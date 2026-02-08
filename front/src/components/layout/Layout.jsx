@@ -11,7 +11,7 @@ function Layout() {
         return (
             <div className="min-h-screen bg-zinc-950 flex justify-center items-center">
                 <div className="w-full max-w-[430px] bg-zinc-900 rounded-2xl p-6 text-center">
-                    <h2 className="text-xl font-semibold mb-4">
+                    <h2 className="text-xl font-semibold mb-4 text-zinc-300">
                         🚫 Доступ ограничен
                     </h2>
 

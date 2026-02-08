@@ -6,7 +6,6 @@ from bot_instance import bot
 import logging
 import redis.asyncio as aioredis
 import json
-from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone

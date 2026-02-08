@@ -12,18 +12,11 @@ key_builder = DefaultKeyBuilder(with_destiny=True)
 
 
 aiogram_redis = Redis(
-    host="127.0.0.1", # settings.REDIS_HOST,
-    port=6379, # settings.REDIS_PORT,
-    # db=settings.REDIS_DB,
-    decode_responses=True
+    host=settings.REDIS_HOST,
+    port=settings.REDIS_PORT,
+    decode_responses=True,
 )
 
-# redis_db = aioredis.Redis(
-#     host='localhost', # settings.REDIS_HOST,
-#     port=6379, # settings.REDIS_PORT,
-#     # db=settings.REDIS_DB,
-#     decode_responses=True
-# )
 
 redis_storage = RedisStorage(redis=aiogram_redis, key_builder=key_builder)
 

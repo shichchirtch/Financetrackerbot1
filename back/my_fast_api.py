@@ -5,11 +5,11 @@ import os
 from bot_instance import bot
 import logging
 import redis.asyncio as aioredis
-
-# r = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis1226"),
-#                      port=int(os.getenv("REDIS_PORT", 6379)),
-#                    decode_responses=True)
-
+import json
+from datetime import datetime
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime, timezone
 
 
 redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis1226"),
@@ -17,6 +17,13 @@ redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis1226"),
                    decode_responses=True)
 
 ADMIN_ID = 6685637602
+
+class ExpenseIn(BaseModel):
+    user_id: int
+    category: str
+    title: Optional[str] = None
+    price: float
+    date: datetime
 
 
 f_api = FastAPI(
@@ -39,8 +46,8 @@ logger = logging.getLogger("fastapi")
 async def receive_telegram_data(data: dict):
     user_id = data["user_id"]
     logger.warning(f"📦 Telegram data: {data}")
-    # await bot.send_message(chat_id= ADMIN_ID,
-    #                        text = f"user_id from webapp: {user_id}")
+    await bot.send_message(chat_id= ADMIN_ID,
+                           text = f"user_id from webapp: {user_id}")
     return {"ok": True}
 
 @f_api.post("/api/start-test")
@@ -70,7 +77,7 @@ async def add_expense(expense: ExpenseIn):
 
     # 4️⃣ формируем объект расхода
     expense_obj = {
-        "id": f"{int(datetime.utcnow().timestamp() * 1000)}",
+        "id": f"{int(datetime.now(timezone.utc).timestamp() * 1000)}",
         "category": expense.category,
         "title": expense.title,
         "price": expense.price,
@@ -101,7 +108,7 @@ async def get_user_months(request: Request):
     print('key_months = ', key_months)
 
     # получаем все месяцы из SET
-    raw_months = await r.smembers(key_months)
+    raw_months = await redis_db.smembers(key_months)
     print('Месяцы юзера = ', raw_months)
 
     # приводим к формату фронта
@@ -136,10 +143,10 @@ async def month_select(request: Request):
     if selected:
         # добавить месяц
 
-        await r.sadd(key_months, value)
+        await redis_db.sadd(key_months, value)
     else:
         # удалить месяц
-        await r.srem(key_months, value)
+        await redis_db.srem(key_months, value)
 
         await bot.send_message(
                 chat_id=user_id,
@@ -147,7 +154,7 @@ async def month_select(request: Request):
             )
 
     # вернуть обновлённый список
-    raw_months = await r.smembers(key_months)
+    raw_months = await redis_db.smembers(key_months)
 
     monaten = []
     for item in raw_months:

@@ -8,7 +8,7 @@ function Footer() {
         '>
             <p className='text-xs
             text-cyan-950
-            '>  Entwickelt von SmartBot Empire </p>
+            '>  Developed by SmartBot Empire </p>
         </footer>
     );
 }

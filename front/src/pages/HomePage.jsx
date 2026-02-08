@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import {useEffect} from "react";
 
 export default function HomePage() {
     const wa = window.Telegram?.WebApp
@@ -8,7 +9,23 @@ export default function HomePage() {
         state => state.expensesUser.trataList
     )
 
-    console.log(trataList, wa)
+    console.log('trataList = ',trataList, '\n\nWA = ', wa)
+
+    useEffect(() => {
+        if (!wa?.initDataUnsafe?.user) return;
+
+        fetch("/api/receive_telegram_data", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                user_id: wa.initDataUnsafe.user.id,
+                first_name: wa.initDataUnsafe.user.first_name,
+                username: wa.initDataUnsafe.user.username,
+            }),
+        });
+    }, []);
 
     return (
         <div

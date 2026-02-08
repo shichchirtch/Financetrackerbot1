@@ -11,7 +11,7 @@ from typing import Optional
 from datetime import datetime, timezone
 
 
-redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis1226"),
+redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis0502"),
                      port=int(os.getenv("REDIS_PORT", 6379)),
                    decode_responses=True)
 

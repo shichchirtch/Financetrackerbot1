@@ -1,14 +1,14 @@
 import {Link} from 'react-router-dom'
-// import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 export default function HomePage() {
-    // const wa = window.Telegram?.WebApp
+    const wa = window.Telegram?.WebApp
 
-    // const trataList = useSelector(
-    //     state => state.expensesUser.trataList
-    // )
-    //
-    // console.log(trataList)
+    const trataList = useSelector(
+        state => state.expensesUser.trataList
+    )
+
+    console.log(trataList, wa)
 
     return (
         <div
@@ -46,7 +46,7 @@ export default function HomePage() {
           text-center
         "
             >
-                Привет,
+                Привет, {wa?.initDataUnsafe?.user?.first_name}
             </p>
 
             <div className="w-full flex flex-col gap-4">

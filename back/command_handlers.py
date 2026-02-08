@@ -1,24 +1,17 @@
-from aiogram import Router, html
+from aiogram import Router
 import asyncio
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.filters import CommandStart, Command
-from bot_base import user_dict, users_db
-from filters import IS_ADMIN
-from lexicon import *
-from copy import deepcopy
 from aiogram.fsm.context import FSMContext
-from bot_instance import dp, bot_storage_key, ROOT_WIND, redis_db
+from bot_instance import dp, bot_storage_key, ROOT_WIND
 from aiogram_dialog import  DialogManager, StartMode
-from keyboards import pre_start_clava
+from my_fast_api import redis_db
+
 from user_repo import *
 
 
 ch_router = Router()
 
-# @ch_router.message()
-# async def foto_accept(message: Message):
-#     foto_id = message.photo[-1].file_id
-#     print(foto_id)
 
 @ch_router.message(CommandStart())
 async def command_start_process(message: Message,dialog_manager: DialogManager, state: FSMContext

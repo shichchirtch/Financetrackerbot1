@@ -2,7 +2,7 @@ from aiogram_dialog import Dialog, Window, ShowMode, StartMode
 from aiogram_dialog.widgets.input import MessageInput
 from lexicon import *
 from user_repo import *
-from bot_instance import ADMIN,  redis_db, ROOT_WIND
+from bot_instance import ADMIN, ROOT_WIND
 from aiogram_dialog.widgets.text import Const
 from aiogram_dialog.widgets.kbd import Button, Row, Group, Column, Next, Cancel, Start, Back
 from aiogram.types import CallbackQuery, Message
@@ -10,8 +10,7 @@ from aiogram_dialog import DialogManager
 import asyncio
 from aiogram.exceptions import TelegramForbiddenError
 from aiogram.types import ContentType
-
-from functools import partial
+from my_fast_api import redis_db
 
 
 async def button_skolko(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):

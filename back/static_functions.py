@@ -1,5 +1,5 @@
 import re
-from bot_instance import redis_db
+from my_fast_api import redis_db
 from aiogram_dialog.widgets.kbd import Button
 from user_repo import *
 from aiogram.types import CallbackQuery
@@ -8,10 +8,6 @@ from aiogram_dialog import ShowMode
 from lexicon import *
 import os
 
-
-def valid_fone_nummer(fone_nummer: str) -> bool:
-    pattern = re.compile(r'^[0-9+() ]{10,15}$')
-    return bool(re.fullmatch(pattern, fone_nummer))
 
 
 async def ru_stellen(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):

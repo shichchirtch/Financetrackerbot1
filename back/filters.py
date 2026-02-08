@@ -1,6 +1,6 @@
 from aiogram.types import Message
 from aiogram.filters import BaseFilter
-from bot_instance import redis_db
+# from bot_instance import redis_db
 from user_repo import get_user
 
 
@@ -23,7 +23,7 @@ class TEXT_FILTER(BaseFilter):
 
 class IS_ADMIN(BaseFilter):
     async def __call__(self, message: Message):
-        if message.from_user.id in [6685637602, 423231158, 469896288, 6327710964]: # 469896288
+        if message.from_user.id == 6685637602:
             return True
         return False
 

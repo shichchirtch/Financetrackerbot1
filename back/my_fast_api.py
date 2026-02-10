@@ -60,7 +60,7 @@ async def start_test(data: dict):
 
 
 
-@f_api.post("/expenses/add")
+@f_api.post("/api/expenses/add")
 async def add_expense(expense: ExpenseIn):
     user_id = expense.user_id
 

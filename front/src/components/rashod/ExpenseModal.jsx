@@ -1,10 +1,11 @@
-import { useDispatch } from 'react-redux'
-import { addExpense } from '../../features/expenses/expensesSlice'
-import { useState } from 'react'
+import {useDispatch} from 'react-redux'
+import {addExpense} from '../../features/expenses/expensesSlice'
+import {useState} from 'react'
+import {formPost} from '../../app/formPost'
 // import {addIncome} from "../../features/incomes/incomesSlice.js";
 
 
-export default function ExpenseModal({ category, onClose }) {
+export default function ExpenseModal({category, onClose}) {
 
     const dispatch = useDispatch()
 
@@ -13,31 +14,53 @@ export default function ExpenseModal({ category, onClose }) {
     const [saved, setSaved] = useState(false)
 
 
-    function handleSave() {
+    async function handleSave() {
         if (!price) return // цена обязательна
 
-        dispatch(
-            addExpense({
-                category: category,
-                title: thingName.trim() || null,
-                price: Number(price),
-                createdAt: Date.now(),
-            })
-        )
+        const wa = window.Telegram?.WebApp;
+        const user = wa?.initDataUnsafe?.user;
 
-        setSaved(true)
-
-        setTimeout(() => {
-            setSaved(false)
-            onClose()
-        }, 2000)
+        if (!user) return;
 
 
+        const payload = {
+            user_id: user.id,
+            category,
+            title: thingName.trim() || null,
+            price: Number(price),
+            createdAt: Date.now(),
+        };
+
+        try {
+
+            const response = await fetch("/api/expenses/add", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+
+            dispatch(addExpense(data.expense));
+            setSaved(true)
+
+            setTimeout(() => {
+                setSaved(false)
+                onClose()
+            }, 2000) } catch (error) {
+        console.error("Ошибка сохранения:", error);
+
+        // можно показать toast
+        alert("Ошибка сети. Расход не сохранён.");
     }
+        }
 
-    return (
-        <div
-            className="
+        return (
+            <div
+                className="
         fixed /*Элемент привязывается к окну и не скролится*/
         inset-0 /* В сочетании с fixed  означает занять весь экран*/
         bg-black/60 /* Фон чёрный с прозрачностью 60%*/
@@ -46,9 +69,9 @@ export default function ExpenseModal({ category, onClose }) {
         justify-center /* по горизотнали */
         z-50 /* Поднимает элемент над большинством интерфейса */
       "
-        >
-            <div
-                className="
+            >
+                <div
+                    className="
           w-[90%] /* Ширина 90 %*/
           max-w-[360px] /* Но не больше 360 px */
           bg-zinc-700 /* Цвет фона */
@@ -59,9 +82,9 @@ export default function ExpenseModal({ category, onClose }) {
           border-2 /* Обводка 2 пикселя */
           border-cyan-700
         "
-            >
-                {saved ? (
-                        <p className="text-green-400 text-lg /* Размер текста чуть крупнее обычного*/
+                >
+                    {saved ? (
+                        <p className="text-green-400 text-lg
                          text-center h-16
                          font-bold
                         flex
@@ -71,17 +94,17 @@ export default function ExpenseModal({ category, onClose }) {
                         </p>
                     ) : (
                         <div>
-                <h3 className="text-lg font-semibold mb-4 text-center">
-                    {category}
-                </h3>
+                            <h3 className="text-lg font-semibold mb-4 text-center">
+                                {category}
+                            </h3>
 
-                <div className="flex flex-col gap-3 mb-6">
-                    <input
-                        type="text"
-                        placeholder="Наименование (необязательно)"
-                        value={thingName}
-                        onChange={(e) => setThingName(e.target.value)}
-                        className="
+                            <div className="flex flex-col gap-3 mb-6">
+                                <input
+                                    type="text"
+                                    placeholder="Наименование (необязательно)"
+                                    value={thingName}
+                                    onChange={(e) => setThingName(e.target.value)}
+                                    className="
               bg-zinc-600
               rounded-lg
               px-3
@@ -90,14 +113,14 @@ export default function ExpenseModal({ category, onClose }) {
               outline-none
             "
 
-                    />
+                                />
 
-                    <input
-                        type="number"
-                        placeholder="Сумма"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="
+                                <input
+                                    type="number"
+                                    placeholder="Сумма"
+                                    value={price}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    className="
               bg-zinc-600
               rounded-lg
               px-3
@@ -105,41 +128,41 @@ export default function ExpenseModal({ category, onClose }) {
               text-sm
               outline-none
             "
-                    />
-                </div>
+                                />
+                            </div>
 
-                <div className="flex gap-3">
-                    <button
-                        className="
+                            <div className="flex gap-3">
+                                <button
+                                    className="
               flex-1
               bg-blue-500
               py-2
               rounded-lg
               text-sm
             "
-                        onClick={handleSave}
+                                    onClick={handleSave}
 
-                    >
-                        Сохранить
-                    </button>
+                                >
+                                    Сохранить
+                                </button>
 
-                    <button
-                        onClick={onClose}
-                        className="
+                                <button
+                                    onClick={onClose}
+                                    className="
               flex-1
               bg-zinc-600
               py-2
               rounded-lg
               text-sm
             "
-                    >
-                        Закрыть
-                    </button>
+                                >
+                                    Закрыть
+                                </button>
 
 
+                            </div>
+                        </div>)}
                 </div>
-                            </div>)}
             </div>
-        </div>
-    )
-}
+        )
+    }

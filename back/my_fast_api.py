@@ -22,7 +22,8 @@ class ExpenseIn(BaseModel):
     category: str
     title: Optional[str] = None
     price: float
-    date: datetime
+
+
 
 
 f_api = FastAPI(
@@ -54,8 +55,10 @@ async def receive_telegram_data(data: dict):
 async def add_expense(expense: ExpenseIn):
     user_id = expense.user_id
 
-    # 1️⃣ определяем месяц
-    month = expense.date.strftime("%Y-%m")
+    now = datetime.now(timezone.utc)
+
+    month = now.strftime("%Y-%m")
+
 
     # 2️⃣ ключи
     months_key = f"user:{user_id}:months"
@@ -70,7 +73,7 @@ async def add_expense(expense: ExpenseIn):
         "category": expense.category,
         "title": expense.title,
         "price": expense.price,
-        "date": expense.date.isoformat(),
+        "createdAt": now.isoformat(),
     }
 
     # 5️⃣ кладём расход в LIST месяца
@@ -78,7 +81,7 @@ async def add_expense(expense: ExpenseIn):
         expenses_key,
         json.dumps(expense_obj, ensure_ascii=False)
     )
-
+    logger.warning(f"💾 Expense saved: {expense_obj}")
     return {
         "status": "ok",
         "month": month,

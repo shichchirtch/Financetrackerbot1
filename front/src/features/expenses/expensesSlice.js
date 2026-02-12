@@ -27,14 +27,13 @@ const expensesSlice = createSlice({
                 console.log('rashod_state = ', rashodState)
                 rashodState.trataList.push(action.payload)
             },
-            prepare({category, title, price, date}) {
+            prepare({category, title, price}) {
                 return {
                     payload: {
                         id: nanoid(),
                         category,
                         title,
-                        price: Number(price),
-                        date: date || new Date().toISOString(),
+                        price: Number(price)
                     },
                 }
             },

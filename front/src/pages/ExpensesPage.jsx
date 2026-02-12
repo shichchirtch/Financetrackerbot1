@@ -110,24 +110,3 @@ export default function ExpensesPage() {
     )
 }
 
-
-// import { Link } from 'react-router-dom'
-//
-// export default function ExpensesPage() {
-//     return (
-//         <div className="p-6 w-full text-white">
-//             <h2 className="text-2xl font-bold mb-6">Расходы</h2>
-//
-//             <p className="text-zinc-300 mb-8">
-//                 Здесь будут категории расходов
-//             </p>
-//
-//             <Link
-//                 to="/"
-//                 className="inline-block mt-4 text-blue-400 underline"
-//             >
-//                 ← Назад
-//             </Link>
-//         </div>
-//     )
-// }

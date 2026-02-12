@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import {createSlice, nanoid} from '@reduxjs/toolkit'
 
 /**
  * Каждый расход:
@@ -27,7 +27,7 @@ const expensesSlice = createSlice({
                 console.log('rashod_state = ', rashodState)
                 rashodState.trataList.push(action.payload)
             },
-            prepare({ category, title, price, date }) {
+            prepare({category, title, price, date}) {
                 return {
                     payload: {
                         id: nanoid(),
@@ -39,6 +39,11 @@ const expensesSlice = createSlice({
                 }
             },
         },
+
+        setExpenses(state, action) {
+            state.trataList = action.payload;
+        },
+
 
         /**
          * Удаление расхода по id

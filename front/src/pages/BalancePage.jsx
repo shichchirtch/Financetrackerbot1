@@ -1,11 +1,17 @@
 // pages/BalancePage.jsx
 import {useState} from "react";
-import { useSelector } from "react-redux"
-import { Link, useParams, useNavigate } from "react-router-dom"
-import { groupExpensesByCategory } from "./externalFunc"
+import {useDispatch, useSelector} from "react-redux"
+import {Link, useParams, useNavigate} from "react-router-dom"
+import {groupExpensesByCategory} from "./externalFunc"
 import TelegramButton from "../components/common/TelegramButton"
 import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
+
+import {useEffect} from "react";
+import {getUserExpenses} from "../../app/getUserExpenses";
+import {getTelegramUser} from "../utils/tg";
+import {setExpenses} from "../store/expensesSlice";
+
 
 const monthDict = {
     '2026-01': 'January 2026',
@@ -15,20 +21,49 @@ const monthDict = {
 }
 
 export default function BalancePage() {
-    const { month } = useParams()
+    const {month} = useParams()
     const navigate = useNavigate()
     const [showChart, setShowChart] = useState(false)
+    const [loading, setLoading] = useState(true);
+    const user = getTelegramUser();
 
-    // 1️⃣ Все расходы пользователя Здесь мы рабоатем с редюсором
-    const trataList = useSelector(
-        state => state.expensesUser.trataList
-    )
+    const dispatch = useDispatch()
 
-    const userId = '12345'
+    useEffect(() => {
+
+        async function loadExpenses() {
+            if (!user) {
+                setLoading(false);
+                return;
+            }
+
+
+            try {
+
+                const data = await getUserExpenses(
+                    `/api/expenses/${user.id}/${month}`
+                );
+
+                dispatch(setExpenses(data.expenses));
+
+            } catch (err) {
+
+                console.error("Ошибка загрузки расходов", err);
+
+            } finally {
+                setLoading(false);
+            }
+        }
+
+
+        loadExpenses();
+
+    }, [month, dispatch, user]);
+
+    const userId = '123'
     // 2️⃣ Фильтрация по месяцу из URL
-    const filtered = trataList.filter(item =>
-        item.date.startsWith(month)
-    )
+    const filtered = useSelector(
+        state => state.expensesUser.trataList)
 
     // 3️⃣ Пустое состояние
     function getEmptyMessage(monthKey) {
@@ -49,12 +84,17 @@ export default function BalancePage() {
                 ? '/expenses'
                 : '/balance'
 
-        return { message, buttonText, link }
+        return {message, buttonText, link}
     }
 
+    if (loading) {
+        return <div>Loading...</div>
+    }
     // ⛔ НЕТ ТРАТ
     if (filtered.length === 0) {
-        const { message, buttonText, link } = getEmptyMessage(month)
+
+
+        const {message, buttonText, link} = getEmptyMessage(month)
 
         return (
             <div className="w-full max-w-[420px] mx-auto p-6 text-center text-slate-100">
@@ -214,7 +254,7 @@ export default function BalancePage() {
                 active:scale-95 mt-5 border-2 border-gray-500
             "
 
-                    onClick={() => setShowChart(true)}>
+                        onClick={() => setShowChart(true)}>
                     Показать диаграмму
                 </button>
             </div>

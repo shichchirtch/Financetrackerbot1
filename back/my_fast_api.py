@@ -49,16 +49,6 @@ async def receive_telegram_data(data: dict):
                            text = f"user_id from webapp: {user_id}")
     return {"ok": True}
 
-@f_api.post("/api/start-test")
-async def start_test(data: dict):
-    print("✅ START TEST CALLED", data)
-    return {
-        "ok": True,
-        "message": "Backend is alive",
-        "user_id": data.get("user_id")
-    }
-
-
 
 @f_api.post("/api/expenses/add")
 async def add_expense(expense: ExpenseIn):
@@ -94,6 +84,27 @@ async def add_expense(expense: ExpenseIn):
         "month": month,
         "expense": expense_obj,
     }
+
+
+@f_api.get("/api/expenses/{user_id}/{month}")
+async def get_expenses(user_id: int, month: str):
+
+    key = f"user:{user_id}:expenses:{month}"
+
+    raw = await redis_db.lrange(key, 0, -1)
+
+    expenses = [json.loads(item) for item in raw]
+
+    return {
+        "status": "ok",
+        "expenses": expenses
+    }
+
+
+
+
+
+
 
 
 

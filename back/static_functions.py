@@ -51,3 +51,8 @@ async def de_stellen(callback: CallbackQuery, widget: Button, dialog_manager: Di
     dialog_manager.show_mode = ShowMode.SEND
     await dialog_manager.next()
 
+
+async def do_nothing(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
+    user_id = callback.from_user.id
+    dialog_manager.show_mode = ShowMode.SEND
+    await dialog_manager.done()

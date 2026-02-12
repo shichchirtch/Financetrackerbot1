@@ -6,11 +6,10 @@ import {groupExpensesByCategory} from "./externalFunc"
 import TelegramButton from "../components/common/TelegramButton"
 import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
-
 import {useEffect} from "react";
-import {getUserExpenses} from "../../app/getUserExpenses";
+import {getUserExpenses} from "../app/getUserExpenses";
 import {getTelegramUser} from "../utils/tg";
-import {setExpenses} from "../store/expensesSlice";
+import {setExpenses} from "../features/expenses/expensesSlice";
 
 
 const monthDict = {

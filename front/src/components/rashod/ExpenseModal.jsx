@@ -3,7 +3,7 @@ import {addExpense} from '../../features/expenses/expensesSlice'
 import {useState} from 'react'
 import {formPost} from '../../app/formPost'
 import {getTelegramUser} from '../../utils/tg'
-// import {addIncome} from "../../features/incomes/incomesSlice.js";
+
 
 
 export default function ExpenseModal({category, onClose}) {

@@ -65,7 +65,8 @@ const expensesSlice = createSlice({
 
 export const {
     addExpense,
-    clearExpenses
+    clearExpenses,
+    setExpenses
 } = expensesSlice.actions
 
 export default expensesSlice.reducer

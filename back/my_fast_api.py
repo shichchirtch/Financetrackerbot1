@@ -112,6 +112,7 @@ async def get_expenses(user_id: int, month: str):
 
 @f_api.post("/api/incomes/add")
 async def add_income(income: IncomeIn):
+    logger.warning(f' income = {income}')
     user_id = income.user_id
 
     now = datetime.now(timezone.utc)

@@ -1,11 +1,11 @@
-import { useDispatch } from 'react-redux'
-import { addIncome } from '../../features/incomes/incomesSlice'
-import { useState } from 'react'
+import {useDispatch} from 'react-redux'
+import {addIncome} from '../../features/incomes/incomesSlice'
+import {useState} from 'react'
 import {formPost} from "../../app/formPost.js";
 import {getTelegramUser} from "../../utils/tg.js";
 
 
-export default function IncomeModal({ onClose }) {
+export default function IncomeModal({onClose}) {
 
     const dispatch = useDispatch()
 
@@ -16,16 +16,17 @@ export default function IncomeModal({ onClose }) {
 
     async function handleSave() {
         if (!amount) return // цена обязательна
+
         const user = getTelegramUser()
 
         if (!user) return;
 
 
         const payload = {
-                user_id: user.id,
-                title: dohodName.trim() || null,
-                amount: parseFloat(amount)
-            }
+            user_id: user.id,
+            title: dohodName.trim() || null,
+            amount: parseFloat(amount)
+        }
 
 
         try {
@@ -36,12 +37,12 @@ export default function IncomeModal({ onClose }) {
 
             dispatch(addIncome(data.income));
 
-             setSaved(true)
+            setSaved(true)
 
-        setTimeout(() => {
-            setSaved(false)
-            onClose()
-        }, 2000)
+            setTimeout(() => {
+                setSaved(false)
+                onClose()
+            }, 2000)
 
 
         } catch (error) {
@@ -101,9 +102,7 @@ export default function IncomeModal({ onClose }) {
               px-3
               py-2
               text-sm
-              outline-none
-            "
-
+              outline-none"
                             />
 
                             <input
@@ -124,18 +123,12 @@ export default function IncomeModal({ onClose }) {
 
                         <div className="flex gap-3">
                             <button
-                                className="
-              flex-1
-              bg-blue-500
-              py-2
-              rounded-lg
-              text-sm
-              active:scale-95
-            "
                                 onClick={handleSave}
-
+                                disabled={loading}
+                                className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
+                                ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                Сохранить
+                                 {loading ? "Сохраняем..." : "Сохранить"}
                             </button>
 
                             <button

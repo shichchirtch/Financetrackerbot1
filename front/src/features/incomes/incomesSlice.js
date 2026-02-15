@@ -27,7 +27,7 @@ const incomesSlice = createSlice({
             },
         },
          setIncome(state, action) {
-            state.trataList = action.payload;
+            state.dohodList = action.payload;
         },
         /**
          * Удаление дохода

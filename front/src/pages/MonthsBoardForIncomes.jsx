@@ -1,12 +1,11 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { useState, useEffect } from 'react'
+import {useSelector, useDispatch} from 'react-redux'
+import {useState, useEffect} from 'react'
 import MonthsGrid from './MonthsGrid'
 import ButtonBack from '../components/common/ButtonBack'
 import ReportMonthIncomes from './ReportMonthIncomes'
 import {getTelegramUser} from "../utils/tg";
 import {getUserIncomes} from "../app/getUserIncomes";
 import {setIncome} from "../features/incomes/incomesSlice";
-
 
 
 export default function MonthsBoardForIncomes() {
@@ -16,7 +15,7 @@ export default function MonthsBoardForIncomes() {
     const dohodList = useSelector(
         state => state.incomesUser.dohodList
     )
-
+    console.log('DOHOD List = ', {dohodList})
     const [activeMonth, setActiveMonth] = useState(null)
     const [loading, setLoading] = useState(false)
     const [total, setTotal] = useState(0)
@@ -26,15 +25,20 @@ export default function MonthsBoardForIncomes() {
         if (!activeMonth || !user) return
 
         async function loadMonth() {
+
             try {
                 setLoading(true)
 
                 const data = await getUserIncomes(
                     `/api/incomes/${user.id}/${activeMonth}`
                 )
+                console.log("FROM BACKEND:", data)
 
                 dispatch(setIncome(data.incomes))
                 setTotal(data.total)
+
+                // console.log("Redux after setIncome:", dohodList)
+
 
             } catch (err) {
                 console.error("Ошибка загрузки доходов", err)
@@ -55,10 +59,10 @@ export default function MonthsBoardForIncomes() {
                     2026
                 </h2>
 
-                <MonthsGrid onSelect={setActiveMonth} />
+                <MonthsGrid onSelect={setActiveMonth}/>
 
                 <div className="flex justify-center">
-                    <ButtonBack />
+                    <ButtonBack/>
                 </div>
             </div>
         )
@@ -79,8 +83,6 @@ export default function MonthsBoardForIncomes() {
         />
     )
 }
-
-
 
 
 // export default function MonthsBoardForIncomes() {

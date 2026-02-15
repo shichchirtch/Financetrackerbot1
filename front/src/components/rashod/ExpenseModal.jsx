@@ -132,17 +132,12 @@ export default function ExpenseModal({category, onClose}) {
 
                         <div className="flex gap-3">
                             <button
-                                className="
-              flex-1
-              bg-blue-500
-              py-2
-              rounded-lg
-              text-sm
-            "
                                 onClick={handleSave}
-
+                                disabled={loading}
+                                className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
+                                ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                Сохранить
+                                 {loading ? "Сохраняем..." : "Сохранить"}
                             </button>
 
                             <button

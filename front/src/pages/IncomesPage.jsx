@@ -15,21 +15,26 @@ export default function IncomePage() {
             <div className="flex flex-col gap-4">
                 {/* Добавить доход */}
                 <Link to="add">
-                    <button className="w-full py-4 bg-slate-600 rounded-lg text-lg active:scale-95">
+                    <button className="w-full py-4 bg-gradient-to-br
+                    from-slate-400 to-slate-500 ounded-lg text-lg active:scale-95">
                         Добавить доход
                     </button>
                 </Link>
 
                 {/* Мои доходы */}
                 <Link to="list">
-                    <button className="w-full py-4 bg-slate-700 rounded-lg text-lg active:scale-95">
+                    <button className="w-full py-4 bg-gradient-to-br
+                     from-slate-500 to-slate-600 rounded-lg
+                      text-lg active:scale-95">
                         Выписка
                     </button>
                 </Link>
 
                 {/* Назад */}
                 <Link to="/">
-                    <button className="w-full py-4 bg-slate-500 rounded-lg text-lg active:scale-95">
+                    <button className="w-full py-4 bg-gradient-to-br
+                     from-slate-700 to-slate-800
+                     active:scale-95">
                         Назад
                     </button>
                 </Link>

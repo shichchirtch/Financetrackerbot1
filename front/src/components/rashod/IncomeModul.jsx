@@ -3,8 +3,6 @@ import { addIncome } from '../../features/incomes/incomesSlice'
 import { useState } from 'react'
 import {formPost} from "../../app/formPost.js";
 import {getTelegramUser} from "../../utils/tg.js";
-import {addExpense} from "../../features/expenses/expensesSlice.js";
-// import {addIncome} from "../../features/incomes/incomesSlice.js";
 
 
 export default function IncomeModal({ onClose }) {

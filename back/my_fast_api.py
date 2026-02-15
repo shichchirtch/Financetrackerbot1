@@ -25,7 +25,7 @@ class ExpenseIn(BaseModel):
 
 class IncomeIn(BaseModel):
     user_id: int
-    title: str
+    title: Optional[str] = None
     amount: float
 
 
@@ -117,7 +117,6 @@ async def add_income(income: IncomeIn):
     now = datetime.now(timezone.utc)
 
     month = now.strftime("%Y-%m")
-
 
     # 2️⃣ ключи
     months_key = f"user:{user_id}:months_inc"

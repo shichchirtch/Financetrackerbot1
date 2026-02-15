@@ -16,7 +16,8 @@ export default function IncomePage() {
                 {/* Добавить доход */}
                 <Link to="add">
                     <button className="w-full py-4 bg-gradient-to-br
-                    from-slate-400 to-slate-500 ounded-lg text-lg active:scale-95">
+                    from-slate-400 to-slate-500 rounded-lg
+                    text-lg active:scale-95">
                         Добавить доход
                     </button>
                 </Link>
@@ -33,8 +34,8 @@ export default function IncomePage() {
                 {/* Назад */}
                 <Link to="/">
                     <button className="w-full py-4 bg-gradient-to-br
-                     from-slate-700 to-slate-800
-                     active:scale-95">
+                     from-slate-700 to-slate-800 rounded-lg
+                     text-lg active:scale-95">
                         Назад
                     </button>
                 </Link>

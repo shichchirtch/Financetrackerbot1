@@ -1,10 +1,41 @@
-import {useSelector} from "react-redux"
-import {useState} from "react"
+import {useSelector, useDispatch} from "react-redux"
+import {useState, useEffect} from "react"
 import {groupIncomesByMonth, buildMonthReport} from "../utils/incomesCount"
 import ButtonBack from '../components/common/ButtonBack'
-
+import {getTelegramUser} from "../utils/tg";
+import {getUserIncomes} from "../app/getUserIncomes";
+import {setIncome} from "../features/incomes/incomesSlice";
 
 export default function IncomesList() {
+    const user = getTelegramUser()
+    const dispatch = useDispatch()
+    const [loading, setLoading] = useState(true)
+
+
+    useEffect(() => {
+        async function loadIncomes() {
+            if (!user) {
+                setLoading(false)
+                return
+            }
+
+            try {
+                const data = await getUserIncomes(
+                    `/api/incomes/${user.id}`
+                )
+
+                dispatch(setIncome(data.income))
+
+            } catch (err) {
+                console.error("Ошибка загрузки доходов", err)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        loadIncomes()
+    }, [dispatch, user])
+
     const dohodList = useSelector(state => state.incomesUser.dohodList)
 
     const grouped = groupIncomesByMonth(dohodList)
@@ -15,7 +46,8 @@ export default function IncomesList() {
 
     console.log('MONTHKEYS = ', monthKeys)
 
-    const [activeMonth, setActiveMonth] = useState(monthKeys[0])
+
+    const activeMonth = monthKeys[0] ?? null
 
     function formatDay(dateString) {
         const date = new Date(dateString)
@@ -88,7 +120,7 @@ export default function IncomesList() {
 
             </div>
             <div className='flex items-center justify-center'>
-            <ButtonBack/>
+                <ButtonBack/>
             </div>
 
         </div>

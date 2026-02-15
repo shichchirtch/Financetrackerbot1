@@ -28,8 +28,7 @@ export default function ExpenseModal({category, onClose}) {
             user_id: user.id,
             category,
             title: thingName.trim() || null,
-            price: parseFloat(price),
-            createdAt: Date.now(),
+            price: parseFloat(price)
         };
 
         try {
@@ -61,13 +60,13 @@ export default function ExpenseModal({category, onClose}) {
     return (
         <div
             className="
-        fixed /*Элемент привязывается к окну и не скролится*/
-        inset-0 /* В сочетании с fixed  означает занять весь экран*/
-        bg-black/60 /* Фон чёрный с прозрачностью 60%*/
-        flex /*Индикатор центрирования элементов */
-        items-center /* по вертикали */
-        justify-center /* по горизотнали */
-        z-50 /* Поднимает элемент над большинством интерфейса */
+        fixed
+        inset-0
+        bg-black/60
+        flex
+        items-center
+        justify-center
+        z-50
       "
         >
             <div

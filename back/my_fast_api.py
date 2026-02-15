@@ -23,6 +23,10 @@ class ExpenseIn(BaseModel):
     title: Optional[str] = None
     price: float
 
+class IncomeIn(BaseModel):
+    user_id: int
+    title: str
+    amount: float
 
 
 
@@ -104,80 +108,58 @@ async def get_expenses(user_id: int, month: str):
     }
 
 
+################################INCOMES########################
+
+@f_api.post("/api/incomes/add")
+async def add_income(income: IncomeIn):
+    user_id = income.user_id
+
+    now = datetime.now(timezone.utc)
+
+    month = now.strftime("%Y-%m")
 
 
+    # 2️⃣ ключи
+    months_key = f"user:{user_id}:months_inc"
+    incomes_key = f"user:{user_id}:incomes_inc:{month}"
 
+    # 3️⃣ добавляем месяц в SET
+    await redis_db.sadd(months_key, month)
 
+    # 4️⃣ формируем объект дохода
+    income_obj = {
+        "id": str(int(now.timestamp() * 1000)),
+        "title": income.title,
+        "amount": income.amount,
+        "createdAt": now.isoformat(),
+    }
 
-
-
-@f_api.post("/api/get-user-months")
-async def get_user_months(request: Request):
-    data = await request.json()
-    print('data = ', data)
-    user_id = data["user_id"]
-    # Формируем ключ по которому можно достучаться до месяцев юзера
-    key_months = f"user:{user_id}:months"
-    print('key_months = ', key_months)
-
-    # получаем все месяцы из SET
-    raw_months = await redis_db.smembers(key_months)
-    print('Месяцы юзера = ', raw_months)
-
-    # приводим к формату фронта
-    monaten = []
-    for item in raw_months:
-        year, month = item.split(":")
-        monaten.append({
-            "year": int(year),
-            "month": month
-        })
-
-
-    # if user_id not in users_db:  # Не удалять !
-    #     users_db[user_id] = {"monaten": []}
-
-    return {"monaten": monaten }
-
-
-@f_api.post("/api/month-select")
-async def month_select(request: Request):
-    data = await request.json()
-    print('coming data = ', data)
-    logger.warning(f"📦LOGGER 84 : {data}")
-    user_id = data["user_id"]
-    month = data["month"]
-    year = data["year"]
-    selected = data["selected"]
-
-
-    key_months = f"user:{user_id}:months"
-    value = f"{year}:{month}"
-    if selected:
-        # добавить месяц
-
-        await redis_db.sadd(key_months, value)
-    else:
-        # удалить месяц
-        await redis_db.srem(key_months, value)
-
-        await bot.send_message(
-                chat_id=user_id,
-                text=f"❌ Der Monat <b> {month}  {year} </b> wurde aus Ihrer Datenbank entfernt."
-            )
-
-    # вернуть обновлённый список
-    raw_months = await redis_db.smembers(key_months)
-
-    monaten = []
-    for item in raw_months:
-        y, m = item.split(":")
-        monaten.append({
-            "year": int(y),
-            "month": m
-        })
-
+    # 5️⃣ кладём dohod в LIST месяца
+    await redis_db.rpush(
+        incomes_key,
+        json.dumps(income_obj, ensure_ascii=False)
+    )
+    logger.warning(f"💾 INCOME saved: {income_obj}")
     return {
         "status": "ok",
-        "monaten": monaten
+        "month": month,
+        "income": income_obj,
+    }
+
+
+
+@f_api.get("/api/incomes/{user_id}/{month}")
+async def get_incomes(user_id: int, month: str):
+
+    key = f"user:{user_id}:incomes_inc:{month}"
+
+    raw = await redis_db.lrange(key, 0, -1)
+
+    user_incomes = [json.loads(item) for item in raw]
+
+    total = sum(i["amount"] for i in user_incomes)
+
+    return {
+        "incomes": user_incomes,
+        "total": total
     }

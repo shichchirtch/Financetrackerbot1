@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import {createSlice, nanoid} from '@reduxjs/toolkit'
 
 /**
  * Доход:
@@ -25,18 +25,10 @@ const incomesSlice = createSlice({
             reducer(state, action) {
                 state.dohodList.push(action.payload)
             },
-            prepare({ title, amount, date }) {
-                return {
-                    payload: {
-                        id: nanoid(),
-                        title,
-                        amount: Number(amount),
-                        date: date || new Date().toISOString(),
-                    },
-                }
-            },
         },
-
+         setIncome(state, action) {
+            state.trataList = action.payload;
+        },
         /**
          * Удаление дохода
          */
@@ -57,6 +49,7 @@ const incomesSlice = createSlice({
 
 export const {
     addIncome,
+    setIncome,
     removeIncome,
     clearIncomes,
 } = incomesSlice.actions

@@ -1,6 +1,9 @@
 import { useDispatch } from 'react-redux'
 import { addIncome } from '../../features/incomes/incomesSlice'
 import { useState } from 'react'
+import {formPost} from "../../app/formPost.js";
+import {getTelegramUser} from "../../utils/tg.js";
+import {addExpense} from "../../features/expenses/expensesSlice.js";
 // import {addIncome} from "../../features/incomes/incomesSlice.js";
 
 
@@ -11,26 +14,46 @@ export default function IncomeModal({ onClose }) {
     const [dohodName, setDohodName] = useState('')
     const [amount, setAmount] = useState('')
     const [saved, setSaved] = useState(false)
+    const [loading, setLoading] = useState(false);
 
-
-    function handleSave() {
+    async function handleSave() {
         if (!amount) return // цена обязательна
+        const user = getTelegramUser()
 
-        dispatch(
-            addIncome({
+        if (!user) return;
+
+
+        const payload = {
+                user_id: user.id,
                 title: dohodName.trim() || null,
-                amount: Number(amount),
-                createdAt: Date.now(),
-            })
-        )
+                amount: parseFloat(amount)
+            }
 
-        setSaved(true)
+
+        try {
+            if (loading) return;
+            setLoading(true);
+
+            const data = await formPost("/api/incomes/add", payload);
+
+            dispatch(addIncome(data.income));
+
+             setSaved(true)
 
         setTimeout(() => {
             setSaved(false)
             onClose()
         }, 2000)
 
+
+        } catch (error) {
+
+            console.error("Ошибка сохранения:", error);
+            alert("Ошибка сети. Доход не сохранён.");
+
+        } finally {
+            setLoading(false);
+        }
 
     }
 

@@ -15,27 +15,26 @@ export default function IncomePage() {
             <div className="flex flex-col gap-4">
                 {/* Добавить доход */}
                 <Link to="add">
-                    <button className="w-full py-4 bg-slate-600 rounded-lg text-lg">
+                    <button className="w-full py-4 bg-slate-600 rounded-lg text-lg active:scale-95">
                         Добавить доход
                     </button>
                 </Link>
 
                 {/* Мои доходы */}
                 <Link to="list">
-                    <button className="w-full py-4 bg-slate-700 rounded-lg text-lg">
+                    <button className="w-full py-4 bg-slate-700 rounded-lg text-lg active:scale-95">
                         Выписка
                     </button>
                 </Link>
 
                 {/* Назад */}
                 <Link to="/">
-                    <button className="w-full py-4 bg-slate-500 rounded-lg text-lg">
+                    <button className="w-full py-4 bg-slate-500 rounded-lg text-lg active:scale-95">
                         Назад
                     </button>
                 </Link>
             </div>
 
-            {/* Небольшая подсказка */}
             {dohodList.length === 0 && (
                 <p className="text-center text-sm opacity-70 mt-6">
                     Доходов пока нет

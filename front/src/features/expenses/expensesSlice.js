@@ -22,35 +22,12 @@ const expensesSlice = createSlice({
         /**
          * Добавление расхода
          */
-        addExpense: {
-            reducer(rashodState, action) {
-                console.log('rashod_state = ', rashodState)
-                rashodState.trataList.push(action.payload)
-            },
-            prepare({category, title, price}) {
-                return {
-                    payload: {
-                        id: nanoid(),
-                        category,
-                        title,
-                        price: Number(price)
-                    },
-                }
-            },
+        addExpense(state, action) {
+            state.trataList.push(action.payload);
         },
 
         setExpenses(state, action) {
             state.trataList = action.payload;
-        },
-
-
-        /**
-         * Удаление расхода по id
-         */
-        removeExpense(rashodState, action) {
-            rashodState.trataList = rashodState.trataList.filter(
-                (expense) => expense.id !== action.payload
-            )
         },
 
         /**

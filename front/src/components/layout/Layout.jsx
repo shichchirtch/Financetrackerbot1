@@ -25,7 +25,8 @@ function Layout() {
             try {
                 const data = await formPost("/api/init", {
                     user_id: tgUser.id,
-                    name: tgUser.first_name
+                    first_name: tgUser.first_name,
+                    language_code: tgUser.language_code
                 })
 
                 dispatch(setUser(data.user))

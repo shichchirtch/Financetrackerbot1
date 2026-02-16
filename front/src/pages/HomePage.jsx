@@ -1,9 +1,11 @@
 import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import {useEffect} from "react";
+import { useEffect } from "react";
+import { useTranslation } from "../features/customHoock"
 
 export default function HomePage() {
     const wa = window.Telegram?.WebApp
+    const { t } = useTranslation()
 
     const trataList = useSelector(
         state => state.expensesUser.trataList
@@ -63,7 +65,7 @@ export default function HomePage() {
           text-center
         "
             >
-                Привет, {wa?.initDataUnsafe?.user?.first_name}
+                {t('Hello')}, {wa?.initDataUnsafe?.user?.first_name}
             </p>
 
             <div className="w-full flex flex-col gap-4">

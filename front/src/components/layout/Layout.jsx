@@ -4,8 +4,8 @@ import Footer from "./Footer";
 import { useDispatch} from "react-redux"
 import {useEffect} from "react";
 import { setUser, setLanguage } from "../../features/user/userSlice"
-import {getUserLan} from "../../app/getUserLan.js";
 import { useTranslation} from "../../features/customHoock";
+import {formPost} from "../../app/formPost.js";
 
 function Layout() {
     const wa = window.Telegram?.WebApp;
@@ -23,13 +23,13 @@ function Layout() {
 
         async function initUser() {
             try {
-                const data = await getUserLan("/api/init", {
+                const data = await formPost("/api/init", {
                     user_id: tgUser.id,
                     name: tgUser.first_name
                 })
 
                 dispatch(setUser(data.user))
-                dispatch(setLanguage(data.lan))
+                dispatch(setLanguage(data.user.lan))
 
             } catch (err) {
                 console.error("Init error:", err)

@@ -55,7 +55,7 @@ async def init_user(data: dict):
     user = await ensure_user(redis_db, user_id, name)
 
     # если новый пользователь — сохранить язык Telegram
-    if not user.get("lan"):
+    if user.get("lan") == "ru":
         user["lan"] = tg_lan
         await update_user(redis_db, user_id, user)
 

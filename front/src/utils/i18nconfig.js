@@ -1,6 +1,6 @@
 export const translations = {
     ru: {
-        Hello: "Привет",
+        Hello: "Привет)))))",
         accessDeniedTitle: "🚫 Доступ ограничен",
         accessDeniedText: "Это веб-приложение можно использовать только через Telegram."
     },

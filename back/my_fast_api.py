@@ -9,6 +9,7 @@ import json
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
+from user_repo import ensure_user, update_user
 
 
 redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis0502"),
@@ -43,6 +44,23 @@ f_api = FastAPI(
 )
 
 logger = logging.getLogger("fastapi")
+
+
+@f_api.post("/api/init")
+async def init_user(data: dict):
+    user_id = data["user_id"]
+    name = data["first_name"]
+    tg_lan = data.get("language_code", "ru")
+
+    user = await ensure_user(redis_db, user_id, name)
+
+    # если новый пользователь — сохранить язык Telegram
+    if not user.get("lan"):
+        user["lan"] = tg_lan
+        await update_user(redis_db, user_id, user)
+
+    return {"user": user}
+
 
 
 

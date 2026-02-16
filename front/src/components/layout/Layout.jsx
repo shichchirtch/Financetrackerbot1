@@ -1,10 +1,42 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useDispatch} from "react-redux"
+import {useEffect} from "react";
+import { setUser, setLanguage } from "../../features/user/userSlice"
+import {getUserLan} from "../../app/getUserLan.js";
+import { useTranslation} from "../../features/customHoock";
 
 function Layout() {
     const wa = window.Telegram?.WebApp;
     const tgUser = wa?.initDataUnsafe?.user;
+
+    const dispatch = useDispatch()
+
+    const { t } = useTranslation()
+
+
+    // 🔥 INIT USER
+    useEffect(() => {
+
+        if (!tgUser) return
+
+        async function initUser() {
+            try {
+                const data = await getUserLan("/api/init", {
+                    user_id: tgUser.id,
+                    name: tgUser.first_name
+                })
+
+                dispatch(setUser(data.user))
+                dispatch(setLanguage(data.lan))
+
+            } catch (err) {
+                console.error("Init error:", err)
+            }
+        }
+        initUser()
+    }, [tgUser, dispatch])
 
     // ❌ НЕ из Telegram
     if (!wa || !tgUser) {
@@ -12,11 +44,11 @@ function Layout() {
             <div className="min-h-screen bg-zinc-950 flex justify-center items-center">
                 <div className="w-full max-w-[430px] bg-zinc-900 rounded-2xl p-6 text-center">
                     <h2 className="text-xl font-semibold mb-4 text-zinc-300">
-                        🚫 Доступ ограничен
+                         {t("accessDeniedTitle")}
                     </h2>
 
                     <p className="mb-4 text-zinc-300">
-                        Это веб-приложение можно использовать только через Telegram.
+                        {t("accessDeniedText")}
                     </p>
 
                     <a

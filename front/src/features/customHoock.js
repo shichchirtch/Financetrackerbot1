@@ -3,7 +3,8 @@ import { translations } from "../utils/i18nconfig"
 
 export function useTranslation() {
 
-     const lan = useSelector(state => state.user.language)
+     const lan = useSelector(state => state.user.language)  || "ru"
+
 
     console.log("CURRENT LANGUAGE =", lan)
 

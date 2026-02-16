@@ -2,13 +2,25 @@ import { useSelector } from "react-redux"
 import { translations } from "../utils/i18nconfig"
 
 export function useTranslation() {
-    const lan = useSelector(state => state.user.language)
+
+     const lan = useSelector(state => state.user.language)
+
+    console.log("CURRENT LANGUAGE =", lan)
 
     function t(key) {
-        const key_for_dict = translations[lan]?.[key] || key
-        console.log('key_for_dict = ', key_for_dict)
-        return key_for_dict
+        console.log("LOOKUP:", key)
+        console.log("DICT:", translations[lan])
+        console.log("VALUE:", translations[lan]?.[key])
+
+        return translations[lan]?.[key] ?? key
     }
+
+
+    // function t(key) {
+    //     const key_for_dict = translations?.[lan]?.[key] ?? key
+    //     console.log('key_for_dict = ', key_for_dict)
+    //     return key_for_dict
+    // }
 
     return { t }
 }

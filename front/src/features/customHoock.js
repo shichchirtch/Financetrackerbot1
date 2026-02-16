@@ -7,6 +7,6 @@ export function useTranslation() {
     function t(key) {
         return translations[lan]?.[key] || key
     }
-
+    console.log('t = ', t)
     return { t }
 }

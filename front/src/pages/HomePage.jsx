@@ -3,9 +3,17 @@ import { useSelector } from 'react-redux'
 import { useEffect } from "react";
 import { useTranslation } from "../features/customHoock"
 
+const test_spisok =   {
+    'ru' : "Ура",
+    'de' : 'Guten Tag'
+
+}
+
 export default function HomePage() {
     const wa = window.Telegram?.WebApp
     const { t } = useTranslation()
+
+    const start_lan = wa?.initDataUnsafe?.user?.language_code
 
     const trataList = useSelector(
         state => state.expensesUser.trataList
@@ -65,7 +73,7 @@ export default function HomePage() {
           text-center
         "
             >
-                {t('Hello')}, {wa?.initDataUnsafe?.user?.first_name}
+                {test_spisok[start_lan]}, {wa?.initDataUnsafe?.user?.first_name}
             </p>
 
             <div className="w-full flex flex-col gap-4">

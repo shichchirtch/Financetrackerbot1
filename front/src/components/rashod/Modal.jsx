@@ -1,10 +1,8 @@
-import {useDispatch} from 'react-redux'
-import {addExpense} from '../../features/expenses/expensesSlice'
-import {useState} from 'react'
-// import {addIncome} from "../../features/incomes/incomesSlice.js";
 
+import { useTranslation } from "../../features/customHoock";
 
 export default function Modal({onClose, children}) {
+    const { t } = useTranslation()
     return (
         <div
             className="
@@ -25,7 +23,7 @@ export default function Modal({onClose, children}) {
                             onClick={onClose}
                             className="flex-1 bg-zinc-600 py-2 rounded-lg text-sm
                             border-2 border-gray-300">
-                            Закрыть
+                            {t('Close')}
                         </button>
                     </div>
                 </div>

@@ -63,9 +63,10 @@ export default function BalancePage() {
     const navigate = useNavigate()
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
-    const user = getTelegramUser();
+    const user = useSelector(state => state.user.user)
 
     const dispatch = useDispatch()
+
 
     useEffect(() => {
 

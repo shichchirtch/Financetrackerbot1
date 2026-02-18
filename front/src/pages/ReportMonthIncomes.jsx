@@ -21,7 +21,7 @@ export default function ReportMonthIncomes({ incomes, total, month }) {
     const lan = useSelector(
         state => state.user.lan)
 
-    const t = useTranslation()
+    const { t } = useTranslation()
 
     function formatDay(dateString) {
         const date = new Date(dateString)

@@ -9,7 +9,7 @@ import { useTranslation } from "../../features/customHoock";
 export default function IncomeModal({onClose}) {
 
     const dispatch = useDispatch()
-    const t = useTranslation()
+    const { t } = useTranslation()
 
     const [dohodName, setDohodName] = useState('')
     const [amount, setAmount] = useState('')

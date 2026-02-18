@@ -28,7 +28,7 @@ export default function IncomePage() {
                     <button className="w-full py-4 bg-gradient-to-br
                      from-slate-500 to-slate-600 rounded-lg
                       text-lg active:scale-95">
-                        {t("Extarct")}
+                        {t("Extract")}
                     </button>
                 </Link>
 

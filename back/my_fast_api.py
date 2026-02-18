@@ -71,7 +71,7 @@ async def receive_telegram_data(data: dict):
     await bot.send_message(chat_id= ADMIN_ID,
                            text = f"user_id from webapp: {user_id}")
 
-    raw = redis_db.get(f"user:{user_id}")
+    raw = await redis_db.get(f"user:{user_id}")
     user = json.loads(raw)
     user_lan = user["lan"]
 

@@ -3,7 +3,6 @@ import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
 import ExpensesPage from './pages/ExpensesPage'
 import IncomesPage from './pages/IncomesPage'
-import IncomesList from './pages/IncomesList'
 import BalancePage from "./pages/BalancePage"
 import AddIncome from "./pages/AddIncome"
 import MonthsBoard from "./pages/MonthsBoard"

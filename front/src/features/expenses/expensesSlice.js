@@ -1,4 +1,4 @@
-import {createSlice, nanoid} from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 
 /**
  * Каждый расход:
@@ -7,7 +7,7 @@ import {createSlice, nanoid} from '@reduxjs/toolkit'
  *   category: string
  *   title?: string
  *   amount: number
- *   date: string
+ *   createdAt: string
  * }
  */
 

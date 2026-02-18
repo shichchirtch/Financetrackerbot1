@@ -25,10 +25,8 @@ export default function MonthsBoardForIncomes() {
         if (!activeMonth || !user) return
 
         async function loadMonth() {
-
             try {
                 setLoading(true)
-
                 const data = await getUserIncomes(
                     `/api/incomes/${user.id}/${activeMonth}`
                 )
@@ -36,10 +34,6 @@ export default function MonthsBoardForIncomes() {
 
                 dispatch(setIncome(data.incomes))
                 setTotal(data.total)
-
-                // console.log("Redux after setIncome:", dohodList)
-
-
             } catch (err) {
                 console.error("Ошибка загрузки доходов", err)
             } finally {
@@ -84,50 +78,3 @@ export default function MonthsBoardForIncomes() {
     )
 }
 
-
-// export default function MonthsBoardForIncomes() {
-//     const dohodList = useSelector(
-//         state => state.incomesUser.dohodList
-//     )
-//
-//     const [activeMonth, setActiveMonth] = useState(null)
-//
-//     // 1️⃣ Пока месяц не выбран — показываем сетку
-//     if (!activeMonth) {
-//         return (
-//             <div>
-//                 <h2
-//                     className="
-//                         mt-8
-//                         text-[30px]
-//                         font-bold
-//                         text-gray-100
-//                         flex
-//                         justify-center
-//                     "
-//                 >
-//                     2026
-//                 </h2>
-//
-//                 <MonthsGrid onSelect={setActiveMonth} />
-//
-//                 <div className="flex justify-center">
-//                     <ButtonBack />
-//                 </div>
-//             </div>
-//         )
-//     }
-//
-//     // 2️⃣ Фильтрация доходов по месяцу
-//     const filtered = dohodList.filter(item =>
-//         item.date.startsWith(activeMonth)
-//     )
-//
-//     return (
-//         <ReportMonthIncomes
-//             incomesForMonth={filtered}
-//             month={activeMonth}
-//             onBack={() => setActiveMonth(null)}
-//         />
-//     )
-// }

@@ -46,20 +46,20 @@ f_api = FastAPI(
 logger = logging.getLogger("fastapi")
 
 
-@f_api.post("/api/init")
-async def init_user(data: dict):
-    user_id = data["user_id"]
-    name = data["first_name"]
-    tg_lan = data.get("language_code", "ru")
-
-    user = await ensure_user(redis_db, user_id, name)
-
-    # если новый пользователь — сохранить язык Telegram
-    if user.get("lan") == "ru":
-        user["lan"] = tg_lan
-        await update_user(redis_db, user_id, user)
-
-    return {"user": user}
+# @f_api.post("/api/init")
+# async def init_user(data: dict):
+#     user_id = data["user_id"]
+#     name = data["first_name"]
+#     tg_lan = data.get("language_code", "ru")
+#
+#     user = await ensure_user(redis_db, user_id, name)
+#
+#     # если новый пользователь — сохранить язык Telegram
+#     if user.get("lan") == "ru":
+#         user["lan"] = tg_lan
+#         await update_user(redis_db, user_id, user)
+#
+#     return {"user": user}
 
 
 
@@ -70,7 +70,13 @@ async def receive_telegram_data(data: dict):
     logger.warning(f"📦 Telegram data: {data}")
     await bot.send_message(chat_id= ADMIN_ID,
                            text = f"user_id from webapp: {user_id}")
-    return {"ok": True}
+
+    raw = redis_db.get(f"user:{user_id}")
+    user = json.loads(raw)
+    user_lan = user["lan"]
+
+    return {"ok": True,
+            "lan": user_lan}
 
 
 @f_api.post("/api/expenses/add")

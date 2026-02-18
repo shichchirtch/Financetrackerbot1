@@ -1,41 +1,82 @@
 import {Link} from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { useEffect } from "react";
-import { useTranslation } from "../features/customHoock"
+import {useSelector, useDispatch} from 'react-redux'
+import {useEffect} from "react";
+import {setUser, setLanguage} from "../features/user/userSlice"
 
-const test_spisok =   {
-    'ru' : "Ура",
-    'de' : 'Guten Tag'
 
+const start_spisok = {
+    'ru': "Привет",
+    'de': 'Guten Tag',
+    'uk': 'Привіт',
+    'tr': 'Merhaba'
+}
+
+const moi_rashkdy = {
+    'ru': 'Мои расходы',
+    'de': 'Meine Ausgaben',
+    'uk': 'Мої витрати',
+    'tr': 'Masraflarım'
+}
+
+const moi_dohosy = {
+    'ru': 'Мои доходы',
+    'de': 'Mein Einkommen',
+    'uk': 'Мої доходи',
+    'tr': 'Gelirim'
 }
 
 export default function HomePage() {
+    const dispatch = useDispatch()
+
+    const supported = ["ru", "de", "uk", "tr"]
     const wa = window.Telegram?.WebApp
-    const { t } = useTranslation()
+    const first_name = wa.initDataUnsafe.user.first_name
 
-    const start_lan = wa?.initDataUnsafe?.user?.language_code
+    const tg_lan = wa?.initDataUnsafe?.user?.language_code
 
-    const trataList = useSelector(
-        state => state.expensesUser.trataList
-    )
+    const start_lan = supported.includes(tg_lan) ? tg_lan : "ru"
 
-    console.log('trataList = ',trataList, '\n\nWA = ', wa)
-
+    const user = useSelector(state => state.user.user)
     useEffect(() => {
-        if (!wa?.initDataUnsafe?.user) return;
+        if (user) return
+        if (!wa?.initDataUnsafe?.user) return
 
-        fetch("/api/receive_telegram_data", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                user_id: wa.initDataUnsafe.user.id,
-                first_name: wa.initDataUnsafe.user.first_name,
-                username: wa.initDataUnsafe.user.username,
-            }),
-        });
-    }, []);
+        const tgUser = wa.initDataUnsafe.user
+
+        const front_user = {
+            user_id: tgUser.id,
+            first_name
+        }
+
+        dispatch(setUser(front_user))
+
+        async function initUser() {
+            try {
+                const response = await fetch("/api/receive_telegram_data", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        user_id: front_user.user_id,
+                        first_name: front_user.first_name,
+                    }),
+                })
+
+                const data = await response.json()
+
+                // 🔥 Вот здесь мы получаем язык из Redis
+                dispatch(setLanguage(data.lan))
+
+            } catch (err) {
+                console.error("Init error:", err)
+                dispatch(setLanguage(start_lan)) // fallback
+            }
+        }
+
+        initUser()
+
+    }, [user])
 
     return (
         <div
@@ -73,7 +114,7 @@ export default function HomePage() {
           text-center
         "
             >
-                {test_spisok[start_lan]}, {wa?.initDataUnsafe?.user?.first_name}
+                {start_spisok[start_lan]}, {first_name}
             </p>
 
             <div className="w-full flex flex-col gap-4">
@@ -91,7 +132,7 @@ export default function HomePage() {
                     text-center
                     text-lg"
                 >
-                    Мои расходы
+                    {moi_rashkdy[start_lan]}
                 </Link>
 
                 <Link
@@ -109,7 +150,7 @@ export default function HomePage() {
                     text-center
                     text-lg"
                 >
-                    Мои доходы
+                    {moi_dohosy[start_lan]}
                 </Link>
             </div>
         </div>

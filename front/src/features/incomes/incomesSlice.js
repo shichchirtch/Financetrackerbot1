@@ -6,7 +6,7 @@ import {createSlice} from '@reduxjs/toolkit'
  *   id: string
  *   title?: string
  *   amount: number
- *   date: string
+ *   createdAt: string
  * }
  */
 

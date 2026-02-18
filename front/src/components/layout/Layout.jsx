@@ -1,43 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useDispatch} from "react-redux"
-import {useEffect} from "react";
-import { setUser, setLanguage } from "../../features/user/userSlice"
 import { useTranslation} from "../../features/customHoock";
-import {formPost} from "../../app/formPost.js";
 
 function Layout() {
     const wa = window.Telegram?.WebApp;
     const tgUser = wa?.initDataUnsafe?.user;
 
-    const dispatch = useDispatch()
-
     const { t } = useTranslation()
-
-
-    // 🔥 INIT USER
-    useEffect(() => {
-
-        if (!tgUser) return
-
-        async function initUser() {
-            try {
-                const data = await formPost("/api/init", {
-                    user_id: tgUser.id,
-                    first_name: tgUser.first_name,
-                    language_code: tgUser.language_code
-                })
-
-                dispatch(setUser(data.user))
-                dispatch(setLanguage(data.user.lan))
-
-            } catch (err) {
-                console.error("Init error:", err)
-            }
-        }
-        initUser()
-    }, [tgUser, dispatch])
 
     // ❌ НЕ из Telegram
     if (!wa || !tgUser) {
@@ -58,7 +28,7 @@ function Layout() {
                         rel="noopener noreferrer"
                         className="inline-block mt-4 px-6 py-3 bg-blue-500 text-white rounded-md"
                     >
-                        👉 Открыть бота в Telegram
+                        {t('OpenBotInTelegram')}
                     </a>
                 </div>
             </div>

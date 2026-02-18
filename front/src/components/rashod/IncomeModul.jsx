@@ -3,7 +3,7 @@ import {addIncome} from '../../features/incomes/incomesSlice'
 import {useState} from 'react'
 import {formPost} from "../../app/formPost.js";
 import {getTelegramUser} from "../../utils/tg.js";
-import { useTranslation } from "../features/customHoock";
+import { useTranslation } from "../../features/customHoock";
 
 
 export default function IncomeModal({onClose}) {

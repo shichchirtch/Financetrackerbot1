@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 export default function MonthsBoard() {
-    console.log("MONTHBOARD")
+    console.log("MONTHBOARD 19.02")
     const navigate = useNavigate()
     console.log("typeof navigate =", typeof navigate)
 

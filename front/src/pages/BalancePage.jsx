@@ -8,7 +8,6 @@ import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
 import {useEffect} from "react";
 import {getUserExpenses} from "../app/getUserExpenses";
-import {getTelegramUser} from "../utils/tg";
 import {setExpenses} from "../features/expenses/expensesSlice";
 import { useTranslation } from "../features/customHoock";
 
@@ -61,7 +60,6 @@ const monthDict = {
 export default function BalancePage() {
     const {month} = useParams()
     const navigate = useNavigate()
-
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
     const user = useSelector(state => state.user.user)

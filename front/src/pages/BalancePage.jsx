@@ -61,11 +61,13 @@ const monthDict = {
 export default function BalancePage() {
     const {month} = useParams()
     const navigate = useNavigate()
+
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
     const user = useSelector(state => state.user.user)
 
     const dispatch = useDispatch()
+    console.log("navigate =", navigate)
 
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useTranslation} from "../../features/customHoock";
+import { useTranslation } from "../../features/customHoock";
 
 function Layout() {
     const wa = window.Telegram?.WebApp;

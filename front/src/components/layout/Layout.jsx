@@ -1,13 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-// import { useTranslation } from "../../features/customHoock";
+import { useTranslation } from "../../features/customHoock";
 
 function Layout() {
-    const wa ='1'
-    const tgUser = '2'
+    const wa =  window.Telegram?.WebApp?.initDataUnsafe
+    const tgUser = wa.initDataUnsafe.user
 
-    // const { t } = useTranslation()
+    const { t } = useTranslation()
 
     // ❌ НЕ из Telegram
     if (!wa || !tgUser) {
@@ -15,11 +15,11 @@ function Layout() {
             <div className="min-h-screen bg-zinc-950 flex justify-center items-center">
                 <div className="w-full max-w-[430px] bg-zinc-900 rounded-2xl p-6 text-center">
                     <h2 className="text-xl font-semibold mb-4 text-zinc-300">
-                         accessDeniedTitle
+                        {t('accessDeniedTitle')}
                     </h2>
 
                     <p className="mb-4 text-zinc-300">
-                        accessDeniedText
+                        {t('accessDeniedText')}
                     </p>
 
                     <a
@@ -28,7 +28,7 @@ function Layout() {
                         rel="noopener noreferrer"
                         className="inline-block mt-4 px-6 py-3 bg-blue-500 text-white rounded-md"
                     >
-                        OpenBotInTelegram
+                        {t("OpenBotInTelegram")}
                     </a>
                 </div>
             </div>

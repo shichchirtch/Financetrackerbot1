@@ -1,5 +1,5 @@
 import MonthsGrid from "./MonthsGrid";
-// import ButtonBack from "../components/common/ButtonBack.jsx";
+import ButtonBack from "../components/common/ButtonBack.jsx";
 import { useNavigate } from 'react-router-dom'
 
 export default function MonthsBoard() {
@@ -12,6 +12,7 @@ export default function MonthsBoard() {
 
     return (
         <MonthsGrid onSelect={goToBalance} />
+
     )
 }
 

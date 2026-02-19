@@ -67,7 +67,7 @@ export default function BalancePage() {
     const user = useSelector(state => state.user.user)
 
     const dispatch = useDispatch()
-    console.log("navigate =", navigate)
+    console.log("70 navigate =", navigate)
 
 
     useEffect(() => {
@@ -79,7 +79,7 @@ export default function BalancePage() {
                 return;
             }
             try {
-                console.log('USER_ID = ', user.id)
+                console.log('82 USER_ID = ', user.id)
                 const data = await getUserExpenses(
                     `/api/expenses/${user.id}/${month}`
                 );

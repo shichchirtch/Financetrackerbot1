@@ -1,4 +1,4 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
 import ExpensesPage from './pages/ExpensesPage'
@@ -8,7 +8,7 @@ import AddIncome from "./pages/AddIncome"
 import MonthsBoard from "./pages/MonthsBoard"
 import MonthsBoardForIncomes from "./pages/MonthsBoardForIncomes"
 
-const router = createHashRouter([
+const router = createBrowserRouter([
     {
         path: '/',
         element: <Layout />,

@@ -44,8 +44,6 @@ export const translations = {
         Extract:'Finanzbericht',
         NoIncomes:"Es gibt noch kein Einkommen.",
         SendReportToBot:'Senden einen Bericht an den Bot.',
-
-
     },
 
     uk: {
@@ -69,7 +67,7 @@ export const translations = {
         Incomes:'Доходи',
         Extract:'Витяг',
         NoIncomes:"Доходів поки що немає",
-        SendReportToBot:'Надіслати звіт Боту',
+        SendReportToBot:'Отправить отчёт боту',
     },
 
     tr: {

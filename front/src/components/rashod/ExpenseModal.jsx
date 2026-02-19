@@ -1,4 +1,4 @@
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {addExpense} from '../../features/expenses/expensesSlice'
 import {useState} from 'react'
 import {formPost} from '../../app/formPost'
@@ -138,7 +138,7 @@ export default function ExpenseModal({category, onClose}) {
                                 className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
                                 ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                 {loading ? "Saving..." : "to save"}
+                                 {loading ? "Saving..." : t('ToSave')}
                             </button>
 
                             <button

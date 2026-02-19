@@ -6,9 +6,9 @@ import {groupExpensesByCategory} from "./externalFunc"
 import TelegramButton from "../components/common/TelegramButton"
 import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
-import {useEffect} from "react";
-import {getUserExpenses} from "../app/getUserExpenses";
-import {setExpenses} from "../features/expenses/expensesSlice";
+import { useEffect } from "react";
+import { getUserExpenses } from "../app/getUserExpenses";
+import { setExpenses } from "../features/expenses/expensesSlice";
 import { useTranslation } from "../features/customHoock";
 
 
@@ -58,6 +58,8 @@ const monthDict = {
     '2026-12': 'December 2026'}
 
 export default function BalancePage() {
+    console.log('BalancePage')
+
     const {month} = useParams()
     const navigate = useNavigate()
     const [showChart, setShowChart] = useState(false)

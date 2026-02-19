@@ -21,6 +21,7 @@ export const translations = {
         Extract:'Выписка',
         NoIncomes:'Доходов пока нет',
         SendReportToBot:'Отправить отчёт боту',
+        ToSave:'Сохранить',
     },
     de: {
         Hello: "Hallo",

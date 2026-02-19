@@ -16,7 +16,6 @@ export default function MonthsBoard() {
             <MonthsGrid
                 onSelect={(month) => navigate(`/balance/${month}`)}
             />
-
             <div className="flex justify-center mt-6">
                 <ButtonBack />
             </div>

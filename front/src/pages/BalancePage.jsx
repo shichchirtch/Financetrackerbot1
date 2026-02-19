@@ -72,11 +72,12 @@ export default function BalancePage() {
 
         async function loadExpenses() {
             if (!user) {
+                console.log("No USER")
                 setLoading(false);
                 return;
             }
             try {
-
+                console.log('USER_ID = ', user.id)
                 const data = await getUserExpenses(
                     `/api/expenses/${user.id}/${month}`
                 );

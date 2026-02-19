@@ -90,8 +90,11 @@ export default function ExpensesPage() {
         state => state.expensesUser.trataList
     )
     const lan =  useSelector(state => state.user.lan)
-    console.log('TRATALIST = ', trataList)
+    console.log('TRATALIST from ExpensePage = ', trataList)
     const { t } = useTranslation()
+    console.log("LAN =", lan)
+    console.log("DICT =", categories_dict[lan])
+    const categories_lan = categories_dict[lan] || []
 
     return (
         <>
@@ -109,7 +112,7 @@ export default function ExpensesPage() {
           gap-3
         "
                 >
-                    {categories_dict[lan].map((category) => (
+                    {categories_lan.map((category) => (
                         <button
                             key={category}
                             className="
@@ -140,7 +143,7 @@ export default function ExpensesPage() {
                     to-sky-950
                     active:scale-95
                         rounded-lg">
-                            ← Назад
+                            ← {t('Back')}
                         </button>
 
                     </Link>
@@ -163,8 +166,6 @@ export default function ExpensesPage() {
                     onClose={() => setSelectedCategory(null)}
                 />
             )}
-
-
         </>
     )
 }

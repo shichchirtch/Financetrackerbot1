@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom'
 
 
 export default function MonthsBoard() {
-
+    console.log("MONTHBOARD")
     const navigate = useNavigate()
+    console.log("typeof navigate =", typeof navigate)
 
     return (
         <div>

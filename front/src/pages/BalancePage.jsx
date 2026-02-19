@@ -79,9 +79,9 @@ export default function BalancePage() {
                 return;
             }
             try {
-                console.log('82 USER_ID = ', user.id)
+                console.log('82 USER_ID = ', user.user_id)
                 const data = await getUserExpenses(
-                    `/api/expenses/${user.id}/${month}`
+                    `/api/expenses/${user.user_id}/${month}`
                 );
 
                 dispatch(setExpenses(data.expenses));

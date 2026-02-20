@@ -4,8 +4,8 @@ import Footer from "./Footer";
 import { useTranslation } from "../../features/customHoock";
 
 function Layout() {
-    const wa =  window.Telegram?.WebApp?.initDataUnsafe
-    const tgUser = wa?.initDataUnsafe?.user?.first_name
+    const wa =  '2'//window.Telegram?.WebApp?.initDataUnsafe
+    const tgUser = '1' //wa?.initDataUnsafe?.user?.first_name
 
     const { t } = useTranslation()
 

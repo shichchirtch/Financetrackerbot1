@@ -1,16 +1,26 @@
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {addIncome} from '../../features/incomes/incomesSlice'
 import {useState} from 'react'
 import {formPost} from "../../app/formPost.js";
 import {getTelegramUser} from "../../utils/tg.js";
-import { useTranslation } from "../../features/customHoock";
+// import { useTranslation } from "../../features/customHoock";
+const SuccessSaved = { 'ru':'✅ Успешно сохранено',
+    'uk':'✅ Успішно збережено',
+    'de':'✅ Erfolgreich gespeichert',
+    'tr':'✅ Başarıyla kaydedildi'
+}
 
+const Close = { 'ru':'Закрыть',
+    'uk':'Закрити',
+    'de':'Schließen',
+    'tr':'Kapalı'
+}
 
 export default function IncomeModal({onClose}) {
 
     const dispatch = useDispatch()
-    const { t } = useTranslation()
-
+    // const { t } = useTranslation()
+    const lan =  useSelector(state => state.user.lan)
     const [dohodName, setDohodName] = useState('')
     const [amount, setAmount] = useState('')
     const [saved, setSaved] = useState(false)
@@ -84,7 +94,7 @@ export default function IncomeModal({onClose}) {
             >
                 {saved ? (
                     <p className="text-green-400 text-lg text-center">
-                        {t('SuccessSaved')}
+                        {SuccessSaved[lan]}
                     </p>
                 ) : (
                     <div>
@@ -144,7 +154,7 @@ export default function IncomeModal({onClose}) {
               active:scale-95
             "
                             >
-                                {t('Close')}
+                                {Close[lan]}
                             </button>
 
 

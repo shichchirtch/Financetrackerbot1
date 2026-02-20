@@ -1,8 +1,17 @@
 
 import { useTranslation } from "../../features/customHoock";
+import {useSelector} from "react-redux";
+const Close = { 'ru':'Закрыть',
+    'uk':'Закрити',
+    'de':'Schließen',
+    'tr':'Kapalı'
+}
+
 
 export default function Modal({onClose, children}) {
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
+
+    const lan =  useSelector(state => state.user.lan)
     return (
         <div
             className="
@@ -23,7 +32,7 @@ export default function Modal({onClose, children}) {
                             onClick={onClose}
                             className="flex-1 bg-zinc-600 py-2 rounded-lg text-sm
                             border-2 border-gray-300">
-                            {t('Close')}
+                            {Close[lan]}
                         </button>
                     </div>
                 </div>

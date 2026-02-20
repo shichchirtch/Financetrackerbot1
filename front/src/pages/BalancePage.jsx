@@ -9,7 +9,7 @@ import Modal from "../components/rashod/Modal"
 import { useEffect } from "react";
 import { getUserExpenses } from "../app/getUserExpenses";
 import { setExpenses } from "../features/expenses/expensesSlice";
-import { useTranslation } from "../features/customHoock";
+// import { useTranslation } from "../features/customHoock";
 
 
 const future_expenses_dict = {
@@ -43,6 +43,12 @@ const back_dict = {
 }
 
 
+const ShowGraphic = { 'ru':'Показать диаграмму',
+    'uk':'Показати діаграму',
+    'de':'Diagramm anzeigen',
+    'tr':'Şemayı göster'
+}
+
 const monthDict = {
     '2026-01': 'January 2026',
     '2026-02': 'February 2026',
@@ -56,6 +62,43 @@ const monthDict = {
     '2026-10': 'October 2026',
     '2026-11': 'November 2026',
     '2026-12': 'December 2026'}
+
+const BudgetExpenses = { 'ru':'Баланс расходов',
+    'uk':'Баланс витрат',
+    'de':'Ausgabenbilanz',
+    'tr':'Giderler dengesi'
+}
+
+const NoName = { 'ru':'Без названия',
+    'uk':'Без назви',
+    'de':'Ohne Titel',
+    'tr':'Başlıksız'
+}
+
+const Total = { 'ru':'Итого',
+    'uk':'Разом',
+    'de':'Gesamt',
+    'tr':'Toplam'
+}
+
+
+const Sum = { 'ru':'Всего',
+    'uk':'Усього',
+    'de':'Gesamt',
+    'tr':'Toplam'
+}
+
+const Back = { 'ru':'Назад',
+    'uk':'Назад',
+    'de':'Zurück',
+    'tr':'Geri'
+}
+
+const HomePage = { 'ru':'На Главную',
+    'uk':'На головну',
+    'de':'Heim',
+    'tr':'Ev'
+}
 
 export default function BalancePage() {
     console.log('BalancePage')
@@ -108,7 +151,7 @@ export default function BalancePage() {
         state => state.user.lan
     )
 
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
 
     // 3️⃣ Пустое состояние
     function getEmptyMessage(monthKey) {
@@ -144,7 +187,7 @@ export default function BalancePage() {
         return (
             <div className="w-full max-w-[420px] mx-auto p-6 text-center text-slate-100">
                 <h1 className="text-2xl font-bold mb-6">
-                    {t('BudgetExpenses')}
+                    {BudgetExpenses[lan]}
                 </h1>
 
                 <p className="text-lg mb-8 opacity-80">
@@ -181,7 +224,7 @@ export default function BalancePage() {
             </div>
 
             <h1 className="text-xl font-semibold text-center mb-4">
-                {t('BalanceOfExpenses')}
+                {BudgetExpenses[lan]}
             </h1>
 
             {/* Категории */}
@@ -220,7 +263,7 @@ export default function BalancePage() {
 
                                     {hasUnnamed && (
                                         <div className="flex justify-between text-sm italic opacity-80">
-                                            <span>{t('NoName')}</span>
+                                            <span>{NoName[lan]}</span>
                                             <span>{data.unnamedTotal}</span>
                                         </div>
                                     )}
@@ -230,7 +273,7 @@ export default function BalancePage() {
                     font-semibold mt-2
                     border-t border-slate-600 pt-2
                   ">
-                                        <span>{t("Total")}</span>
+                                        <span>{Total[lan]}</span>
                                         <span>{data.total}</span>
                                     </div>
                                 </>
@@ -248,7 +291,7 @@ export default function BalancePage() {
         flex justify-between
         font-bold text-lg
       ">
-                <span>{t('Sum')}</span>
+                <span>{Sum[lan]}</span>
                 <span>{grandTotal}</span>
             </div>
 
@@ -266,7 +309,7 @@ export default function BalancePage() {
             border-2 border-cyan-400
           "
                 >
-                    {t("Back")}
+                    {Back[lan]}
                 </button>
 
                 <Link to="/">
@@ -279,7 +322,7 @@ export default function BalancePage() {
             text-white
             border-2 border-cyan-400
           ">
-                        {t('HomePage')}
+                        {HomePage[lan]}
                     </button>
                 </Link>
             </div>
@@ -300,7 +343,7 @@ export default function BalancePage() {
             "
 
                         onClick={() => setShowChart(true)}>
-                    {t('ShowGraphic')}
+                    {ShowGraphic[lan]}
                 </button>
             </div>
                 </span>

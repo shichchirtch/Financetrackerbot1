@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
-import { useTranslation } from "../../features/customHoock";
-
+import {useSelector} from "react-redux";
+// import { useTranslation } from "../../features/customHoock";
+const Back = { 'ru':'Назад',
+    'uk':'Назад',
+    'de':'Zurück',
+    'tr':'Geri'
+}
 
 export default function ButtonBack() {
-    const t = useTranslation()
+    // const t = useTranslation()
+    const lan =  useSelector(state => state.user.lan)
     return (
         <div>
             <Link to="/">
@@ -15,7 +21,7 @@ export default function ButtonBack() {
                         rounded-lg
                         m-7
                         text-blue-100">
-                    ← {t("Back")}
+                    ← {Back[lan]}
                 </button>
             </Link>
         </div>

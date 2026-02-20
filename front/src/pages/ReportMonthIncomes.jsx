@@ -1,6 +1,6 @@
 import ButtonBack from '../components/common/ButtonBack'
 import { useSelector } from "react-redux";
-import { useTranslation } from "../features/customHoock";
+// import { useTranslation } from "../features/customHoock";
 
 const future_incomes_dict = {
     'ru':'Доходов в будущем ещё нет',
@@ -17,11 +17,16 @@ const now_incomes_dict = {
 }
 
 
-export default function ReportMonthIncomes({ incomes, total, month }) {
-    const lan = useSelector(
-        state => state.user.lan)
+const Sum = { 'ru':'Всего',
+    'uk':'Усього',
+    'de':'Gesamt',
+    'tr':'Toplam'
+}
 
-    const { t } = useTranslation()
+export default function ReportMonthIncomes({ incomes, total, month }) {
+    const lan = useSelector(state => state.user.lan)
+
+    // const { t } = useTranslation()
 
     function formatDay(dateString) {
         const date = new Date(dateString)
@@ -91,7 +96,7 @@ export default function ReportMonthIncomes({ incomes, total, month }) {
                 ))}
 
                 <div className="mt-6 p-4 bg-slate-700 rounded-lg flex justify-between font-bold text-lg">
-                    <span>{t('Sum')}</span>
+                    <span>{Sum[lan]}</span>
                     <span>{total}</span>
                 </div>
 

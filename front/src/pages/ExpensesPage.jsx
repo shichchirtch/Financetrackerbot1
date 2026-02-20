@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useState } from "react";
 import ExpenseModal from '../components/rashod/ExpenseModal'
 import { useSelector } from "react-redux";
-import { useTranslation } from "../features/customHoock";
+// import { useTranslation } from "../features/customHoock";
 
 
 
@@ -81,6 +81,23 @@ const categories_dict = {
     'tr':categories_tr
 }
 
+const ArtOfExpenses = { 'ru':'Категории расходов',
+    'uk':'Категорії витрат',
+    'de':'Ausgabenkategorien',
+    'tr':'Gider kategorileri'
+}
+
+const Back = { 'ru':'Назад',
+    'uk':'Назад',
+    'de':'Zurück',
+    'tr':'Geri'
+}
+
+const Budget = { 'ru':'Баланс',
+    'uk':'Баланс',
+    'de':'Bilanz',
+    'tr':'Denge'
+}
 
 export default function ExpensesPage() {
 
@@ -91,7 +108,7 @@ export default function ExpensesPage() {
     )
     const lan =  useSelector(state => state.user.lan)
     console.log('TRATALIST from ExpensePage = ', trataList)
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
     console.log("LAN =", lan)
     console.log("DICT =", categories_dict[lan])
     const categories_lan = categories_dict[lan] || []
@@ -102,7 +119,7 @@ export default function ExpensesPage() {
         text-white
         ">
                 <h2 className="text-xl font-semibold mb-6 mt-4 text-center">
-                    {t('ArtOfExpenses')}
+                    {ArtOfExpenses[lan]}
                 </h2>
 
                 <div
@@ -143,7 +160,7 @@ export default function ExpensesPage() {
                     to-sky-950
                     active:scale-95
                         rounded-lg">
-                            ← {t('Back')}
+                            ← {Back[lan]}
                         </button>
 
                     </Link>
@@ -155,7 +172,7 @@ export default function ExpensesPage() {
                     bg-sky-950
                     active:scale-95
                         rounded-lg">
-                            {t('Budget')}
+                            {Budget[lan]}
                          </button>
                     </Link>
             </div>

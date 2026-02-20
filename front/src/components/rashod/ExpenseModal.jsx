@@ -3,19 +3,36 @@ import {addExpense} from '../../features/expenses/expensesSlice'
 import {useState} from 'react'
 import {formPost} from '../../app/formPost'
 import {getTelegramUser} from '../../utils/tg'
-import { useTranslation } from "../../features/customHoock";
+// import { useTranslation } from "../../features/customHoock";
 
 
+const SuccessSaved = { 'ru':'✅ Успешно сохранено',
+    'uk':'✅ Успішно збережено',
+    'de':'✅ Erfolgreich gespeichert',
+    'tr':'✅ Başarıyla kaydedildi'
+}
+
+const ToSave = { 'ru':'Сохранить',
+    'uk':'Зберегти',
+    'de':'Speichern',
+    'tr':'Kaydetmek'
+}
+
+const Close = { 'ru':'Закрыть',
+    'uk':'Закрити',
+    'de':'Schließen',
+    'tr':'Kapalı'
+}
 
 export default function ExpenseModal({category, onClose}) {
 
     const dispatch = useDispatch()
-
+    const lan =  useSelector(state => state.user.lan)
     const [thingName, setThingName] = useState('')
     const [price, setPrice] = useState('')
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false);
-    const { t } = useTranslation()
+    // const { t } = useTranslation()
 
     async function handleSave() {
         if (!price) return // цена обязательна
@@ -90,7 +107,7 @@ export default function ExpenseModal({category, onClose}) {
                         flex
                         items-center
                         justify-center">
-                        {t('SuccessSaved')}
+                        {SuccessSaved[lan]}
                     </p>
                 ) : (
                     <div>
@@ -138,7 +155,7 @@ export default function ExpenseModal({category, onClose}) {
                                 className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
                                 ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                 {loading ? "Saving..." : t('ToSave')}
+                                 {loading ? "Saving..." : ToSave[lan]}
                             </button>
 
                             <button
@@ -151,7 +168,7 @@ export default function ExpenseModal({category, onClose}) {
               text-sm
             "
                             >
-                                {t('Close')}
+                                {Close[lan]}
                             </button>
 
 

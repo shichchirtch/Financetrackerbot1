@@ -5,7 +5,7 @@ import { useTranslation } from "../../features/customHoock";
 
 function Layout() {
     const wa =  window.Telegram?.WebApp?.initDataUnsafe
-    const tgUser = wa.initDataUnsafe.user
+    const tgUser = wa?.initDataUnsafe?.user?.first_name
 
     const { t } = useTranslation()
 

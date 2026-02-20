@@ -36,9 +36,10 @@ export default function HomePage() {
 
     const start_lan = supported.includes(tg_lan) ? tg_lan : "ru"
 
-    const user = useSelector(state => state.user.user)
+    const name_user = first_name//useSelector(state => state.user.user)
+
     useEffect(() => {
-        if (user) return
+        if (name_user) return
         if (!wa?.initDataUnsafe?.user) return
 
         const tgUser = wa.initDataUnsafe.user
@@ -76,7 +77,7 @@ export default function HomePage() {
 
         initUser()
 
-    }, [user])
+    }, [name_user])
 
     return (
         <div

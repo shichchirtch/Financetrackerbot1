@@ -42,13 +42,10 @@ export default function MonthsBoard() {
         navigate(`/balance/${month}`)
     }
 
-    return (<div>
+    return (
         <div>
         <MonthsGrid onSelect={goToBalance} />
             </div>
-        <div className="mt-10">
-                <ButtonBack />         </div>
-        </div>
 
     )
 }

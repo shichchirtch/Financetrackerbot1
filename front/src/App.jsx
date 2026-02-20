@@ -8,6 +8,7 @@ import AddIncome from "./pages/AddIncome"
 import MonthsBoard from "./pages/MonthsBoard"
 import MonthsBoardForIncomes from "./pages/MonthsBoardForIncomes"
 
+
 const router = createBrowserRouter([
     {
         path: '/',

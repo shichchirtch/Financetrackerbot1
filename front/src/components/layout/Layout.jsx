@@ -4,13 +4,13 @@ import Footer from "./Footer";
 import { useTranslation } from "../../features/customHoock";
 
 function Layout() {
-    const wa =  '2'//window.Telegram?.WebApp?.initDataUnsafe
-    const tgUser = '1' //wa?.initDataUnsafe?.user?.first_name
+    const wa =  window.Telegram?.WebApp?.initDataUnsafe
+    const tgUser = wa?.initDataUnsafe?.user?.first_name
 
     const { t } = useTranslation()
 
     // ❌ НЕ из Telegram
-    if (!wa || !tgUser) {
+    if ( !tgUser) {
         return (
             <div className="min-h-screen bg-zinc-950 flex justify-center items-center">
                 <div className="w-full max-w-[430px] bg-zinc-900 rounded-2xl p-6 text-center">

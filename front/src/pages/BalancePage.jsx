@@ -65,10 +65,10 @@ export default function BalancePage() {
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
     const user = useSelector(state => state.user.user)
+    console.log('user 68 str = ', user)
 
     const dispatch = useDispatch()
     console.log("70 navigate =", navigate)
-
 
     useEffect(() => {
 

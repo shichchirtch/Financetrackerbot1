@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom'
 import {useSelector, useDispatch} from 'react-redux'
 import {useEffect} from "react";
-import {setUser, setLanguage} from "../features/user/userSlice"
+import {setLanguage} from "../features/user/userSlice"
 
 
 const start_spisok = {
@@ -27,29 +27,14 @@ const moi_dohosy = {
 
 export default function HomePage() {
     const dispatch = useDispatch()
+    const front_user = useSelector(state => state.user.user)
+    const user_id = front_user?.id
+    const name_user = useSelector(state => state.user.user?.first_name)
+    const lan = useSelector(state => state.user.lan)
 
-    const supported = ["ru", "de", "uk", "tr"]
-    const wa = window.Telegram?.WebApp
-    const first_name = wa.initDataUnsafe.user.first_name
-
-    const tg_lan = wa?.initDataUnsafe?.user?.language_code
-
-    const start_lan = supported.includes(tg_lan) ? tg_lan : "ru"
-
-    const name_user = first_name//useSelector(state => state.user.user)
 
     useEffect(() => {
-        if (name_user) return
-        if (!wa?.initDataUnsafe?.user) return
-
-        const tgUser = wa.initDataUnsafe.user
-
-        const front_user = {
-            user_id: tgUser.id,
-            first_name
-        }
-
-        dispatch(setUser(front_user))
+        if (!user_id) return
 
         async function initUser() {
             try {
@@ -59,25 +44,26 @@ export default function HomePage() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        user_id: front_user.user_id,
-                        first_name: front_user.first_name,
+                        user_id: user_id,
+                        first_name: name_user,
                     }),
                 })
 
                 const data = await response.json()
-
-                // 🔥 Вот здесь мы получаем язык из Redis
                 dispatch(setLanguage(data.lan))
 
             } catch (err) {
                 console.error("Init error:", err)
-                dispatch(setLanguage(start_lan)) // fallback
             }
         }
 
         initUser()
 
-    }, [name_user])
+    }, [user_id])
+
+    if (!front_user) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div
@@ -115,7 +101,7 @@ export default function HomePage() {
           text-center
         "
             >
-                {start_spisok[start_lan]}, {first_name}
+                {start_spisok[lan]}, {name_user}
             </p>
 
             <div className="w-full flex flex-col gap-4">
@@ -133,7 +119,7 @@ export default function HomePage() {
                     text-center
                     text-lg"
                 >
-                    {moi_rashkdy[start_lan]}
+                    {moi_rashkdy[lan]}
                 </Link>
 
                 <Link
@@ -151,7 +137,7 @@ export default function HomePage() {
                     text-center
                     text-lg"
                 >
-                    {moi_dohosy[start_lan]}
+                    {moi_dohosy[lan]}
                 </Link>
             </div>
         </div>

@@ -20,8 +20,11 @@ export default function HomePage() {
     // const wa = window.Telegram?.WebApp
     const { t } = useTranslation()
 
+    const account = useSelector(state => state.user.account)
+    console.log("HomePage account =", account)
+
     const lan =  useSelector(state => state.user.lan)
-    const first_name =  useSelector(state => state.user.account.first_name)
+    const first_name =  useSelector(state => state.user.account?.first_name)
 
     const trataList = useSelector(
         state => state.expensesUser.trataList

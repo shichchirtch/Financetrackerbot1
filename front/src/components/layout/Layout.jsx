@@ -1,10 +1,10 @@
-import { Outlet } from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useDispatch} from "react-redux"
+import {useDispatch} from "react-redux"
 import {useEffect} from "react";
-import { setUser, setLanguage } from "../../features/user/userSlice"
-import { useTranslation} from "../../features/customHoock";
+import {setUser, setLanguage} from "../../features/user/userSlice"
+import {useTranslation} from "../../features/customHoock";
 import {formPost} from "../../app/formPost.js";
 
 function Layout() {
@@ -13,29 +13,36 @@ function Layout() {
 
     const dispatch = useDispatch()
 
-    const { t } = useTranslation()
-
-
+    const {t} = useTranslation()
     // 🔥 INIT USER
+    console.log("Layout render, tgUser =", tgUser)
     useEffect(() => {
 
         if (!tgUser) return
 
         async function initUser() {
+            if (!tgUser) return;
+
+            const front_user_dict = {
+                user_id: tgUser.id,
+                first_name: tgUser.first_name
+            }
+
             try {
                 const data = await formPost("/api/init", {
                     user_id: tgUser.id,
                     first_name: tgUser.first_name,
                     language_code: tgUser.language_code
                 })
-
-                dispatch(setUser(data.user))
-                dispatch(setLanguage(data.user.lan))
+                console.log('DATA = ', data)
+                dispatch(setUser(front_user_dict))
+                dispatch(setLanguage(data.lan))
 
             } catch (err) {
                 console.error("Init error:", err)
             }
         }
+
         initUser()
     }, [tgUser, dispatch])
 
@@ -45,7 +52,7 @@ function Layout() {
             <div className="min-h-screen bg-zinc-950 flex justify-center items-center">
                 <div className="w-full max-w-[430px] bg-zinc-900 rounded-2xl p-6 text-center">
                     <h2 className="text-xl font-semibold mb-4 text-zinc-300">
-                         {t("accessDeniedTitle")}
+                        {t("accessDeniedTitle")}
                     </h2>
 
                     <p className="mb-4 text-zinc-300">
@@ -78,13 +85,13 @@ function Layout() {
                     overflow-hidden
                 "
             >
-                <Header />
+                <Header/>
 
                 <main className="flex-1 flex overflow-y-auto justify-center">
-                    <Outlet />
+                    <Outlet/>
                 </main>
 
-                <Footer />
+                <Footer/>
             </div>
         </div>
     );

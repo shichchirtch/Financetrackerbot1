@@ -2,7 +2,8 @@ import {useDispatch} from 'react-redux'
 import {addIncome} from '../../features/incomes/incomesSlice'
 import {useState} from 'react'
 import {formPost} from "../../app/formPost.js";
-import {getTelegramUser} from "../../utils/tg.js";
+import { useSelector } from 'react-redux'
+import { useTranslation } from "../../features/customHoock";
 
 
 export default function IncomeModal({onClose}) {
@@ -13,17 +14,15 @@ export default function IncomeModal({onClose}) {
     const [amount, setAmount] = useState('')
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false);
-
+    const t = useTranslation()
+    const user_id = useSelector(state => state.user.account?.user_id)
     async function handleSave() {
         if (!amount) return // цена обязательна
-
-        const user = getTelegramUser()
-
-        if (!user) return;
+        if (!user_id) return;
 
 
         const payload = {
-            user_id: user.id,
+            user_id: user_id,
             title: dohodName.trim() || null,
             amount: parseFloat(amount)
         }
@@ -48,7 +47,7 @@ export default function IncomeModal({onClose}) {
         } catch (error) {
 
             console.error("Ошибка сохранения:", error);
-            alert("Ошибка сети. Доход не сохранён.");
+            alert("Network error. Доход не сохранён.");
 
         } finally {
             setLoading(false);
@@ -82,7 +81,7 @@ export default function IncomeModal({onClose}) {
             >
                 {saved ? (
                     <p className="text-green-400 text-lg text-center">
-                        ✅ Успешно сохранено
+                        {t('SuccessSaved')}
                     </p>
                 ) : (
                     <div>
@@ -93,7 +92,7 @@ export default function IncomeModal({onClose}) {
                         <div className="flex flex-col gap-3 mb-6">
                             <input
                                 type="text"
-                                placeholder="Наименование (необязательно)"
+                                placeholder="name"
                                 value={dohodName}
                                 onChange={(e) => setDohodName(e.target.value)}
                                 className="
@@ -107,7 +106,7 @@ export default function IncomeModal({onClose}) {
 
                             <input
                                 type="number"
-                                placeholder="Сумма"
+                                placeholder="Sum"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 className="
@@ -128,7 +127,7 @@ export default function IncomeModal({onClose}) {
                                 className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
                                 ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                 {loading ? "Сохраняем..." : "Сохранить"}
+                                 {loading ? t("Saving") : t('ToSave')}
                             </button>
 
                             <button
@@ -142,10 +141,8 @@ export default function IncomeModal({onClose}) {
               active:scale-95
             "
                             >
-                                Закрыть
+                                {t('Close')}
                             </button>
-
-
                         </div>
                     </div>)}
             </div>

@@ -1,24 +1,29 @@
-
+import { useSelector } from 'react-redux'
 import ButtonBack from '../components/common/ButtonBack'
 
-const monthDict= {
-    '2026-01': 'January 2026',
-    '2026-02': 'February 2026',
-    '2026-03': 'March 2026',
-    '2026-04': 'April 2026',
-    '2026-05': 'Mai 2026',
-    '2026-06': 'June 2026',
-    '2026-07': 'July 2026',
-    '2026-08': 'August 2026',
-    '2026-09': 'September 2026',
-    '2026-10': 'October 2026',
-    '2026-11': 'November 2026',
-    '2026-12': 'December 2026'}
+import { useTranslation } from "../features/customHoock";
+
+const future_incomes_dict = {
+    'ru':'Доходов в будущем ещё нет',
+    'de':'Es gibt noch keine zukünftigen Einnahmen',
+    'uk':'Доходів у майбутньому ще немає',
+    'tr':'Gelecekte henüz bir gelir yok'
+}
+
+const now_incomes_dict = {
+    'ru':'В этом месяце доходов нет',
+    'de':'Diesen Monat gibt es kein Einkommen',
+    'uk':'Цього місяця доходів немає',
+    'tr':'Bu ay hiç gelir yok'
+}
 
 
 
 export default function ReportMonthIncomes({ incomes, total, month }) {
+    const lan = useSelector(
+        state => state.user.lan)
 
+    const { t } = useTranslation()
     function formatDay(dateString) {
         const date = new Date(dateString)
 
@@ -32,8 +37,8 @@ export default function ReportMonthIncomes({ incomes, total, month }) {
         const now = new Date().toISOString().slice(0, 7)
 
         return monthKey > now
-            ? 'Доходов в будущем ещё нет'
-            : 'В этом месяце доходов нет'
+            ? future_incomes_dict[lan]
+            : now_incomes_dict[lan]
     }
 
     if (!incomes || incomes.length === 0) {
@@ -87,7 +92,7 @@ export default function ReportMonthIncomes({ incomes, total, month }) {
                 ))}
 
                 <div className="mt-6 p-4 bg-slate-700 rounded-lg flex justify-between font-bold text-lg">
-                    <span>Всего</span>
+                    <span>{t('Sum')}</span>
                     <span>{total}</span>
                 </div>
 

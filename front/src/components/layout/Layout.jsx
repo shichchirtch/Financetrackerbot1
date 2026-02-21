@@ -13,7 +13,7 @@ function Layout() {
 
     const dispatch = useDispatch()
 
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     // 🔥 INIT USER
     console.log("Layout render, tgUser =", tgUser)
     useEffect(() => {

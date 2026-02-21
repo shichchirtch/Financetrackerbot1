@@ -1,15 +1,14 @@
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
+import { useTranslation } from "../features/customHoock";
 
 export default function IncomePage() {
-    const dohodList = useSelector(
-        state => state.incomesUser.dohodList
-    )
 
+    const { t } = useTranslation()
     return (
         <div className="w-full max-w-[420px] mx-auto p-6 text-slate-200">
             <h1 className="text-2xl font-bold text-center mb-8">
-                Доходы
+                {t('Incomes')}
             </h1>
 
             <div className="flex flex-col gap-4">
@@ -18,7 +17,7 @@ export default function IncomePage() {
                     <button className="w-full py-4 bg-gradient-to-br
                     from-slate-400 to-slate-500 rounded-lg
                     text-lg active:scale-95">
-                        Добавить доход
+                        {t('AddIncome')}
                     </button>
                 </Link>
 
@@ -27,7 +26,7 @@ export default function IncomePage() {
                     <button className="w-full py-4 bg-gradient-to-br
                      from-slate-500 to-slate-600 rounded-lg
                       text-lg active:scale-95">
-                        Выписка
+                        {t("Extract")}
                     </button>
                 </Link>
 
@@ -36,16 +35,10 @@ export default function IncomePage() {
                     <button className="w-full py-4 bg-gradient-to-br
                      from-slate-700 to-slate-800 rounded-lg
                      text-lg active:scale-95">
-                        Назад
+                        {t('Back')}
                     </button>
                 </Link>
             </div>
-
-            {dohodList.length === 0 && (
-                <p className="text-center text-sm opacity-70 mt-6">
-                    Доходов пока нет
-                </p>
-            )}
         </div>
     )
 }

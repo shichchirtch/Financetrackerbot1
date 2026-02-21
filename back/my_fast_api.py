@@ -49,17 +49,23 @@ logger = logging.getLogger("fastapi")
 @f_api.post("/api/init")
 async def init_user(data: dict):
     user_id = data["user_id"]
-    name = data["first_name"]
+    first_name = data["first_name"]
     tg_lan = data.get("language_code", "ru")
 
-    user = await ensure_user(redis_db, user_id, name)
+    user = await ensure_user(redis_db, user_id, first_name, tg_lan)
+
+    # user = {
+    #     "user_tg_id": user_id,
+    #     "name": name,
+    #     "lan": user_lan,
+    # }
 
     # если новый пользователь — сохранить язык Telegram
-    if user.get("lan") == "ru":
-        user["lan"] = tg_lan
-        await update_user(redis_db, user_id, user)
+    # if user.get("lan") == "ru":
+    #     user["lan"] = tg_lan
+    #     await update_user(redis_db, user_id, user)
 
-    return {"user": user}
+    return {"lan": user['lan']}
 
 
 

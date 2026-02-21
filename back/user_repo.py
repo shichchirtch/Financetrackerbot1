@@ -6,11 +6,17 @@ async def get_user(redis, user_id: int) -> dict | None:
     return json.loads(data) if data else None
 
 
-async def create_user(redis, user_id: int, name: str):
+async def create_user(redis, user_id: int, name: str, user_lan:str):
+
+    lan_list = ['ru', 'uk', 'de', 'tr']
+
+    if user_lan not in lan_list:
+        user_lan = 'ru'
+
     user = {
         "user_tg_id": user_id,
         "name": name,
-        "lan": "ru",
+        "lan": user_lan
     }
 
     await redis.set(
@@ -22,12 +28,12 @@ async def create_user(redis, user_id: int, name: str):
     return user
 
 
-async def ensure_user(redis, user_id: int, name: str):
+async def ensure_user(redis, user_id: int, name: str, user_lan:str):
     user = await get_user(redis, user_id)
     if user:
         return user
 
-    return await create_user(redis, user_id, name)
+    return await create_user(redis, user_id, name, user_lan)
 
 
 def month_key(date_str: str) -> str:

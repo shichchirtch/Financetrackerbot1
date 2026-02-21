@@ -3,7 +3,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-  user: null,
+  account: null,
   lan: "ru"
 }
 
@@ -12,7 +12,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action) {
-      state.user = action.payload
+      state.account = action.payload
     },
     setLanguage(state, action) {
       state.lan = action.payload

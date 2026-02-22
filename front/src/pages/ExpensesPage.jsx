@@ -161,8 +161,6 @@ export default function ExpensesPage() {
                     onClose={() => setSelectedCategory(null)}
                 />
             )}
-
-
         </>
     )
 }

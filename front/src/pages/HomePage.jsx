@@ -1,6 +1,5 @@
 import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux'
-// import { useEffect } from "react";
 import { useTranslation } from "../features/customHoock"
 
 const moi_rashkdy = {
@@ -32,21 +31,6 @@ export default function HomePage() {
 
     console.log('trataList = ',trataList)
 
-    // useEffect(() => {
-    //     if (!wa?.initDataUnsafe?.user) return;
-    //
-    //     fetch("/api/receive_telegram_data", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //             user_id: wa.initDataUnsafe.user.id,
-    //             first_name: wa.initDataUnsafe.user.first_name,
-    //             username: wa.initDataUnsafe.user.username,
-    //         }),
-    //     });
-    // }, []);
 
     return (
         <div

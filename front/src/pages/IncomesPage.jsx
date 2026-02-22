@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom"
-import { useSelector } from "react-redux"
 
 export default function IncomePage() {
-    const dohodList = useSelector(
-        state => state.incomesUser.dohodList
-    )
 
     return (
         <div className="w-full max-w-[420px] mx-auto p-6 text-slate-200">
@@ -40,12 +36,6 @@ export default function IncomePage() {
                     </button>
                 </Link>
             </div>
-
-            {dohodList.length === 0 && (
-                <p className="text-center text-sm opacity-70 mt-6">
-                    Доходов пока нет
-                </p>
-            )}
         </div>
     )
 }

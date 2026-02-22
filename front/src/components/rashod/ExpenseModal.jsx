@@ -1,9 +1,7 @@
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {addExpense} from '../../features/expenses/expensesSlice'
 import {useState} from 'react'
 import {formPost} from '../../app/formPost'
-import {getTelegramUser} from '../../utils/tg'
-
 
 
 export default function ExpenseModal({category, onClose}) {
@@ -15,17 +13,15 @@ export default function ExpenseModal({category, onClose}) {
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false);
 
+    const user_id =  useSelector(state => state.user.account?.user_id)
 
     async function handleSave() {
-        if (!price) return // цена обязательна
+        if (!price || !user_id) return // цена обязательна
 
-        const user = getTelegramUser()
-
-        if (!user) return;
 
 
         const payload = {
-            user_id: user.id,
+            user_id: user_id,
             category,
             title: thingName.trim() || null,
             price: parseFloat(price)
@@ -49,7 +45,7 @@ export default function ExpenseModal({category, onClose}) {
         } catch (error) {
 
             console.error("Ошибка сохранения:", error);
-            alert("Ошибка сети. Расход не сохранён.");
+            alert("Network error. Расход не сохранён.");
 
         } finally {
             setLoading(false);

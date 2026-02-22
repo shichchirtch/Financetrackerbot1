@@ -16,7 +16,7 @@ const moi_dohody = {
     'tr': 'Gelirim'
 }
 export default function HomePage() {
-    // const wa = window.Telegram?.WebApp
+
     const { t } = useTranslation()
 
     const account = useSelector(state => state.user.account)

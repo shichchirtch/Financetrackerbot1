@@ -1,8 +1,3 @@
-import {useDispatch} from 'react-redux'
-import {addExpense} from '../../features/expenses/expensesSlice'
-import {useState} from 'react'
-// import {addIncome} from "../../features/incomes/incomesSlice.js";
-
 
 export default function Modal({onClose, children}) {
     return (

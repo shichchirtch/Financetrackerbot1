@@ -3,14 +3,13 @@ import {useState, useEffect} from 'react'
 import MonthsGrid from './MonthsGrid'
 import ButtonBack from '../components/common/ButtonBack'
 import ReportMonthIncomes from './ReportMonthIncomes'
-import {getTelegramUser} from "../utils/tg";
 import {getUserIncomes} from "../app/getUserIncomes";
 import {setIncome} from "../features/incomes/incomesSlice";
 
 
 export default function MonthsBoardForIncomes() {
     const dispatch = useDispatch()
-    const user = getTelegramUser()
+    const user_id =  useSelector(state => state.user.account?.user_id)
 
     const dohodList = useSelector(
         state => state.incomesUser.dohodList
@@ -22,7 +21,7 @@ export default function MonthsBoardForIncomes() {
 
     // 🔥 Когда выбран месяц — загружаем данные
     useEffect(() => {
-        if (!activeMonth || !user) return
+        if (!activeMonth || !user_id) return
 
         async function loadMonth() {
 
@@ -30,7 +29,7 @@ export default function MonthsBoardForIncomes() {
                 setLoading(true)
 
                 const data = await getUserIncomes(
-                    `/api/incomes/${user.id}/${activeMonth}`
+                    `/api/incomes/${user_id}/${activeMonth}`
                 )
                 console.log("FROM BACKEND:", data)
 
@@ -49,7 +48,7 @@ export default function MonthsBoardForIncomes() {
 
         loadMonth()
 
-    }, [activeMonth, user, dispatch])
+    }, [activeMonth, user_id, dispatch])
 
     // 1️⃣ Пока месяц не выбран — показываем календарь
     if (!activeMonth) {

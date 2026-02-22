@@ -1,8 +1,7 @@
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {addIncome} from '../../features/incomes/incomesSlice'
 import {useState} from 'react'
 import {formPost} from "../../app/formPost.js";
-import {getTelegramUser} from "../../utils/tg.js";
 
 
 export default function IncomeModal({onClose}) {
@@ -13,17 +12,13 @@ export default function IncomeModal({onClose}) {
     const [amount, setAmount] = useState('')
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false);
+    const user_id =  useSelector(state => state.user.account?.user_id)
 
     async function handleSave() {
-        if (!amount) return // цена обязательна
-
-        const user = getTelegramUser()
-
-        if (!user) return;
-
+        if (!amount || user_id) return // цена обязательна
 
         const payload = {
-            user_id: user.id,
+            user_id: user_id,
             title: dohodName.trim() || null,
             amount: parseFloat(amount)
         }

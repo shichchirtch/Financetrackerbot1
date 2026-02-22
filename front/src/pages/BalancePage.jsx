@@ -8,7 +8,6 @@ import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
 import {useEffect} from "react";
 import {getUserExpenses} from "../app/getUserExpenses";
-import {getTelegramUser} from "../utils/tg";
 import {setExpenses} from "../features/expenses/expensesSlice";
 
 
@@ -31,21 +30,22 @@ export default function BalancePage() {
     const navigate = useNavigate()
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
-    const user = getTelegramUser();
+    const user_id =  useSelector(state => state.user.account?.user_id)
+
 
     const dispatch = useDispatch()
 
     useEffect(() => {
 
         async function loadExpenses() {
-            if (!user) {
+            if (!user_id) {
                 setLoading(false);
                 return;
             }
             try {
 
                 const data = await getUserExpenses(
-                    `/api/expenses/${user.id}/${month}`
+                    `/api/expenses/${user_id}/${month}`
                 );
 
                 dispatch(setExpenses(data.expenses));
@@ -61,9 +61,9 @@ export default function BalancePage() {
 
         loadExpenses();
 
-    }, [month, dispatch, user]);
+    }, [month, dispatch, user_id]);
 ///////////////////////////////////////////////////////////////////////////////////
-    const userId = user?.id
+
     // 2️⃣ Фильтрация по месяцу из URL
     const filtered = useSelector(
         state => state.expensesUser.trataList)
@@ -246,7 +246,7 @@ export default function BalancePage() {
                 <TelegramButton
                     total={grandTotal}
                     month={month}
-                    user_id={userId}
+                    user_id={user_id}
                 />
             </div>
             <div>

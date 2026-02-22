@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import {useState} from "react";
 import ExpenseModal from '../components/rashod/ExpenseModal'
 import {useSelector} from "react-redux";
+import { useTranslation } from "../features/customHoock";
 
 const categories_ru = [
     'Продукты',
@@ -89,7 +90,7 @@ export default function ExpensesPage() {
     const lan =  useSelector(state => state.user.lan)
 
     console.log('TRATALIST = ', trataList)
-
+    const { t } = useTranslation()
 
     return (
         <>
@@ -97,7 +98,7 @@ export default function ExpensesPage() {
         text-white
         ">
                 <h2 className="text-xl font-semibold mb-6 mt-4 text-center">
-                    Категории расходов
+                    {t('ArtOfExpenses')}
                 </h2>
 
                 <div
@@ -138,7 +139,7 @@ export default function ExpensesPage() {
                     to-sky-950
                     active:scale-95
                         rounded-lg">
-                            ← Назад
+                            ← {t('Back')}
                         </button>
 
                     </Link>
@@ -150,7 +151,7 @@ export default function ExpensesPage() {
                     bg-sky-950
                     active:scale-95
                         rounded-lg">
-                     Баланс
+                     {t('Budget')}
                          </button>
                     </Link>
             </div>

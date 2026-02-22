@@ -9,6 +9,37 @@ import Modal from "../components/rashod/Modal"
 import {useEffect} from "react";
 import {getUserExpenses} from "../app/getUserExpenses";
 import {setExpenses} from "../features/expenses/expensesSlice";
+import { useTranslation } from "../features/customHoock";
+
+const future_expenses_dict = {
+    'ru':'Трат в будущем ещё нет',
+    'de':'Bisher sind keine weiteren Ausgaben geplant.',
+    'uk':'Витрат у майбутньому ще немає',
+    'tr':'Henüz geleceğe yönelik bir masraf yok.'
+}
+
+const now_expenses_dict = {
+    'ru':'В этом месяце трат нет',
+    'de':'Diesen Monat fallen keine Ausgaben an.',
+    'uk':'Цього місяця витрат немає',
+    'tr':'Bu ay herhangi bir masraf yok.'
+}
+
+
+const add_expence_dict = {
+    'ru':'Добавить расход',
+    'de':'Verbrauch hinzufügen',
+    'uk':'Додати витрату',
+    'tr':'Gider ekle'
+}
+
+
+const back_dict = {
+    'ru':'Вернуться',
+    'de':'Zurückkehren',
+    'uk':'Повернутись',
+    'tr':'Geri dönmek'
+}
 
 
 const monthDict = {
@@ -31,7 +62,7 @@ export default function BalancePage() {
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
     const user_id =  useSelector(state => state.user.account?.user_id)
-
+    const { t } = useTranslation()
 
     const dispatch = useDispatch()
 
@@ -67,20 +98,22 @@ export default function BalancePage() {
     // 2️⃣ Фильтрация по месяцу из URL
     const filtered = useSelector(
         state => state.expensesUser.trataList)
-
+     const lan = useSelector(
+        state => state.user.lan
+    )
     // 3️⃣ Пустое состояние
     function getEmptyMessage(monthKey) {
         const now = new Date().toISOString().slice(0, 7)
 
         const message =
             monthKey > now
-                ? 'Трат в будущем ещё нет'
-                : 'В этом месяце трат нет'
+                ? future_expenses_dict[lan]
+                : now_expenses_dict[lan]
 
         const buttonText =
             monthKey === now
-                ? 'Добавить расход'
-                : 'Вернуться'
+                ? add_expence_dict[lan]
+                : back_dict[lan]
 
         const link =
             monthKey === now
@@ -178,7 +211,7 @@ export default function BalancePage() {
 
                                     {hasUnnamed && (
                                         <div className="flex justify-between text-sm italic opacity-80">
-                                            <span>Без названия</span>
+                                            <span>{t('NoName')}</span>
                                             <span>{data.unnamedTotal}</span>
                                         </div>
                                     )}
@@ -188,7 +221,7 @@ export default function BalancePage() {
                     font-semibold mt-2
                     border-t border-slate-600 pt-2
                   ">
-                                        <span>Итого</span>
+                                        <span>{t("Total")}</span>
                                         <span>{data.total}</span>
                                     </div>
                                 </>
@@ -206,7 +239,7 @@ export default function BalancePage() {
         flex justify-between
         font-bold text-lg
       ">
-                <span>Всего</span>
+                <span>{t('Sum')}</span>
                 <span>{grandTotal}</span>
             </div>
 
@@ -224,7 +257,7 @@ export default function BalancePage() {
             border-2 border-cyan-400
           "
                 >
-                    Назад
+                    {t('Back')}
                 </button>
 
                 <Link to="/">
@@ -237,7 +270,7 @@ export default function BalancePage() {
             text-white
             border-2 border-cyan-400
           ">
-                        На главную
+                        {t('HomePage')}
                     </button>
                 </Link>
             </div>
@@ -258,7 +291,7 @@ export default function BalancePage() {
             "
 
                         onClick={() => setShowChart(true)}>
-                    Показать диаграмму
+                    {t('ShowGraphic')}
                 </button>
             </div>
                 </span>

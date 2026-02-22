@@ -14,6 +14,7 @@ export default function IncomeModal({onClose}) {
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false);
     const user_id =  useSelector(state => state.user.account?.user_id)
+    console.log('USER = ', user_id)
 
     async function handleSave() {
         if (!amount || user_id) return // цена обязательна
@@ -103,7 +104,7 @@ export default function IncomeModal({onClose}) {
 
                             <input
                                 type="number"
-                                placeholder="Сумма"
+                                placeholder="sum"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
                                 className="

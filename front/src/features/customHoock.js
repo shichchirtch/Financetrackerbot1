@@ -49,6 +49,7 @@ const translations = {
         Extract:'Finanzbericht',
         NoIncomes:"Es gibt noch kein Einkommen.",
         SendReportToBot:'Senden einen Bericht an den Bot.',
+        ToSave:'Speichern'
     },
 
     uk: {
@@ -73,6 +74,7 @@ const translations = {
         Extract:'Витяг',
         NoIncomes:"Доходів поки що немає",
         SendReportToBot:'Отправить отчёт боту',
+        ToSave:'Зберегти'
     },
 
     tr: {
@@ -97,6 +99,7 @@ const translations = {
         Extract:'Finansal rapor',
         NoIncomes:"Henüz gelir yok",
         SendReportToBot:'Bota bir rapor gönder',
+        ToSave:'Kaydetmek'
     }
 }
 

@@ -2,12 +2,13 @@ import {useDispatch, useSelector} from 'react-redux'
 import {addIncome} from '../../features/incomes/incomesSlice'
 import {useState} from 'react'
 import {formPost} from "../../app/formPost.js";
+import { useTranslation } from "../../features/customHoock";
 
 
 export default function IncomeModal({onClose}) {
 
     const dispatch = useDispatch()
-
+    const { t } = useTranslation()
     const [dohodName, setDohodName] = useState('')
     const [amount, setAmount] = useState('')
     const [saved, setSaved] = useState(false)
@@ -43,7 +44,7 @@ export default function IncomeModal({onClose}) {
         } catch (error) {
 
             console.error("Ошибка сохранения:", error);
-            alert("Ошибка сети. Доход не сохранён.");
+            alert("Network error Доход не сохранён.");
 
         } finally {
             setLoading(false);
@@ -77,7 +78,7 @@ export default function IncomeModal({onClose}) {
             >
                 {saved ? (
                     <p className="text-green-400 text-lg text-center">
-                        ✅ Успешно сохранено
+                        {t('SuccessSaved')}
                     </p>
                 ) : (
                     <div>
@@ -88,7 +89,7 @@ export default function IncomeModal({onClose}) {
                         <div className="flex flex-col gap-3 mb-6">
                             <input
                                 type="text"
-                                placeholder="Наименование (необязательно)"
+                                placeholder="name"
                                 value={dohodName}
                                 onChange={(e) => setDohodName(e.target.value)}
                                 className="
@@ -123,7 +124,7 @@ export default function IncomeModal({onClose}) {
                                 className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
                                 ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                 {loading ? "Сохраняем..." : "Сохранить"}
+                                 {loading ? "Saving..." : t('ToSave')}
                             </button>
 
                             <button
@@ -137,10 +138,8 @@ export default function IncomeModal({onClose}) {
               active:scale-95
             "
                             >
-                                Закрыть
+                                {t('Back')}
                             </button>
-
-
                         </div>
                     </div>)}
             </div>

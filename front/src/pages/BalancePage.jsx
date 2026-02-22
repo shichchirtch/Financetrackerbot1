@@ -8,38 +8,9 @@ import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
 import {useEffect} from "react";
 import {getUserExpenses} from "../app/getUserExpenses";
+import {getTelegramUser} from "../utils/tg";
 import {setExpenses} from "../features/expenses/expensesSlice";
-import { useTranslation } from "../features/customHoock";
 
-const future_expenses_dict = {
-    'ru':'Трат в будущем ещё нет',
-    'de':'Bisher sind keine weiteren Ausgaben geplant.',
-    'uk':'Витрат у майбутньому ще немає',
-    'tr':'Henüz geleceğe yönelik bir masraf yok.'
-}
-
-const now_expenses_dict = {
-    'ru':'В этом месяце трат нет',
-    'de':'Diesen Monat fallen keine Ausgaben an.',
-    'uk':'Цього місяця витрат немає',
-    'tr':'Bu ay herhangi bir masraf yok.'
-}
-
-
-const add_expence_dict = {
-    'ru':'Добавить расход',
-    'de':'Verbrauch hinzufügen',
-    'uk':'Додати витрату',
-    'tr':'Gider ekle'
-}
-
-
-const back_dict = {
-    'ru':'Вернуться',
-    'de':'Zurückkehren',
-    'uk':'Повернутись',
-    'tr':'Geri dönmek'
-}
 
 const monthDict = {
     '2026-01': 'January 2026',
@@ -60,32 +31,28 @@ export default function BalancePage() {
     const navigate = useNavigate()
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
+    const user = getTelegramUser();
 
     const dispatch = useDispatch()
 
-    const t = useTranslation()
-    const lan = useSelector(
-        state => state.user.lan
-    )
-    const user_id = useSelector(state => state.user.account?.user_id)
     useEffect(() => {
 
         async function loadExpenses() {
-            if (!user_id) {
+            if (!user) {
                 setLoading(false);
                 return;
             }
             try {
 
                 const data = await getUserExpenses(
-                    `/api/expenses/${user_id}/${month}`
+                    `/api/expenses/${user.id}/${month}`
                 );
 
                 dispatch(setExpenses(data.expenses));
 
             } catch (err) {
 
-                console.error("Error loading expenses", err);
+                console.error("Ошибка загрузки расходов", err);
 
             } finally {
                 setLoading(false);
@@ -94,9 +61,9 @@ export default function BalancePage() {
 
         loadExpenses();
 
-    }, [month, dispatch, user_id]);
+    }, [month, dispatch, user]);
 ///////////////////////////////////////////////////////////////////////////////////
-//     const userId = user?.id
+    const userId = user?.id
     // 2️⃣ Фильтрация по месяцу из URL
     const filtered = useSelector(
         state => state.expensesUser.trataList)
@@ -107,13 +74,13 @@ export default function BalancePage() {
 
         const message =
             monthKey > now
-                ? future_expenses_dict[lan]
-                : now_expenses_dict[lan]
+                ? 'Трат в будущем ещё нет'
+                : 'В этом месяце трат нет'
 
         const buttonText =
             monthKey === now
-                ? add_expence_dict[lan]
-                : back_dict[lan]
+                ? 'Добавить расход'
+                : 'Вернуться'
 
         const link =
             monthKey === now
@@ -135,7 +102,7 @@ export default function BalancePage() {
         return (
             <div className="w-full max-w-[420px] mx-auto p-6 text-center text-slate-100">
                 <h1 className="text-2xl font-bold mb-6">
-                    {t('BudgetExpenses')}
+                    Баланс расходов
                 </h1>
 
                 <p className="text-lg mb-8 opacity-80">
@@ -172,7 +139,7 @@ export default function BalancePage() {
             </div>
 
             <h1 className="text-xl font-semibold text-center mb-4">
-                {t('BalanceOfExpenses')}
+                Баланс расходов
             </h1>
 
             {/* Категории */}
@@ -221,7 +188,7 @@ export default function BalancePage() {
                     font-semibold mt-2
                     border-t border-slate-600 pt-2
                   ">
-                                        <span>{t("Total")}</span>
+                                        <span>Итого</span>
                                         <span>{data.total}</span>
                                     </div>
                                 </>
@@ -239,7 +206,7 @@ export default function BalancePage() {
         flex justify-between
         font-bold text-lg
       ">
-                <span>{t('Sum')}</span>
+                <span>Всего</span>
                 <span>{grandTotal}</span>
             </div>
 
@@ -257,7 +224,7 @@ export default function BalancePage() {
             border-2 border-cyan-400
           "
                 >
-                    {t('HomePage')}
+                    Назад
                 </button>
 
                 <Link to="/">
@@ -279,7 +246,7 @@ export default function BalancePage() {
                 <TelegramButton
                     total={grandTotal}
                     month={month}
-                    user_id={user_id}
+                    user_id={userId}
                 />
             </div>
             <div>

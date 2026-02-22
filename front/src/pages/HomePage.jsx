@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom'
 import { useSelector } from 'react-redux'
+// import { useEffect } from "react";
 import { useTranslation } from "../features/customHoock"
 
 const moi_rashkdy = {
@@ -16,7 +17,7 @@ const moi_dohody = {
     'tr': 'Gelirim'
 }
 export default function HomePage() {
-
+    // const wa = window.Telegram?.WebApp
     const { t } = useTranslation()
 
     const account = useSelector(state => state.user.account)

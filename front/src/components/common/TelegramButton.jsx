@@ -1,8 +1,10 @@
-import { useTranslation } from "../../features/customHoock";
+
 
 function SendReportButton({ total, month, userId }) {
-    const t = useTranslation()
+
     async function handleClick() {
+        // const tg = window.Telegram?.WebApp;
+        // const userId = tg?.initDataUnsafe?.user?.id;
 
         if (!userId) {
             alert("Открыто не в Telegram");
@@ -48,7 +50,7 @@ function SendReportButton({ total, month, userId }) {
                 active:scale-95 mt-5 border-2 border-gray-400
             "
         >
-           {t('SendReportToBot')}
+            Отправить отчёт боту
         </button>
     );
 }

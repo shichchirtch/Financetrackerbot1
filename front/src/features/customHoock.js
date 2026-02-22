@@ -6,11 +6,22 @@ export function useTranslation() {
      const lan =  useSelector(state => state.user?.lan)  || "ru"
 
 
+    console.log("CURRENT LANGUAGE =", lan)
+
     function t(key) {
+        console.log("LOOKUP:", key)
+        console.log("DICT:", translations[lan])
+        console.log("VALUE:", translations[lan]?.[key])
 
         return translations[lan]?.[key] ?? key
     }
 
+
+    // function t(key) {
+    //     const key_for_dict = translations?.[lan]?.[key] ?? key
+    //     console.log('key_for_dict = ', key_for_dict)
+    //     return key_for_dict
+    // }
 
     return { t }
 }

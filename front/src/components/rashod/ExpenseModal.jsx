@@ -2,8 +2,7 @@ import {useDispatch} from 'react-redux'
 import {addExpense} from '../../features/expenses/expensesSlice'
 import {useState} from 'react'
 import {formPost} from '../../app/formPost'
-import { useSelector } from 'react-redux'
-import { useTranslation } from "../../features/customHoock";
+import {getTelegramUser} from '../../utils/tg'
 
 
 
@@ -16,15 +15,17 @@ export default function ExpenseModal({category, onClose}) {
     const [saved, setSaved] = useState(false)
     const [loading, setLoading] = useState(false);
 
-    const t = useTranslation()
-    const user_id = useSelector(state => state.user.account?.user_id)
+
     async function handleSave() {
         if (!price) return // цена обязательна
-        if (!user_id) return;
+
+        const user = getTelegramUser()
+
+        if (!user) return;
 
 
         const payload = {
-            user_id,
+            user_id: user.id,
             category,
             title: thingName.trim() || null,
             price: parseFloat(price)
@@ -48,7 +49,7 @@ export default function ExpenseModal({category, onClose}) {
         } catch (error) {
 
             console.error("Ошибка сохранения:", error);
-            alert("Error of Network. Расход не сохранён.");
+            alert("Ошибка сети. Расход не сохранён.");
 
         } finally {
             setLoading(false);
@@ -88,7 +89,7 @@ export default function ExpenseModal({category, onClose}) {
                         flex
                         items-center
                         justify-center">
-                        {t('SuccessSaved')}
+                        ✅ Успешно сохранено
                     </p>
                 ) : (
                     <div>
@@ -99,7 +100,7 @@ export default function ExpenseModal({category, onClose}) {
                         <div className="flex flex-col gap-3 mb-6">
                             <input
                                 type="text"
-                                placeholder="Name"
+                                placeholder="Наименование (необязательно)"
                                 value={thingName}
                                 onChange={(e) => setThingName(e.target.value)}
                                 className="
@@ -115,7 +116,7 @@ export default function ExpenseModal({category, onClose}) {
 
                             <input
                                 type="number"
-                                placeholder="Sum"
+                                placeholder="Сумма"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
                                 className="
@@ -136,7 +137,7 @@ export default function ExpenseModal({category, onClose}) {
                                 className={`flex-1 py-2 rounded-lg active:scale-95 text-sm
                                 ${loading ? "bg-gray-500" : "bg-blue-500"}`}
                             >
-                                 {loading ? t("Saving") : t('ToSave')}
+                                 {loading ? "Сохраняем..." : "Сохранить"}
                             </button>
 
                             <button
@@ -149,7 +150,7 @@ export default function ExpenseModal({category, onClose}) {
               text-sm
             "
                             >
-                                {t("Close")}
+                                Закрыть
                             </button>
 
 

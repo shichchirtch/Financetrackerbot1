@@ -1,8 +1,7 @@
 import {Link} from "react-router-dom";
-import { useTranslation } from "../../features/customHoock";
+
 
 export default function ButtonBack() {
-    const t = useTranslation()
     return (
         <div>
             <Link to="/">
@@ -14,7 +13,7 @@ export default function ButtonBack() {
                         rounded-lg
                         m-7
                         text-blue-100">
-                    ← {t('Back')}
+                    ← Назад
                 </button>
             </Link>
         </div>

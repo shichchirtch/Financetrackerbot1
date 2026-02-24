@@ -12,6 +12,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     dohodList: [],
+    total: 0
 }
 
 const incomesSlice = createSlice({
@@ -26,8 +27,9 @@ const incomesSlice = createSlice({
                 state.dohodList.push(action.payload)
             },
         },
-         setIncome(state, action) {
-            state.dohodList = action.payload;
+        setIncome(state, action) {
+            state.dohodList = action.payload.incomes;
+            state.total = action.payload.total
         },
         /**
          * Удаление дохода
@@ -36,6 +38,10 @@ const incomesSlice = createSlice({
             state.dohodList = state.dohodList.filter(
                 (income) => income.id !== action.payload
             )
+        },
+
+        setTotal(state, action) {
+            state.total = action.payload
         },
 
         /**
@@ -51,6 +57,7 @@ export const {
     addIncome,
     setIncome,
     removeIncome,
+    setTotal,
     clearIncomes,
 } = incomesSlice.actions
 

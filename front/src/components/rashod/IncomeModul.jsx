@@ -1,7 +1,7 @@
-import {useDispatch, useSelector} from 'react-redux'
-import {addIncome} from '../../features/incomes/incomesSlice'
-import {useState} from 'react'
-import {formPost} from "../../app/formPost.js";
+import { useDispatch, useSelector } from 'react-redux'
+import { addIncome } from '../../features/incomes/incomesSlice'
+import { useState } from 'react'
+import { formPost } from "../../app/formPost.js";
 import { useTranslation } from "../../features/customHoock";
 
 

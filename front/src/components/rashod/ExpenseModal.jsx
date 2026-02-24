@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux'
 import {addExpense} from '../../features/expenses/expensesSlice'
 import {useState} from 'react'
-import {formPost} from '../../app/formPost'
+import { formPost } from '../../app/formPost'
 import { useTranslation } from "../../features/customHoock";
 
 

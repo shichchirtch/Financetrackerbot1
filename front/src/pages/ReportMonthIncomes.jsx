@@ -1,40 +1,67 @@
-import { useTranslation } from "../features/customHoock";
+import {useTranslation} from "../features/customHoock";
 import ButtonBack from '../components/common/ButtonBack';
-import { useSelector } from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
+import {formPost} from '../app/formPost'
+import {removeIncome, setTotal} from "../features/incomes/incomesSlice";
 
-const monthDict= {
-    '2026-01': 'January 2026',
-    '2026-02': 'February 2026',
-    '2026-03': 'March 2026',
-    '2026-04': 'April 2026',
-    '2026-05': 'Mai 2026',
-    '2026-06': 'June 2026',
-    '2026-07': 'July 2026',
-    '2026-08': 'August 2026',
-    '2026-09': 'September 2026',
-    '2026-10': 'October 2026',
-    '2026-11': 'November 2026',
-    '2026-12': 'December 2026'}
+// const monthDict= {
+//     '2026-01': 'January 2026',
+//     '2026-02': 'February 2026',
+//     '2026-03': 'March 2026',
+//     '2026-04': 'April 2026',
+//     '2026-05': 'Mai 2026',
+//     '2026-06': 'June 2026',
+//     '2026-07': 'July 2026',
+//     '2026-08': 'August 2026',
+//     '2026-09': 'September 2026',
+//     '2026-10': 'October 2026',
+//     '2026-11': 'November 2026',
+//     '2026-12': 'December 2026'}
 
 const future_incomes_dict = {
-    'ru':'Доходов в будущем ещё нет',
-    'de':'Es gibt noch keine zukünftigen Einnahmen',
-    'uk':'Доходів у майбутньому ще немає',
-    'tr':'Gelecekte henüz bir gelir yok'
+    'ru': 'Доходов в будущем ещё нет',
+    'de': 'Es gibt noch keine zukünftigen Einnahmen',
+    'uk': 'Доходів у майбутньому ще немає',
+    'tr': 'Gelecekte henüz bir gelir yok'
 }
 
 const now_incomes_dict = {
-    'ru':'В этом месяце доходов нет',
-    'de':'Diesen Monat gibt es kein Einkommen',
-    'uk':'Цього місяця доходів немає',
-    'tr':'Bu ay hiç gelir yok'
+    'ru': 'В этом месяце доходов нет',
+    'de': 'Diesen Monat gibt es kein Einkommen',
+    'uk': 'Цього місяця доходів немає',
+    'tr': 'Bu ay hiç gelir yok'
 }
 
-export default function ReportMonthIncomes({ incomes, total, month }) {
-    const { t } = useTranslation()
+export default function ReportMonthIncomes({ month }) {
+    const {t} = useTranslation()
+    const dispatch = useDispatch()
+    const total = useSelector(state => state.incomesUser.total)
+    const lan = useSelector(state => state.user.lan)
+    const user_id = useSelector(state => state.user.account?.user_id)
+    const incomes = useSelector(state => state.incomesUser.dohodList)
 
-    const lan = useSelector(
-        state => state.user.lan)
+    async function handleDeleteIncome(income_id) { // изменено: добавлен обработчик удаления дохода
+        const isConfirmed = window.confirm("Удалить доход?") // изменено: подтверждение удаления
+
+        if (!isConfirmed || !user_id) return
+
+        try {
+            const data = await formPost(
+                '/api/incomes/delete',
+                {user_id, income_id, month}
+            )
+
+            // 1️⃣ Удаляем доход из списка
+            dispatch(removeIncome(income_id))
+
+            // 2️⃣ Обновляем total из backend
+            dispatch(setTotal(data.total))
+
+        } catch (error) {
+            console.error('Ошибка удаления дохода:', error)
+        }
+    }
+
 
     function formatDay(dateString) {
         const date = new Date(dateString)
@@ -99,7 +126,17 @@ export default function ReportMonthIncomes({ incomes, total, month }) {
                                 : formatDay(income.createdAt)
                             }
                         </span>
-                        <span>{income.amount}</span>
+                        <div className="flex items-center gap-2"> {/* изменено: обёртка суммы и кнопки удаления */}
+                            <span>{income.amount}</span>
+                            <button
+                                type="button"
+                                onClick={() => handleDeleteIncome(income.id)} // изменено: удаляем конкретный доход по id
+                                className="text-red-400 hover:text-red-300 active:scale-95"
+                                aria-label="Удалить доход"
+                            >
+                                ✕
+                            </button>
+                        </div>
                     </div>
                 ))}
 

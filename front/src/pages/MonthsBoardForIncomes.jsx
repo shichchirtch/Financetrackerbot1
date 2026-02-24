@@ -14,10 +14,10 @@ export default function MonthsBoardForIncomes() {
     const dohodList = useSelector(
         state => state.incomesUser.dohodList
     )
+
     console.log('DOHOD List = ', {dohodList})
     const [activeMonth, setActiveMonth] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [total, setTotal] = useState(0)
 
     // 🔥 Когда выбран месяц — загружаем данные
     useEffect(() => {
@@ -33,8 +33,10 @@ export default function MonthsBoardForIncomes() {
                 )
                 console.log("FROM BACKEND:", data)
 
-                dispatch(setIncome(data.incomes))
-                setTotal(data.total)
+                dispatch(setIncome({
+                    incomes: data.incomes,
+                    total: data.total
+                }))
 
                 // console.log("Redux after setIncome:", dohodList)
 
@@ -75,8 +77,6 @@ export default function MonthsBoardForIncomes() {
     // 3️⃣ Показ отчёта
     return (
         <ReportMonthIncomes
-            incomes={dohodList}
-            total={total}
             month={activeMonth}
             onBack={() => setActiveMonth(null)}
         />

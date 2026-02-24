@@ -187,3 +187,36 @@ async def get_incomes(user_id: int, month: str):
         "incomes": user_incomes,
         "total": total
     }
+
+@f_api.post("/api/incomes/delete")
+async def delete_income(data: dict):
+    user_id = data["user_id"]
+    income_id = data["income_id"]
+    month = data["month"]  # важно! нужен месяц для ключа
+
+    key = f"user:{user_id}:incomes_inc:{month}"
+
+    # 1️⃣ получаем список
+    raw = await redis_db.lrange(key, 0, -1)
+    incomes = [json.loads(item) for item in raw]
+
+    # 2️⃣ фильтруем
+    updated_incomes = [
+        income for income in incomes
+        if income["id"] != income_id
+    ]
+
+    # 3️⃣ полностью очищаем список в Redis
+    await redis_db.delete(key)
+
+    # 4️⃣ записываем обратно
+    if updated_incomes:
+        await redis_db.rpush(
+            key,
+            *[json.dumps(i) for i in updated_incomes]
+        )
+
+    total = sum(i["amount"] for i in updated_incomes)
+
+    return {"ok": True,
+            "total": total}

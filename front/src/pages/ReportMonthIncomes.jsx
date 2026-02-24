@@ -3,20 +3,7 @@ import ButtonBack from '../components/common/ButtonBack';
 import {useSelector, useDispatch} from "react-redux";
 import {formPost} from '../app/formPost'
 import {removeIncome, setTotal} from "../features/incomes/incomesSlice";
-
-// const monthDict= {
-//     '2026-01': 'January 2026',
-//     '2026-02': 'February 2026',
-//     '2026-03': 'March 2026',
-//     '2026-04': 'April 2026',
-//     '2026-05': 'Mai 2026',
-//     '2026-06': 'June 2026',
-//     '2026-07': 'July 2026',
-//     '2026-08': 'August 2026',
-//     '2026-09': 'September 2026',
-//     '2026-10': 'October 2026',
-//     '2026-11': 'November 2026',
-//     '2026-12': 'December 2026'}
+import {useState} from "react";
 
 const future_incomes_dict = {
     'ru': 'Доходов в будущем ещё нет',
@@ -32,7 +19,12 @@ const now_incomes_dict = {
     'tr': 'Bu ay hiç gelir yok'
 }
 
-export default function ReportMonthIncomes({ month }) {
+export default function ReportMonthIncomes({month}) {
+
+    const [incomeToDelete, setIncomeToDelete] = useState(null)
+    const [deleting, setDeleting] = useState(false)
+    const [removingId, setRemovingId] = useState(null)
+
     const {t} = useTranslation()
     const dispatch = useDispatch()
     const total = useSelector(state => state.incomesUser.total)
@@ -40,25 +32,41 @@ export default function ReportMonthIncomes({ month }) {
     const user_id = useSelector(state => state.user.account?.user_id)
     const incomes = useSelector(state => state.incomesUser.dohodList)
 
-    async function handleDeleteIncome(income_id) { // изменено: добавлен обработчик удаления дохода
-        const isConfirmed = window.confirm("Удалить доход?") // изменено: подтверждение удаления
+    async function handleDeleteIncome() { // изменено: добавлен обработчик удаления дохода
 
-        if (!isConfirmed || !user_id) return
+        if (!incomeToDelete || !user_id) return
 
         try {
+
+            setDeleting(true)
+
+            // запускаем анимацию
+            setRemovingId(incomeToDelete)
+
+            // ждём 250мс (время анимации)
+            await new Promise(resolve => setTimeout(resolve, 250))
+
             const data = await formPost(
                 '/api/incomes/delete',
-                {user_id, income_id, month}
+                {
+                    user_id,
+                    income_id: incomeToDelete,
+                    month
+                }
             )
 
             // 1️⃣ Удаляем доход из списка
-            dispatch(removeIncome(income_id))
+            dispatch(removeIncome(incomeToDelete))
 
             // 2️⃣ Обновляем total из backend
             dispatch(setTotal(data.total))
 
         } catch (error) {
             console.error('Ошибка удаления дохода:', error)
+        } finally {
+            setDeleting(false)
+            setIncomeToDelete(null)
+            setRemovingId(null)
         }
     }
 
@@ -119,7 +127,17 @@ export default function ReportMonthIncomes({ month }) {
                 </h2>
 
                 {incomes.map((income) => (
-                    <div key={income.id} className="flex justify-between text-lg">
+                    <div
+                        key={income.id}
+                        className={`
+                            flex justify-between text-lg
+                            transition-all duration-300 ease-in-out
+                            ${removingId === income.id
+                            ? "opacity-0 scale-95"
+                            : "opacity-100 scale-100"
+                        }
+    `}
+                    >
                         <span>
                             {income.title
                                 ? `${formatDay(income.createdAt)} — ${income.title}`
@@ -130,13 +148,17 @@ export default function ReportMonthIncomes({ month }) {
                             <span>{income.amount}</span>
                             <button
                                 type="button"
-                                onClick={() => handleDeleteIncome(income.id)} // изменено: удаляем конкретный доход по id
-                                className="text-red-400 hover:text-red-300 active:scale-95"
+                                onClick={() => setIncomeToDelete(income.id)}
+                                className="text-gray-500 hover:text-gray-300
+                                opacity-70
+                                hover:opacity-100
+                                transition"
                                 aria-label="Удалить доход"
                             >
                                 ✕
                             </button>
                         </div>
+
                     </div>
                 ))}
 
@@ -144,6 +166,47 @@ export default function ReportMonthIncomes({ month }) {
                     <span>{t('Sum')}</span>
                     <span>{total}</span>
                 </div>
+
+
+                {incomeToDelete && (
+                    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn">
+                        <div className="bg-slate-800 p-6 rounded-xl w-[90%] max-w-[320px] shadow-xl">
+                            <p className="text-white text-center mb-6">
+                                Удалить доход?
+                            </p>
+
+                            <div className="flex justify-between gap-4">
+                                <button
+                                    onClick={() => setIncomeToDelete(null)}
+                                    disabled={deleting}
+                                    className="
+                        flex-1 py-2 rounded-lg
+                        bg-slate-600
+                        hover:bg-slate-500
+                        transition
+                    "
+                                >
+                                    Отмена
+                                </button>
+
+                                <button
+                                    onClick={handleDeleteIncome}
+                                    disabled={deleting}
+                                    className="
+                        flex-1 py-2 rounded-lg
+                        bg-gray-500
+                        hover:bg-gray-400
+                        transition
+                        disabled:opacity-50
+                    "
+                                >
+                                    {deleting ? "Удаляем..." : "Удалить"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
             </div>
 

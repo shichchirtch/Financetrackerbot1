@@ -1,11 +1,19 @@
 second_window_text ={
-    'ru':'Для выбора языка нажмите на кнопку',
+    'ru':'Для выбора языка нажмите на кнопку◀️\n\n'
+         'Чтобы создать новую заметку нажмите 📝\n\n'
+         'Чтобы просмотреть свои замкти нажмите 📚',
 
-    'uk':'Щоб вибрати мову, натисніть кнопку',
+    'uk':'Щоб вибрати мову, натисніть кнопку◀️\n\n' 
+'Щоб створити нову нотатку, натисніть 📝\n\n' 
+'Щоб переглянути свої замки, натисніть 📚',
 
-    'de':'Um eine Sprache auszuwählen, klicken Sie auf die Schaltfläche',
+    'de':'Um eine Sprache auszuwählen, klicken Sie auf die Schaltfläche ◀️\n\n'
+         'Um eine neue Notiz zu erstellen, klicken Sie auf 📝\n\n'
+         'Um Ihre Notizen anzuzeigen, klicken Sie auf 📚',
 
-    'tr':'Dil seçmek için düğmeye tıklayın'
+    'tr':'Dil seçmek için ◀️ düğmesine tıklayın.\n\n'
+'Yeni bir not oluşturmak için 📝 düğmesine tıklayın.\n\n'
+'Notlarınızı görüntülemek için 📚 düğmesine tıklayın.'
 }
 
 bot_reply = {
@@ -167,5 +175,32 @@ help_msg = {
          '✉️Ayrıca size aylık gider dökümünüzü içeren bir Telegram mesajı da gönderebilir.\n\n'
          '📝Telegram tarafında, ekonomik veya başka herhangi bir konuda notlar oluşturabilirsiniz.'
 
+}
 
+Neue_Notiz_erstellen = {
+    'ru':'Записать новую заметку',
+    'uk':'Записати нову нотатку',
+    'de':'Schreibe eine neue Notiz',
+    'tr':'Yeni bir not yazın'
+}
+
+Kuck_meine_Notizen={
+    'ru':'Посмотреть мои заметки',
+    'uk':'Переглянути мої нотатки',
+    'de':'Meine Notizen ansehen',
+    'tr':'Notlarımı görüntüle'
+}
+
+send_to_dev= {
+    'ru':'Отправьте следующее сообщение разработчику или нажмите на ◀️',
+    'uk':'Надішліть наступне повідомлення розробнику або натисніть ◀️',
+    'de':'Senden Sie die folgende Nachricht an den Entwickler oder klicken Sie auf ◀️',
+    'tr':'Geliştiriciye aşağıdaki mesajı gönderin veya ◀️ simgesine tıklayın.'
+}
+
+wurde_gesendet = {
+    'ru':'Сообщение успешно отправлено.',
+    'uk':'Повідомлення успішно надіслано.',
+    'de':'Die Nachricht wurde erfolgreich gesendet',
+    'tr':'Mesaj başarıyla gönderildi.'
 }

@@ -18,7 +18,8 @@ async def do_nothing_getter(dialog_manager: DialogManager, event_from_user: User
     user = await get_user(redis_db, user_id)
     lan = user['lan']
     notiz = second_window_text[lan]
-    return { 'notiz':notiz }
+    return { 'notiz':notiz , 'Neue_Notiz_erstellen':Neue_Notiz_erstellen[lan],
+             'Kuck_meine_Notizen':Kuck_meine_Notizen[lan]}
 
 async def start_window_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
     lan = event_from_user.language_code
@@ -59,11 +60,11 @@ root_dialog = Dialog(
         id='second_window_root_dialog',
         on_click=do_nothing),
             Start(
-                text=Const('Neue Notiz erstellen'),
+                text=Format('Neue_Notiz_erstellen'),
                 id='kuck_start',
                 state=CREATE.einstellen),
             Start(
-                text=Const('Kuck meine Notizen'),
+                text=Format('Kuck_meine_Notizen'),
                 id='save_bd',
                 state=ZEIGEN.clava),
         state=ROOT_WIND.do_nothing,

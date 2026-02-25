@@ -24,8 +24,8 @@ async def message_text_acc(message: Message, widget: MessageInput, dialog_manage
     note = f'{note}\n\n\n von {name}  {user_name}'
     await bot.send_message(admin_id, note)
     await asyncio.sleep(1)
-
-    await message.answer(text=f'Die Nachricht wurde erfolgreich gesendet.')
+    lan = dialog_manager.dialog_data['lan']
+    await message.answer(text=wurde_gesendet[lan])
     await asyncio.sleep(1)
     dialog_manager.show_mode = ShowMode.DELETE_AND_SEND
     await dialog_manager.done()
@@ -51,12 +51,14 @@ async def wie_viel_schon_gestarted(callback: CallbackQuery, widget: Button, dial
 
 async def sending_msg(cb: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
     text_from_admin = dialog_manager.dialog_data['admin_msg']
+    count = 0
     if text_from_admin.startswith('one'):
         prefix, us_id, text_msg = text_from_admin.split('$')  # one$12345678$admin_text
         user_id = int(us_id)
         try:
             await cb.bot.send_message(chat_id=user_id, text=text_msg)
             await cb.message.answer('Message is sent !')
+
         except Exception as e:
             await cb.message.answer(f'Msg is not sent due to {e}')
         await dialog_manager.done()
@@ -69,12 +71,13 @@ async def sending_msg(cb: CallbackQuery, widget: Button, dialog_manager: DialogM
             try:
                 translated_text = await get_translate(text_from_admin, lan, temp_dict)
                 await cb.bot.send_message(chat_id=user_id, text=translated_text)
+                count += 1
             except TelegramForbiddenError:
                 pass
             except Exception as ex:
                 print(f'Admin sending exception happend  {ex}')
             await asyncio.sleep(0.2)  # Жду 0.2 секунды
-        await cb.message.answer('Mailing done')
+        await cb.message.answer(f'Mailing done\n\nTotal messages sent : {count}')
         await dialog_manager.done()
 
 
@@ -128,12 +131,20 @@ async def last_wind_about_dialog_getter(dialog_manager: DialogManager, event_fro
     lan = dialog_manager.dialog_data['lan']
     return {'senden':senden[lan]}
 
+async def ready_to_send(cb: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
+    user = await get_user(redis_db, cb.from_user.id)
+    lan = user['lan']
+    dialog_manager.dialog_data['lan'] = lan
+    await cb.message.answer(send_to_dev[lan])
+    await dialog_manager.next()
+
 
 about_dialog = Dialog(
     Window(
         Format('{about}'),
-        Row(Next(Const('✉️'),
+        Row(Button(Const('✉️'),
                  id="schreib_nachrichten",
+                   on_click=ready_to_send,
                  ),
             Cancel(Const("◀️ Zurück"),
                    id="back")),
@@ -149,4 +160,5 @@ about_dialog = Dialog(
         Cancel(Const('◀️'),
                id='about_acc'),
         state=ABOUT.accepting,
+        getter=last_wind_about_dialog_getter
     ))

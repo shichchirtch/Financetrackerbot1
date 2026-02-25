@@ -14,6 +14,7 @@ import {formPost} from "../app/formPost.js";
 import { useMemo } from "react";
 
 
+
 const future_expenses_dict = {
     'ru': 'Трат в будущем ещё нет',
     'de': 'Bisher sind keine weiteren Ausgaben geplant.',
@@ -125,13 +126,17 @@ export default function BalancePage() {
                 setLoading(false);
                 return;
             }
+            console.log("Redux total =", total)
             try {
 
                 const data = await getUserExpenses(
                     `/api/expenses/${user_id}/${month}`
                 );
 
-                dispatch(setExpenses(data.expenses));
+                dispatch(setExpenses({
+                    expenses: data.expenses,
+                    total: data.total
+                }))
 
             } catch (err) {
 

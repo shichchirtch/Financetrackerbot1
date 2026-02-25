@@ -3,8 +3,9 @@ from bot_instance import bot, dp, bot_storage_key
 from command_handlers import ch_router
 from start_menu import set_main_menu
 from aiogram_dialog import setup_dialogs
-from admin_dialog import admin_dialog
-from dialogs import root_dialog
+from admin_dialog import admin_dialog, about_dialog
+from dialogs import root_dialog, create_dialog
+from zeigen_dialog import zeigen_dialog
 
 
 
@@ -19,6 +20,11 @@ async def main():
     dp.include_router(ch_router)
     dp.include_router(root_dialog)
     dp.include_router(admin_dialog)
+    dp.include_router(create_dialog)
+    dp.include_router(zeigen_dialog)
+    dp.include_router(admin_dialog)
+    dp.include_router(about_dialog)
+
 
 
     # dialogs

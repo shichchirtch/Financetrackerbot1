@@ -66,7 +66,7 @@ export default function BalancePage() {
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
     const user_id = useSelector(state => state.user.account?.user_id)
-    const {t} = useTranslation()
+    const { t } = useTranslation()
 
     const [expenseToDelete, setExpenseToDelete] = useState(null)
     const [deleting, setDeleting] = useState(false)
@@ -76,7 +76,7 @@ export default function BalancePage() {
     const filtered = useSelector( state => state.expensesUser.trataList)
     const grouped = useMemo(() => groupExpensesByCategory(filtered),
         [filtered]);
-
+    console.log('total 79 = ', total)
     const dispatch = useDispatch()
 
     async function handleDeleteExpense() { // изменено: добавлен обработчик удаления дохода
@@ -183,7 +183,7 @@ export default function BalancePage() {
         return (
             <div className="w-full max-w-[420px] mx-auto p-6 text-center text-slate-100">
                 <h1 className="text-2xl font-bold mb-6">
-                    Баланс расходов
+                    {t('BudgetExpenses')}
                 </h1>
 
                 <p className="text-lg mb-8 opacity-80">
@@ -205,9 +205,6 @@ export default function BalancePage() {
         )
     }
 
-    // 4️⃣ Агрегация (ТОЛЬКО если есть данные)
-    // const grouped = groupExpensesByCategory(filtered)
-
 
     // ✅ ОСНОВНОЙ ОТЧЁТ
     return (
@@ -218,7 +215,7 @@ export default function BalancePage() {
             </div>
 
             <h1 className="text-xl font-semibold text-center mb-4">
-                Баланс расходов
+                {t('BudgetExpenses')}
             </h1>
 
             {/* Категории */}
@@ -292,7 +289,7 @@ export default function BalancePage() {
                     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn">
                         <div className="bg-slate-800 p-6 rounded-xl w-[90%] max-w-[320px] shadow-xl">
                             <p className="text-white text-center mb-6">
-                                Удалить расход ?
+                                {t('DeleteExpense')} ?
                             </p>
 
                             <div className="flex justify-between gap-4">
@@ -306,7 +303,7 @@ export default function BalancePage() {
                         transition
                     "
                                 >
-                                    Отмена
+                                    {t("CancelNote")}
                                 </button>
 
                                 <button
@@ -320,7 +317,7 @@ export default function BalancePage() {
                         disabled:opacity-50
                     "
                                 >
-                                    {deleting ? "Удаляем..." : "Удалить"}
+                                    {deleting ? "in process..." : t("DeleteAct")}
                                 </button>
                             </div>
                         </div>

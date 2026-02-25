@@ -9,7 +9,8 @@ import json
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
-from user_repo import ensure_user, update_user
+from user_repo import ensure_user, get_user
+from lexicon import *
 
 
 redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis0502"),
@@ -54,17 +55,6 @@ async def init_user(data: dict):
 
     user = await ensure_user(redis_db, user_id, first_name, tg_lan)
 
-    # user = {
-    #     "user_tg_id": user_id,
-    #     "name": name,
-    #     "lan": user_lan,
-    # }
-
-    # если новый пользователь — сохранить язык Telegram
-    # if user.get("lan") == "ru":
-    #     user["lan"] = tg_lan
-    #     await update_user(redis_db, user_id, user)
-
     return {"lan": user['lan']}
 
 
@@ -86,7 +76,6 @@ async def add_expense(expense: ExpenseIn):
     now = datetime.now(timezone.utc)
 
     month = now.strftime("%Y-%m")
-
 
     # 2️⃣ ключи
     months_key = f"user:{user_id}:months"
@@ -267,3 +256,21 @@ async def delete_income(data: dict):
 
     return {"ok": True,
             "total": total}
+
+## ## ## ## ## ## ## ############ Bot Report ###################################
+
+@f_api.post("/api/report")
+async def receive_telegram_data(data: dict):
+    user_id = data["user_id"]
+    month = data["month"]
+    total=data["total"]
+    user = await get_user(redis_db, user_id)
+    lan = user['lan']
+    logger.warning(f"📦 Bot accepted : {data}")
+
+    await bot.send_message(chat_id= int(user_id),
+                           text = f"<b>{bot_reply[lan]} {month} {total}</b> 💶")
+    return {"ok": True}
+
+
+

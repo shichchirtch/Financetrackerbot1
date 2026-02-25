@@ -37,8 +37,24 @@ class ROOT_WIND(StatesGroup):
 
 class ADMIN(StatesGroup):
     first = State()
-    select_city= State()
-    send_msg = State()
+    accept_msg= State()
+    admin_send_msg = State()
+
+class CREATE(StatesGroup):
+    einstellen = State()
+    ask_capture = State()
+    enter_capture = State()
+    finish = State()
+
+
+class ZEIGEN(StatesGroup):
+    clava = State()
+    list_notes = State()
+    schlist = State()
+
+class ABOUT(StatesGroup):
+    one = State()
+    accepting = State()
 
 
 

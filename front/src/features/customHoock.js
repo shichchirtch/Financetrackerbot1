@@ -1,6 +1,4 @@
 import { useSelector } from "react-redux"
-// import { translations } from "../utils/i18nconfig"
-
 
 const translations = {
     ru: {
@@ -26,6 +24,10 @@ const translations = {
         NoIncomes:'Доходов пока нет',
         SendReportToBot:'Отправить отчёт боту',
         ToSave:'Сохранить',
+        DeleteExpense:'Удалить расход',
+        DeleteIncome:'Удалить доход',
+        CancelNote:'Отменить',
+        DeleteAct:'Удалить',
     },
     de: {
         Hello: "Hallo",
@@ -49,7 +51,11 @@ const translations = {
         Extract:'Finanzbericht',
         NoIncomes:"Es gibt noch kein Einkommen.",
         SendReportToBot:'Senden einen Bericht an den Bot.',
-        ToSave:'Speichern'
+        ToSave:'Speichern',
+        DeleteExpense:'Ausgaben löschen',
+        DeleteIncome:'Einkommen löschen',
+        CancelNote:'Stornieren',
+        DeleteAct:'Löschen',
     },
 
     uk: {
@@ -74,7 +80,11 @@ const translations = {
         Extract:'Витяг',
         NoIncomes:"Доходів поки що немає",
         SendReportToBot:'Отправить отчёт боту',
-        ToSave:'Зберегти'
+        ToSave:'Зберегти',
+        DeleteExpense:'Видалити витрати',
+        DeleteIncome:'Видалити дохід',
+        CancelNote:'Скасувати',
+        DeleteAct:'Видалити',
     },
 
     tr: {
@@ -99,7 +109,11 @@ const translations = {
         Extract:'Finansal rapor',
         NoIncomes:"Henüz gelir yok",
         SendReportToBot:'Bota bir rapor gönder',
-        ToSave:'Kaydetmek'
+        ToSave:'Kaydetmek',
+        DeleteExpense:'Gideri sil',
+        DeleteIncome:'Geliri sil',
+        CancelNote:'İptal etmek',
+        DeleteAct:'Silmek',
     }
 }
 

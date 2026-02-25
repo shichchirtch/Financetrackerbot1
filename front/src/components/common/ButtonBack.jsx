@@ -13,7 +13,7 @@ export default function ButtonBack() {
                         rounded-lg
                         m-7
                         text-blue-100">
-                    ← Назад
+                    ⬅️
                 </button>
             </Link>
         </div>

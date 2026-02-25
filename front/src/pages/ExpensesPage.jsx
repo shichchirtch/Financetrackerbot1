@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom'
 import {useState} from "react";
 import ExpenseModal from '../components/rashod/ExpenseModal'
 import {useSelector} from "react-redux";
-import { useTranslation } from "../features/customHoock";
+import {useTranslation} from "../features/customHoock";
 
 const categories_ru = [
     'Продукты',
@@ -24,60 +24,60 @@ const categories_ru = [
     'Иное',
 ]
 const categories_tr = ['Market',
-'Kira',
-'Ulaşım',
-'İletişim ve İnternet',
-'Hediyeler',
-'Eğlence',
-'Vergiler',
-'Seyahat',
-'İlaçlar',
-'Giyim/Kozmetik',
-'Ev',
-'Hayır Kurumu',
-'Eğitim',
-'Hobiler',
-'Spor',
-'Diğer']
+    'Kira',
+    'Ulaşım',
+    'İletişim ve İnternet',
+    'Hediyeler',
+    'Eğlence',
+    'Vergiler',
+    'Seyahat',
+    'İlaçlar',
+    'Giyim/Kozmetik',
+    'Ev',
+    'Hayır Kurumu',
+    'Eğitim',
+    'Hobiler',
+    'Spor',
+    'Diğer']
 
 const categories_de = ['Lebensmittel',
-'Miete',
-'Transport',
-'Kommunikation und Internet',
-'Geschenke',
-'Unterhaltung',
-'Steuern',
-'Reisen',
-'Medikamente',
-'Kleidung/Kosmetik',
-'Wohnen',
-'Wohltätigkeit',
-'Studium',
-'Hobbys',
-'Sport',
-'Sonstiges']
+    'Miete',
+    'Transport',
+    'Kommunikation und Internet',
+    'Geschenke',
+    'Unterhaltung',
+    'Steuern',
+    'Reisen',
+    'Medikamente',
+    'Kleidung/Kosmetik',
+    'Wohnen',
+    'Wohltätigkeit',
+    'Studium',
+    'Hobbys',
+    'Sport',
+    'Sonstiges']
 const categories_uk = ['Продукти',
-'Оренда',
-'Транспорт',
-'Звязок та Інтернет',
-'Подарунки',
-'Розваги',
-'Податки',
-'Подорожі',
-'Ліки',
-'Одяг / Косметика',
-'Для дому',
-'Благодійність',
-'Навчання',
-'Хоббі',
-'Спорт',
-'Інше',]
+    'Оренда',
+    'Транспорт',
+    'Звязок та Інтернет',
+    'Подарунки',
+    'Розваги',
+    'Податки',
+    'Подорожі',
+    'Ліки',
+    'Одяг / Косметика',
+    'Для дому',
+    'Благодійність',
+    'Навчання',
+    'Хоббі',
+    'Спорт',
+    'Інше',]
 
 const categories_dict = {
-    'ru':categories_ru,
-    'uk':categories_uk,
-    'de':categories_de,
-    'tr':categories_tr
+    'ru': categories_ru,
+    'uk': categories_uk,
+    'de': categories_de,
+    'tr': categories_tr
 }
 
 export default function ExpensesPage() {
@@ -87,10 +87,10 @@ export default function ExpensesPage() {
     const trataList = useSelector(
         state => state.expensesUser.trataList
     )
-    const lan =  useSelector(state => state.user.lan)
+    const lan = useSelector(state => state.user.lan)
 
     console.log('TRATALIST = ', trataList)
-    const { t } = useTranslation()
+    const {t} = useTranslation()
 
     return (
         <>
@@ -151,10 +151,10 @@ export default function ExpensesPage() {
                     bg-sky-950
                     active:scale-95
                         rounded-lg">
-                     {t('Budget')}
-                         </button>
+                            {t('Budget')}
+                        </button>
                     </Link>
-            </div>
+                </div>
             </div>
             {selectedCategory && (
                 <ExpenseModal

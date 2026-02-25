@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 
 async def get_user(redis, user_id: int) -> dict | None:
     data = await redis.get(f"user:{user_id}")

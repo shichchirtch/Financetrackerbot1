@@ -7,6 +7,9 @@ async def set_main_menu(bot):
                    description='start window'),
 
         BotCommand(command='/help',
+                   description='about bot'),
+
+        BotCommand(command='/about_project',
                    description='about bot')
 
     ]

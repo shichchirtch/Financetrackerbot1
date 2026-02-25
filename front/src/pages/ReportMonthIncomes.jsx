@@ -172,7 +172,7 @@ export default function ReportMonthIncomes({month}) {
                     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn">
                         <div className="bg-slate-800 p-6 rounded-xl w-[90%] max-w-[320px] shadow-xl">
                             <p className="text-white text-center mb-6">
-                                Удалить доход?
+                                {t('DeleteIncome')}
                             </p>
 
                             <div className="flex justify-between gap-4">
@@ -186,7 +186,7 @@ export default function ReportMonthIncomes({month}) {
                         transition
                     "
                                 >
-                                    Отмена
+                                    {t('CancelNote')}
                                 </button>
 
                                 <button
@@ -200,7 +200,7 @@ export default function ReportMonthIncomes({month}) {
                         disabled:opacity-50
                     "
                                 >
-                                    {deleting ? "Удаляем..." : "Удалить"}
+                                    {deleting ? "in process..." : t('DeleteAct')}
                                 </button>
                             </div>
                         </div>

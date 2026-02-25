@@ -1,109 +1,152 @@
-from aiogram_dialog import Dialog, Window, ShowMode, StartMode
+from aiogram_dialog import Dialog, Window, ShowMode
+from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog.widgets.kbd import Button, Row, Next, Cancel
 from aiogram_dialog.widgets.input import MessageInput
-from lexicon import *
-from user_repo import *
-from bot_instance import ADMIN, ROOT_WIND
-from aiogram_dialog.widgets.text import Const
-from aiogram_dialog.widgets.kbd import Button, Row, Group, Column, Next, Cancel, Start, Back
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, User
 from aiogram_dialog import DialogManager
+from bot_instance import ADMIN, bot, ABOUT
+from aiogram.types import ContentType
 import asyncio
 from aiogram.exceptions import TelegramForbiddenError
-from aiogram.types import ContentType
 from my_fast_api import redis_db
+from static_functions import check_len_note, get_translate
+from user_repo import get_user
+from lexicon import *
+
+admin_id = 6685637602
 
 
-async def button_skolko(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
-    user_ids = await redis_db.smembers("users:all")
-    await callback.message.answer(f'Бота запустило {len(user_ids)} человек')
+async def message_text_acc(message: Message, widget: MessageInput, dialog_manager: DialogManager) -> None:
+    '''Функция посылаем мне сообщения юзеров'''
+    name = message.from_user.first_name
+    user_name = message.from_user.username
+    note = check_len_note(message.text)
+    note = f'{note}\n\n\n von {name}  {user_name}'
+    await bot.send_message(admin_id, note)
+    await asyncio.sleep(1)
+
+    await message.answer(text=f'Die Nachricht wurde erfolgreich gesendet.')
+    await asyncio.sleep(1)
+    dialog_manager.show_mode = ShowMode.DELETE_AND_SEND
     await dialog_manager.done()
 
 
-async def button_hamburg(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
-    dialog_manager.dialog_data['city'] = 'Hamburg'
+async def accepet_admin_message(msg: Message, widget: MessageInput, dialog_manager: DialogManager, *args, **kwargs):
+    dialog_manager.dialog_data['admin_msg'] = msg.text
     await dialog_manager.next()
 
 
-async def button_bremen(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
-    dialog_manager.dialog_data['city'] = 'Bremen'
-    await dialog_manager.next()
+async def get_users(redis) -> list[int]:
+    user_ids = await redis.smembers("users:all")
+    return [int(uid) for uid in user_ids]
 
 
-async def button_name_city(callback: CallbackQuery,
-                           widget: Button, dialog_manager: DialogManager,
-                           city: str,
-                           *args, **kwargs):
-    dialog_manager.dialog_data['city'] = city
-    await dialog_manager.next()
+async def wie_viel_schon_gestarted(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args,
+                                   **kwargs):
+    count = await redis_db.scard("users:all")
+    msg = f'Количество запустивших бота {count}'
+    await callback.message.answer(text=msg)
+    await dialog_manager.done()
 
 
-async def send_msg(
-        message: Message,
-        widget: MessageInput,
-        dialog_manager: DialogManager,
-        *args, **kwargs
-):
-    city = dialog_manager.dialog_data['city']
-    print('city:', city)
-
-    user_ids = await redis_db.smembers("users:all")
-    counter = 0
-
-    for user_id in user_ids:
-        user = await get_user(redis_db, user_id)
-        if not user:
-            continue
-
-        if user['activ'] and user['stadt'] == city:
+async def sending_msg(cb: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
+    text_from_admin = dialog_manager.dialog_data['admin_msg']
+    if text_from_admin.startswith('one'):
+        prefix, us_id, text_msg = text_from_admin.split('$')  # one$12345678$admin_text
+        user_id = int(us_id)
+        try:
+            await cb.bot.send_message(chat_id=user_id, text=text_msg)
+            await cb.message.answer('Message is sent !')
+        except Exception as e:
+            await cb.message.answer(f'Msg is not sent due to {e}')
+        await dialog_manager.done()
+    else:
+        users_list = await get_users(redis_db)
+        temp_dict = {}
+        for user_id in users_list:
+            redis_user = await get_user(redis_db, user_id)
+            lan = redis_user['lan']
             try:
-                await message.bot.send_message(
-                    chat_id=int(user_id),
-                    text=message.text
-                )
-                counter += 1
+                translated_text = await get_translate(text_from_admin, lan, temp_dict)
+                await cb.bot.send_message(chat_id=user_id, text=translated_text)
             except TelegramForbiddenError:
                 pass
-            except Exception as e:
-                print(f"Ошибка отправки {user_id}: {e}")
-
-            await asyncio.sleep(0.2)  # анти-флуд
-
-    await message.answer(
-        f'📨 Рассылка завершена.\n'
-        f'Разослано сообщений — <b>{counter}</b>\n\n🔥'
-    )
-
-    await dialog_manager.done()
-
-
-async def message_err_handler(message: Message, widget: MessageInput,
-                              dialog_manager: DialogManager) -> None:
-    dialog_manager.show_mode = ShowMode.NO_UPDATE
-    await message.answer('Что то пошло не так')
-
-
-async def admin_exit(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
-    await callback.message.answer('Вы вышли из режима администратора')
-    dialog_manager.show_mode = ShowMode.SEND
-    await dialog_manager.start(state=ROOT_WIND.root_wind, mode=StartMode.RESET_STACK)
+            except Exception as ex:
+                print(f'Admin sending exception happend  {ex}')
+            await asyncio.sleep(0.2)  # Жду 0.2 секунды
+        await cb.message.answer('Mailing done')
+        await dialog_manager.done()
 
 
 admin_dialog = Dialog(
     Window(
         Const('Возможные дейсвтия'),
-        Group(
-            Column(
-                Button(
-                    text=Const('Сколько запустило'),
-                    id='skolko',
-                    on_click=button_skolko),
+        Button(Const('Сколько'),
+               id='wieviele',
+               on_click=wie_viel_schon_gestarted,
 
-            ),
-
+               ),
+        Next(
+            text=Const('Отправить сообщение юзерам'),
+            id='send_msg'),
+        state=ADMIN.first
+    ),
+    Window(  # Принимает текст сообщения и записывает его в словарь data
+        Const(text='введите текст сообщения'),
+        Cancel(
+            text=Const('◀️'),
+            id='admin_out_1',
         ),
-        state=ADMIN.first,
+        MessageInput(
+            func=accepet_admin_message,
+            content_types=ContentType.TEXT,
+        ),
+        state=ADMIN.accept_msg
+    ),
+    Window(  # Отправляет сообщение юзерам
+        Const('Отправить сообщуху'),
+        Row(Cancel(
+            text=Const('◀️'),
+            id='admin_out_2',
+        ),
+            Button(
+                text=Const('Начать рассылку'),
+                id='send_msg_fin',
+                on_click=sending_msg)),
+        state=ADMIN.admin_send_msg)
+)
+#######################################  ABOUT #######################
+
+
+async def first_wind_about_dialog_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+    user = await get_user(redis_db, event_from_user.id)
+    lan = user['lan']
+    dialog_manager.dialog_data['lan'] = lan
+    return {'about':about[lan]}
+
+async def last_wind_about_dialog_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+    lan = dialog_manager.dialog_data['lan']
+    return {'senden':senden[lan]}
+
+
+about_dialog = Dialog(
+    Window(
+        Format('{about}'),
+        Row(Next(Const('✉️'),
+                 id="schreib_nachrichten",
+                 ),
+            Cancel(Const("◀️ Zurück"),
+                   id="back")),
+        state=ABOUT.one,
+        getter=first_wind_about_dialog_getter
+    ),
+    Window(
+        Format("{senden}"),
+        MessageInput(
+            func=message_text_acc,
+            content_types=ContentType.TEXT,
+        ),
+        Cancel(Const('◀️'),
+               id='about_acc'),
+        state=ABOUT.accepting,
     ))
-
-
-
-

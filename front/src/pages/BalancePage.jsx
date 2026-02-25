@@ -8,37 +8,40 @@ import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
 import {useEffect} from "react";
 import {getUserExpenses} from "../app/getUserExpenses";
-import {setExpenses} from "../features/expenses/expensesSlice";
-import { useTranslation } from "../features/customHoock";
+import {setExpenses, setTotal, removeExpense} from "../features/expenses/expensesSlice";
+import {useTranslation} from "../features/customHoock";
+import {formPost} from "../app/formPost.js";
+import { useMemo } from "react";
+
 
 const future_expenses_dict = {
-    'ru':'Трат в будущем ещё нет',
-    'de':'Bisher sind keine weiteren Ausgaben geplant.',
-    'uk':'Витрат у майбутньому ще немає',
-    'tr':'Henüz geleceğe yönelik bir masraf yok.'
+    'ru': 'Трат в будущем ещё нет',
+    'de': 'Bisher sind keine weiteren Ausgaben geplant.',
+    'uk': 'Витрат у майбутньому ще немає',
+    'tr': 'Henüz geleceğe yönelik bir masraf yok.'
 }
 
 const now_expenses_dict = {
-    'ru':'В этом месяце трат нет',
-    'de':'Diesen Monat fallen keine Ausgaben an.',
-    'uk':'Цього місяця витрат немає',
-    'tr':'Bu ay herhangi bir masraf yok.'
+    'ru': 'В этом месяце трат нет',
+    'de': 'Diesen Monat fallen keine Ausgaben an.',
+    'uk': 'Цього місяця витрат немає',
+    'tr': 'Bu ay herhangi bir masraf yok.'
 }
 
 
 const add_expence_dict = {
-    'ru':'Добавить расход',
-    'de':'Verbrauch hinzufügen',
-    'uk':'Додати витрату',
-    'tr':'Gider ekle'
+    'ru': 'Добавить расход',
+    'de': 'Verbrauch hinzufügen',
+    'uk': 'Додати витрату',
+    'tr': 'Gider ekle'
 }
 
 
 const back_dict = {
-    'ru':'Вернуться',
-    'de':'Zurückkehren',
-    'uk':'Повернутись',
-    'tr':'Geri dönmek'
+    'ru': 'Вернуться',
+    'de': 'Zurückkehren',
+    'uk': 'Повернутись',
+    'tr': 'Geri dönmek'
 }
 
 
@@ -54,17 +57,66 @@ const monthDict = {
     '2026-09': 'September 2026',
     '2026-10': 'October 2026',
     '2026-11': 'November 2026',
-    '2026-12': 'December 2026'}
+    '2026-12': 'December 2026'
+}
 
 export default function BalancePage() {
     const {month} = useParams()
     const navigate = useNavigate()
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
-    const user_id =  useSelector(state => state.user.account?.user_id)
-    const { t } = useTranslation()
+    const user_id = useSelector(state => state.user.account?.user_id)
+    const {t} = useTranslation()
+
+    const [expenseToDelete, setExpenseToDelete] = useState(null)
+    const [deleting, setDeleting] = useState(false)
+    const [removingId, setRemovingId] = useState(null)
+    const total = useSelector(state => state.expensesUser.total)
+    const lan = useSelector(state => state.user.lan)
+    const filtered = useSelector( state => state.expensesUser.trataList)
+    const grouped = useMemo(() => groupExpensesByCategory(filtered),
+        [filtered]);
 
     const dispatch = useDispatch()
+
+    async function handleDeleteExpense() { // изменено: добавлен обработчик удаления дохода
+
+        if (!expenseToDelete || !user_id) return
+
+        try {
+
+            setDeleting(true)
+
+            // запускаем анимацию
+            setRemovingId(expenseToDelete)
+
+            // ждём 500мс (время анимации)
+            await new Promise(resolve => setTimeout(resolve, 500))
+
+            const data = await formPost(
+                '/api/expenses/delete',
+                {
+                    user_id,
+                    expense_id: expenseToDelete,
+                    month
+                }
+            )
+
+            // 1️⃣ Удаляем расход из списка
+            dispatch(removeExpense(expenseToDelete))
+
+            // 2️⃣ Обновляем total из backend
+            dispatch(setTotal(data.total))
+
+        } catch (error) {
+            console.error('Ошибка удаления дохода:', error)
+        } finally {
+            setDeleting(false)
+            setExpenseToDelete(null)
+            setRemovingId(null)
+        }
+    }
+
 
     useEffect(() => {
 
@@ -95,12 +147,8 @@ export default function BalancePage() {
     }, [month, dispatch, user_id]);
 ///////////////////////////////////////////////////////////////////////////////////
 
-    // 2️⃣ Фильтрация по месяцу из URL
-    const filtered = useSelector(
-        state => state.expensesUser.trataList)
-     const lan = useSelector(
-        state => state.user.lan
-    )
+
+
     // 3️⃣ Пустое состояние
     function getEmptyMessage(monthKey) {
         const now = new Date().toISOString().slice(0, 7)
@@ -158,10 +206,8 @@ export default function BalancePage() {
     }
 
     // 4️⃣ Агрегация (ТОЛЬКО если есть данные)
-    const grouped = groupExpensesByCategory(filtered)
+    // const grouped = groupExpensesByCategory(filtered)
 
-    const grandTotal = filtered.reduce(
-        (sum, item) => sum + item.price, 0)
 
     // ✅ ОСНОВНОЙ ОТЧЁТ
     return (
@@ -177,70 +223,111 @@ export default function BalancePage() {
 
             {/* Категории */}
             <div className="space-y-4">
+
+
                 {Object.entries(grouped).map(([category, data]) => {
-                    const hasNamed = Object.keys(data.named).length > 0
-                    const hasUnnamed = data.unnamedTotal > 0
 
                     return (
                         <div
                             key={category}
                             className="bg-slate-800 rounded-lg p-4"
                         >
-                            {!hasNamed && hasUnnamed ? (
-                                <div className="flex justify-between font-semibold">
-                                    <span>{category}</span>
-                                    <span>{data.total}</span>
-                                </div>
-                            ) : (
-                                <>
-                                    <h2 className="font-semibold mb-2">
-                                        {category}
-                                    </h2>
+                            {/* Заголовок категории */}
+                            <h2 className="font-semibold mb-2">
+                                {category}
+                            </h2>
 
-                                    {Object.entries(data.named).map(
-                                        ([title, sum]) => (
-                                            <div
-                                                key={title}
-                                                className="flex justify-between text-sm"
-                                            >
-                                                <span>{title}</span>
-                                                <span>{sum}</span>
-                                            </div>
-                                        )
-                                    )}
+                            {/* Все расходы категории */}
+                            {data.items.map(expense => (
+                                <div
+                                    key={expense.id}
+                                    className={`flex justify-between text-sm transition-all duration-300
+                        ${removingId === expense.id ? "opacity-0 translate-x-4" : ""}
+                    `}
+                                >
+                    <span>
+                        {expense.title || t("NoName")}
+                    </span>
 
-                                    {hasUnnamed && (
-                                        <div className="flex justify-between text-sm italic opacity-80">
-                                            <span>{t('NoName')}</span>
-                                            <span>{data.unnamedTotal}</span>
-                                        </div>
-                                    )}
+                                    <div className="flex items-center gap-2">
+                                        <span>{expense.price}</span>
 
-                                    <div className="
-                    flex justify-between
-                    font-semibold mt-2
-                    border-t border-slate-600 pt-2
-                  ">
-                                        <span>{t("Total")}</span>
-                                        <span>{data.total}</span>
+                                        <button
+                                            onClick={() => setExpenseToDelete(expense.id)}
+                                            className="text-gray-500 hover:text-gray-300 transition"
+                                        >
+                                            ✕
+                                        </button>
                                     </div>
-                                </>
-                            )}
+                                </div>
+                            ))}
+
+                            {/* Total категории */}
+                            <div className="
+                flex justify-between
+                font-semibold mt-2
+                border-t border-slate-600 pt-2
+            ">
+                                <span>{t("Total")}</span>
+                                <span>{data.total}</span>
+                            </div>
                         </div>
                     )
                 })}
-            </div>
 
-            {/* Общий итог */}
-            <div className="
+
+                {/* Общий итог */}
+                <div className="
         mt-6 p-4
         bg-slate-700
         rounded-lg
         flex justify-between
         font-bold text-lg
       ">
-                <span>{t('Sum')}</span>
-                <span>{grandTotal}</span>
+                    <span>{t('Sum')}</span>
+                    <span>{total}</span>
+                </div>
+
+                {expenseToDelete && (
+                    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 animate-fadeIn">
+                        <div className="bg-slate-800 p-6 rounded-xl w-[90%] max-w-[320px] shadow-xl">
+                            <p className="text-white text-center mb-6">
+                                Удалить расход ?
+                            </p>
+
+                            <div className="flex justify-between gap-4">
+                                <button
+                                    onClick={() => setExpenseToDelete(null)}
+                                    disabled={deleting}
+                                    className="
+                        flex-1 py-2 rounded-lg
+                        bg-slate-600
+                        hover:bg-slate-500
+                        transition
+                    "
+                                >
+                                    Отмена
+                                </button>
+
+                                <button
+                                    onClick={handleDeleteExpense}
+                                    disabled={deleting}
+                                    className="
+                        flex-1 py-2 rounded-lg
+                        bg-gray-500
+                        hover:bg-gray-400
+                        transition
+                        disabled:opacity-50
+                    "
+                                >
+                                    {deleting ? "Удаляем..." : "Удалить"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
             </div>
 
             {/* Кнопки */}
@@ -277,7 +364,7 @@ export default function BalancePage() {
             <span className="grid grid-cols-2 gap-4">
             <div>
                 <TelegramButton
-                    total={grandTotal}
+                    total={total}
                     month={month}
                     user_id={user_id}
                 />
@@ -300,7 +387,7 @@ export default function BalancePage() {
                 {showChart && (
                     <Modal onClose={() => setShowChart(false)}>
                         <div className="max-h-[750px]">
-                            <ExpensesPie grouped={grouped} itog={grandTotal}/>
+                            <ExpensesPie grouped={grouped} itog={total}/>
                         </div>
                     </Modal>
                 )}
@@ -308,4 +395,3 @@ export default function BalancePage() {
         </div>
     )
 }
-

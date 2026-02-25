@@ -1,9 +1,9 @@
-import {useTranslation} from "../features/customHoock";
+import { useTranslation } from "../features/customHoock";
 import ButtonBack from '../components/common/ButtonBack';
-import {useSelector, useDispatch} from "react-redux";
-import {formPost} from '../app/formPost'
-import {removeIncome, setTotal} from "../features/incomes/incomesSlice";
-import {useState} from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { formPost } from '../app/formPost'
+import { removeIncome, setTotal } from "../features/incomes/incomesSlice";
+import { useState } from "react";
 
 const future_incomes_dict = {
     'ru': 'Доходов в будущем ещё нет',
@@ -44,7 +44,7 @@ export default function ReportMonthIncomes({month}) {
             setRemovingId(incomeToDelete)
 
             // ждём 250мс (время анимации)
-            await new Promise(resolve => setTimeout(resolve, 250))
+            await new Promise(resolve => setTimeout(resolve, 500))
 
             const data = await formPost(
                 '/api/incomes/delete',

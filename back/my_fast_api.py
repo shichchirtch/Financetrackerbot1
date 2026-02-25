@@ -132,6 +132,53 @@ async def get_expenses(user_id: int, month: str):
     }
 
 
+@f_api.post("/api/expenses/delete")
+async def delete_expense(data: dict):
+    user_id = data["user_id"]
+    expense_id = data["expense_id"]
+    month = data["month"]
+
+    expenses_key = f"user:{user_id}:expenses:{month}"
+    months_key = f"user:{user_id}:months"
+
+    # 1️⃣ Получаем список расходов месяца
+    raw = await redis_db.lrange(expenses_key, 0, -1)
+
+    expenses = []
+    for item in raw:
+        try:
+            expenses.append(json.loads(item))
+        except Exception:
+            continue
+
+    # 2️⃣ Фильтруем по id
+    updated_expenses = [
+        expense for expense in expenses
+        if expense["id"] != expense_id
+    ]
+
+    # 3️⃣ Удаляем старый список
+    await redis_db.delete(expenses_key)
+
+    # 4️⃣ Если список не пуст — записываем обратно
+    if updated_expenses:
+        await redis_db.rpush(
+            expenses_key,
+            *[json.dumps(e, ensure_ascii=False) for e in updated_expenses]
+        )
+    else:
+        # если расходов не осталось — убираем месяц из SET
+        await redis_db.srem(months_key, month)
+
+    # 5️⃣ Пересчитываем total расходов
+    total = sum(e["price"] for e in updated_expenses)
+
+    return {
+        "ok": True,
+        "total": total
+    }
+
+
 ################################INCOMES########################
 
 @f_api.post("/api/incomes/add")

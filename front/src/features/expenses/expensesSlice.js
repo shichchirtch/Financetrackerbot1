@@ -1,4 +1,4 @@
-import {createSlice, nanoid} from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 /**
  * Каждый расход:
@@ -12,7 +12,8 @@ import {createSlice, nanoid} from '@reduxjs/toolkit'
  */
 
 const rashodState = {
-    trataList: [],   // все расходы
+    trataList: [],
+    total: 0// все расходы
 }
 
 const expensesSlice = createSlice({
@@ -28,21 +29,26 @@ const expensesSlice = createSlice({
 
         setExpenses(state, action) {
             state.trataList = action.payload;
+            state.total = action.payload.total
         },
 
-        /**
-         * Очистка всех расходов (можно для тестов)
-         */
-        clearExpenses(rashodState) {
-            rashodState.trataList = []
+        removeExpense(state, action) {
+            state.trataList = state.trataList.filter(
+                (expense) => expense.id !== action.payload
+            )
+        },
+
+        setTotal(state, action) {
+            state.total = action.payload
         },
     },
 })
 
 export const {
     addExpense,
-    clearExpenses,
-    setExpenses
+    setExpenses,
+    removeExpense,
+    setTotal
 } = expensesSlice.actions
 
 export default expensesSlice.reducer

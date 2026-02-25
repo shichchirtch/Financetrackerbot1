@@ -43,13 +43,6 @@ const incomesSlice = createSlice({
         setTotal(state, action) {
             state.total = action.payload
         },
-
-        /**
-         * Очистка всех доходов
-         */
-        clearIncomes(state) {
-            state.dohodList = []
-        },
     },
 })
 
@@ -58,7 +51,6 @@ export const {
     setIncome,
     removeIncome,
     setTotal,
-    clearIncomes,
 } = incomesSlice.actions
 
 export default incomesSlice.reducer

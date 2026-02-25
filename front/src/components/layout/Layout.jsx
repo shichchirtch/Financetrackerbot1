@@ -20,6 +20,11 @@ function Layout() {
 
         if (!tgUser) return
 
+        wa.ready();
+        wa.expand();
+        wa.setHeaderColor("#0f172a"); // твой slate-900
+        wa.setBackgroundColor("#0f172a");
+
         async function initUser() {
             if (!tgUser) return;
 
@@ -74,7 +79,7 @@ function Layout() {
 
     // ✅ Открыто из Telegram
     return (
-        <div className="min-h-[100svh] bg-zinc-950 flex justify-center">
+        <div className="min-h-[100svh] bg-zinc-950 flex justify-center pb-[env(safe-area-inset-bottom)]">
             <div
                 className="
                     w-full

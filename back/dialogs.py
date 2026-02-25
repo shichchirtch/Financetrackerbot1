@@ -17,12 +17,21 @@ async def do_nothing_getter(dialog_manager: DialogManager, event_from_user: User
     notiz = second_window_text[lan]
     return { 'notiz':notiz }
 
+async def start_window_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+    lan = event_from_user.language_code
+    was_machen_dict  = {
+        'ru':'Выберите язык Интерфейса',
+        'uk':'Виберіть мову Інтерфейсу',
+        'de':'Wählen Sie die Schnittstellensprache aus',
+        'tr':'Arayüz dilini seçin'
+    }
+    return { 'begrusung': was_machen_dict[lan] }
 
 
 
 root_dialog = Dialog(
     Window(
-        Const("Выберите язык Интерфейса\n\nWählen Sie die Schnittstellensprache aus\n\nВиберіть мову Інтерфейсу"),
+        Format("{begrusung}"),
         Row(
             Button(Const('Deutsch'),
                    id='de_lan',
@@ -38,7 +47,8 @@ root_dialog = Dialog(
                    id='tr_lan',
                    on_click=tr_stellen),
         ),
-        state=ROOT_WIND.lan_select
+        state=ROOT_WIND.lan_select,
+        getter=start_window_getter,
     ),
 
     Window(

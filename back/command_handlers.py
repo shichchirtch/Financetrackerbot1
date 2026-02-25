@@ -16,13 +16,20 @@ ch_router = Router()
 @ch_router.message(CommandStart())
 async def command_start_process(message: Message,dialog_manager: DialogManager, state: FSMContext
 ):
+    start_dict = {
+        'ru':'Приветствую',
+        'uk':'Вітаю',
+        'de':'Grüße',
+        'tr':'Selamlar'
+    }
+
     user_id = message.from_user.id
     user_name = message.from_user.first_name or "User"
     user_lan = message.from_user.language_code
     print(user_name, user_id)
     user = await ensure_user(redis_db, user_id, user_name, user_lan)
     print('user = ', user)
-    await message.answer(text=f"hi {user_name}")
+    await message.answer(text=f"<b>{start_dict[user_lan]}, {user_name} !</b>")
     await dialog_manager.start(
         state=ROOT_WIND.lan_select,
         mode=StartMode.RESET_STACK

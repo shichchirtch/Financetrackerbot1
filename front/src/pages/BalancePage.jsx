@@ -3,7 +3,7 @@ import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux"
 import {Link, useParams, useNavigate} from "react-router-dom"
 import {groupExpensesByCategory} from "./externalFunc"
-import TelegramButton from "../components/common/TelegramButton"
+import SendReportButton from "../components/common/TelegramButton"
 import ExpensesPie from "../features/ui/PieChart"
 import Modal from "../components/rashod/Modal"
 import {useEffect} from "react";
@@ -365,7 +365,7 @@ export default function BalancePage() {
             </div>
             <span className="grid grid-cols-2 gap-4">
             <div>
-                <TelegramButton
+                <SendReportButton
                     total={total}
                     month={month}
                     user_id={user_id}

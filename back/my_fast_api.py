@@ -263,7 +263,7 @@ async def delete_income(data: dict):
 async def receive_telegram_data(data: dict):
     user_id = data["user_id"]
     month = data["month"]
-    total=data["total"]
+    total = data.get("total", "no data")
     user = await get_user(redis_db, user_id)
     lan = user['lan']
     logger.warning(f"📦 Bot accepted : {data}")

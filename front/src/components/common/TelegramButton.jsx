@@ -22,7 +22,7 @@ function SendReportButton({ total, month, user_id, lan }) {
             month: month,
             total: total,
         };
-
+        console.log("payload =", payload)
         try {
             const res = await fetch("/api/report", {
                 method: "POST",

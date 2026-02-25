@@ -22,7 +22,6 @@ async def main():
     dp.include_router(admin_dialog)
     dp.include_router(create_dialog)
     dp.include_router(zeigen_dialog)
-    dp.include_router(admin_dialog)
     dp.include_router(about_dialog)
 
 

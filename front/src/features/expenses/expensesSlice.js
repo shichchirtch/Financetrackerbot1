@@ -28,9 +28,10 @@ const expensesSlice = createSlice({
         },
 
         setExpenses(state, action) {
-            state.trataList = action.payload;
-            state.total = action.payload.total
+            state.trataList = action.payload.expenses;
+            state.total = action.payload.total;
         },
+
 
         removeExpense(state, action) {
             state.trataList = state.trataList.filter(

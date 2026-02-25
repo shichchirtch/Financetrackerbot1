@@ -369,6 +369,7 @@ export default function BalancePage() {
                     total={total}
                     month={month}
                     user_id={user_id}
+                    lan={lan}
                 />
             </div>
             <div>

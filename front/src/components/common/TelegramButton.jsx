@@ -1,8 +1,14 @@
-import {useTranslation} from "../../features/customHoock.js";
+// import {useTranslation} from "../../features/customHoock.js";
 
 
-function SendReportButton({ total, month, user_id }) {
-    const { t } = useTranslation()
+const SendReportToBot = {'ru':'Отправить отчёт боту',
+'uk':'Надіслати звіт боту',
+'de':'Senden einen Bericht an den Bot',
+'tr':'Bota bir rapor gönder'}
+
+
+function SendReportButton({ total, month, user_id, lan }) {
+    // const { t } = useTranslation()
     async function handleClick() {
 
         if (!user_id) {
@@ -49,7 +55,7 @@ function SendReportButton({ total, month, user_id }) {
                 active:scale-95 mt-5 border-2 border-gray-400
             "
         >
-            {t('SendReportToBot')}
+            {SendReportToBot[lan]}
         </button>
     );
 }

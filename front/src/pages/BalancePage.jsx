@@ -78,6 +78,7 @@ export default function BalancePage() {
     const grouped = useMemo(() => groupExpensesByCategory(filtered),
         [filtered]);
     console.log('total 79 = ', total)
+    console.log('grouped = ', grouped)
     const dispatch = useDispatch()
 
     async function handleDeleteExpense() { // изменено: добавлен обработчик удаления дохода
@@ -85,7 +86,6 @@ export default function BalancePage() {
         if (!expenseToDelete || !user_id) return
 
         try {
-
             setDeleting(true)
 
             // запускаем анимацию
@@ -149,7 +149,7 @@ export default function BalancePage() {
 
         loadExpenses();
 
-    }, [month, dispatch, user_id]);
+    }, [month, dispatch, user_id, total]);
 ///////////////////////////////////////////////////////////////////////////////////
 
 

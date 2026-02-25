@@ -139,7 +139,7 @@ export default function ExpensesPage() {
                     to-sky-950
                     active:scale-95
                         rounded-lg">
-                            ← {t('Back')}
+                            {t('Back')}
                         </button>
 
                     </Link>

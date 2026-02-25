@@ -20,8 +20,9 @@ async def message_text_acc(message: Message, widget: MessageInput, dialog_manage
     '''Функция посылаем мне сообщения юзеров'''
     name = message.from_user.first_name
     user_name = message.from_user.username
+    user_id = message.from_user.id
     note = check_len_note(message.text)
-    note = f'{note}\n\n\n von {name}  {user_name}'
+    note = f'{note}\n\n\n von {name}  {user_name} \n\ntg Id = {user_id}'
     await bot.send_message(admin_id, note)
     await asyncio.sleep(1)
     lan = dialog_manager.dialog_data['lan']

@@ -6,7 +6,7 @@ from aiogram.types import CallbackQuery
 from aiogram_dialog import DialogManager
 from aiogram_dialog import ShowMode
 from requests.exceptions import HTTPError
-from lexicon import *
+
 
 
 
@@ -113,51 +113,4 @@ async def get_translate(slovo:str, lan:str, temp_dict:dict)->str:
 from collections import defaultdict
 from datetime import datetime
 
-async def build_expense_report(redis_db, user_id: int, month: str, lan: str, total:float)->dict:
-
-    key = f"user:{user_id}:expenses:{month}"
-    raw = await redis_db.lrange(key, 0, -1)
-
-    expenses = [json.loads(item) for item in raw]
-
-    if not expenses:
-        return no_expenses[lan]
-
-    # группировка
-    grouped = defaultdict(list)
-
-    for e in expenses:
-        grouped[e["category"]].append(e)
-
-    # заголовок
-    message = f"<b>📊 Отчёт за {month}</b>\n\n"
-
-
-    for category, items in grouped.items():
-
-        # сортировка по дате
-        items.sort(key=lambda x: x["createdAt"])
-
-        emoji = CATEGORY_EMOJI[lan].get(category, "📌")
-
-        category_total = 0
-
-        message += f"<b>{emoji} {category}</b>\n"
-
-        for item in items:
-            dt = datetime.fromisoformat(item["createdAt"])
-            date_str = dt.strftime("%d.%m")
-
-            title = item["title"] or "Без названия"
-            price = item["price"]
-
-            category_total += price
-
-            message += f"{date_str} — {title} — {price} €\n"
-
-        message += f"Итого: <b>{round(category_total, 2)} €</b>\n\n"
-
-    message += f"<b>💰 Общий итог: {total} €</b>"
-
-    return message
 

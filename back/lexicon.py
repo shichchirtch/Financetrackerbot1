@@ -294,3 +294,8 @@ no_expenses = {
     'tr': '<b>Bu ay için herhangi bir masraf yok 🤷</b>',
 
 }
+
+report_for = {'ru':'Отчёт за ',
+              'uk':'Звіт за ',
+              'de':'Bericht für ',
+              'tr':'Rapor için '}

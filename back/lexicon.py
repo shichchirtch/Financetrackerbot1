@@ -204,3 +204,11 @@ wurde_gesendet = {
     'de':'Die Nachricht wurde erfolgreich gesendet',
     'tr':'Mesaj başarıyla gönderildi.'
 }
+
+
+Schiken_mir_Capture = {
+    'ru':'Отправь мне картинку !',
+    'uk':'Відправ мені картинку !',
+    'de':'Schick mir ein Foto!',
+    'tr':'Bana bir fotoğraf gönder!'
+}

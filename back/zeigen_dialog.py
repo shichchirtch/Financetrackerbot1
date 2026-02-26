@@ -199,5 +199,5 @@ Group(
                id='go_to_start',
                on_click=reset_funk_zeigen),
         state=ZEIGEN.schlist,
-getter=last_wind_zeigen_dialog_getter
+        getter=last_wind_zeigen_dialog_getter
     ),)

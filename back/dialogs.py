@@ -60,11 +60,11 @@ root_dialog = Dialog(
         id='second_window_root_dialog',
         on_click=do_nothing),
             Start(
-                text=Format('Neue_Notiz_erstellen'),
+                text=Format('{Neue_Notiz_erstellen}'),
                 id='kuck_start',
                 state=CREATE.einstellen),
             Start(
-                text=Format('Kuck_meine_Notizen'),
+                text=Format('{Kuck_meine_Notizen}'),
                 id='save_bd',
                 state=ZEIGEN.clava),
         state=ROOT_WIND.do_nothing,
@@ -137,6 +137,10 @@ async def message_not_foto_handler(message: Message, widget: MessageInput,
 async def second_window_create_dialog_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
     lan = dialog_manager.dialog_data['lan']
     return {'EingebenCaptura':EingebenCaptura[lan]}
+
+async def third_window_create_dialog_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+    lan = dialog_manager.dialog_data['lan']
+    return {'Schiken_mir_Capture':Schiken_mir_Capture[lan]}
 
 
 async def peredumal_func(callback: CallbackQuery, widget: Button,
@@ -240,7 +244,7 @@ create_dialog = Dialog(
     ),
 
     Window(  # Окно принимающее capture
-        Format(text='Schiken mir Capture !'),  # Отправьте capture
+        Format('{Schiken_mir_Capture}'),  # Отправьте capture
         MessageInput(
             func=message_capture_handler,
             content_types=ContentType.TEXT,
@@ -252,6 +256,7 @@ create_dialog = Dialog(
         Cancel(Const('◀️'),
                id='Cancel_for_accepting_capture'),
         state=CREATE.enter_capture,
+        getter=third_window_create_dialog_getter
     ),
     Window(  # окно возвращаюшее в предыдущий диалог
         Format(text='{NotizAczeptiert}'),  # Напоминание принято

@@ -115,9 +115,12 @@ async def get_expenses(user_id: int, month: str):
 
     expenses = [json.loads(item) for item in raw]
 
+    total = sum(e["price"] for e in expenses)
+
     return {
         "status": "ok",
-        "expenses": expenses
+        "expenses": expenses,
+        "total": total,
     }
 
 

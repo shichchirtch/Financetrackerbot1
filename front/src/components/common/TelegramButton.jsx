@@ -1,63 +1,94 @@
-// import {useTranslation} from "../../features/customHoock.js";
+import {useState} from "react";
+
+const SendReportToBot = {
+    'ru': 'Отправить отчёт боту',
+    'uk': 'Надіслати звіт боту',
+    'de': 'Senden einen Bericht an den Bot',
+    'tr': 'Bota bir rapor gönder'
+}
 
 
-const SendReportToBot = {'ru':'Отправить отчёт боту',
-'uk':'Надіслати звіт боту',
-'de':'Senden einen Bericht an den Bot',
-'tr':'Bota bir rapor gönder'}
-
+const SuccessSend ={
+    'ru':'Отчёт успешно отправлен !',
+    'uk':'Звіт успішно надіслано!',
+    'de':'Bericht erfolgreich gesendet!',
+    'tr':'Rapor başarıyla gönderildi!'
+}
 
 function SendReportButton({ total, month, user_id, lan }) {
-    // const { t } = useTranslation()
+
+    const [send, setSend] = useState(false)
+    const [loading, setLoading] = useState(false)
+
     async function handleClick() {
 
         if (!user_id) {
-            alert("Открыто не в Telegram");
-            return;
+            alert("Открыто не в Telegram")
+            return
         }
 
-        const payload = {
-            user_id: user_id,
-            type: "month_report",
-            month: month,
-            total: total,
-        };
-        console.log("payload =", payload)
         try {
+            setLoading(true)
+
             const res = await fetch("/api/report", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(payload),
-            });
+                body: JSON.stringify({
+                    user_id,
+                    month,
+                    total
+                }),
+            })
 
             if (!res.ok) {
-                throw new Error("Ошибка сервера");
+                throw new Error("Ошибка сервера")
             }
 
-            // 👉 красиво закрываем мини-апп
-            // tg.close();
+            setSend(true)
+
+            const tg = window.Telegram?.WebApp
+
+            setTimeout(() => {
+                tg?.close()
+            }, 2000)
 
         } catch (err) {
-            console.error(err);
-            alert("Error");
+            console.error(err)
+        } finally {
+            setLoading(false)
         }
     }
 
     return (
-        <button
-            onClick={handleClick}
-            className="
-                w-full py-3.5
-                bg-cyan-600 rounded-lg
-                font-bold text-gray-100
-                active:scale-95 mt-5 border-2 border-gray-400
-            "
-        >
-            {SendReportToBot[lan]}
-        </button>
-    );
+        <div className="w-full">
+            <button
+                onClick={handleClick}
+                disabled={loading || send}
+                className="
+                    w-full py-3.5
+                    bg-cyan-700 rounded-lg
+                    font-bold text-gray-100
+                    active:scale-95
+                    border-2 border-gray-400
+                    disabled:opacity-60
+                "
+            >
+                {loading
+                    ? "..."
+                    : send
+                        ? SuccessSend[lan]
+                        : SendReportToBot[lan]}
+            </button>
+
+            {send && (
+                <p className="text-green-400 text-lg text-center mt-3 animate-fadeIn">
+                    {SuccessSend[lan]}
+                </p>
+            )}
+        </div>
+    )
 }
 
 export default SendReportButton;

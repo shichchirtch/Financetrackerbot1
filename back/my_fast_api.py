@@ -9,8 +9,8 @@ import json
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
-from user_repo import ensure_user, get_user
-from lexicon import *
+from user_repo import ensure_user
+from static_functions import build_expense_report
 
 
 redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis0502"),
@@ -264,16 +264,42 @@ async def delete_income(data: dict):
 
 @f_api.post("/api/report")
 async def receive_telegram_data(data: dict):
+
     user_id = data["user_id"]
     month = data["month"]
-    total = data.get("total", "no data")
-    user = await get_user(redis_db, user_id)
-    lan = user['lan']
-    logger.warning(f"📦 Bot accepted : {data}")
+    lan = data.get("lan", "ru")
+    total = data.get("total", 'no_data')
 
-    await bot.send_message(chat_id= int(user_id),
-                           text = f"<b>{bot_reply[lan]} {month} {total}</b> 💶")
+    report_text = await build_expense_report(
+        redis_db,
+        user_id,
+        month,
+        lan,
+        total
+    )
+
+    await bot.send_message(
+        chat_id=int(user_id),
+        text=report_text,
+        parse_mode="HTML"
+    )
+
     return {"ok": True}
+
+
+
+# @f_api.post("/api/report")
+# async def receive_telegram_data(data: dict):
+#     user_id = data["user_id"]
+#     month = data["month"]
+#     total = data.get("total", "no data")
+#     user = await get_user(redis_db, user_id)
+#     lan = user['lan']
+#     logger.warning(f"📦 Bot accepted : {data}")
+#
+#     await bot.send_message(chat_id= int(user_id),
+#                            text = f"<b>{bot_reply[lan]} {month} {total}</b> 💶")
+#     return {"ok": True}
 
 
 

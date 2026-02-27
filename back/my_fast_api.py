@@ -262,6 +262,27 @@ async def delete_income(data: dict):
             "total": total}
 
 ## ## ## ## ## ## ## ############ Bot Report ###################################
+bez_nazwanija = {
+    'ru':'Без названия',
+    'uk':'Без назви',
+    'de':'Ohne Titel',
+    'tr':'Başlıksız'
+}
+
+monthDict= {
+    '2026-01': 'January 2026',
+    '2026-02': 'February 2026',
+    '2026-03': 'March 2026',
+    '2026-04': 'April 2026',
+    '2026-05': 'Mai 2026',
+    '2026-06': 'June 2026',
+    '2026-07': 'July 2026',
+    '2026-08': 'August 2026',
+    '2026-09': 'September 2026',
+    '2026-10': 'October 2026',
+    '2026-11': 'November 2026',
+    '2026-12': 'December 2026'}
+
 async def build_expense_report(redis_db, user_id: int, month: str, lan: str, total:float)->dict:
 
     key = f"user:{user_id}:expenses:{month}"
@@ -279,7 +300,7 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
         grouped[e["category"]].append(e)
 
     # заголовок
-    message = f"<b>📊 {report_for[lan]} {month}</b>\n\n"
+    message = f"<b>📊 {report_for[lan]} {monthDict[month]}</b>\n\n"
 
 
     for category, items in grouped.items():
@@ -297,14 +318,18 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
             dt = datetime.fromisoformat(item["createdAt"])
             date_str = dt.strftime("%d.%m")
 
-            title = item["title"] or "Без названия"
+            title = item["title"] or bez_nazwanija[lan]
             price = item["price"]
 
             category_total += price
 
             message += f"{date_str} — {title} — {price} €\n"
 
-        message += f"Итого: <b>{round(category_total, 2)} €</b>\n\n"
+            # 👇 Показываем "Итого" только если больше одной записи
+        if len(items) > 1:
+            message += f"Итого: <b>{round(category_total, 2)} €</b>\n"
+
+        message += "\n"
 
     message += f"<b>💰 Общий итог: {total} €</b>"
 
@@ -338,20 +363,6 @@ async def receive_telegram_data(data: dict):
 
     return {"ok": True}
 
-
-
-# @f_api.post("/api/report")
-# async def receive_telegram_data(data: dict):
-#     user_id = data["user_id"]
-#     month = data["month"]
-#     total = data.get("total", "no data")
-#     user = await get_user(redis_db, user_id)
-#     lan = user['lan']
-#     logger.warning(f"📦 Bot accepted : {data}")
-#
-#     await bot.send_message(chat_id= int(user_id),
-#                            text = f"<b>{bot_reply[lan]} {month} {total}</b> 💶")
-#     return {"ok": True}
 
 
 

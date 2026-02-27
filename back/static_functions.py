@@ -110,7 +110,5 @@ async def get_translate(slovo:str, lan:str, temp_dict:dict)->str:
         res = slovo
     return res
 
-from collections import defaultdict
-from datetime import datetime
 
 

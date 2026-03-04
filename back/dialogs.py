@@ -79,9 +79,7 @@ async def message_text_handler(message: Message, widget: MessageInput, dialog_ma
     note = check_len_note(message.text)
     heute = datetime.datetime.now().strftime('%d.%m.%Y')
     note = f'{note}\n\n {heute}'
-    user = await get_user(redis_db, message.from_user.id)
-    lan = user['lan']
-    dialog_manager.dialog_data['lan'] = lan
+    lan = dialog_manager.dialog_data['lan']
     dialog_manager.dialog_data['note'] = note
     dialog_manager.dialog_data['foto_id'] = ''
 
@@ -111,9 +109,7 @@ async def accepting_foto(message: Message, widget: MessageInput, dialog_manager:
     heute = datetime.datetime.now().strftime('%d.%m.%Y %H:%M')
     capture = f'Foto {heute}'
     dialog_manager.dialog_data['capture'] = capture
-    user = await get_user(redis_db, message.from_user.id)
-    lan = user['lan']
-    dialog_manager.dialog_data['lan'] = lan
+
     await redis_db.hset(
         f"user:{message.from_user.id}:notes",
         capture,
@@ -128,9 +124,7 @@ async def accepting_foto(message: Message, widget: MessageInput, dialog_manager:
 
 async def message_not_foto_handler(message: Message, widget: MessageInput,
                                    dialog_manager: DialogManager) -> None:
-    user = await get_user(redis_db, message.from_user.id)
-    lan = user['lan']
-    dialog_manager.dialog_data['lan'] = lan
+    lan = dialog_manager.dialog_data['lan']
     dialog_manager.show_mode = ShowMode.NO_UPDATE
     await message.answer(error_enter_type[lan])
 
@@ -213,6 +207,7 @@ async def crate_dialog_first_window_getter(dialog_manager: DialogManager, event_
     user_id = event_from_user.id
     user = await get_user(redis_db, user_id)
     lan = user['lan']
+    dialog_manager.dialog_data['lan'] = lan
     text_foto_dict  = {
         'ru':'Отправьте мне текст или фотографию',
         'uk':'Надішліть мені текст або фотографію',

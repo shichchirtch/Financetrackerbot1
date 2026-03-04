@@ -1,6 +1,6 @@
 import translators
 
-from back.bot_instance import ROOT_WIND
+from bot_instance import ROOT_WIND
 from my_fast_api import redis_db
 from aiogram_dialog.widgets.kbd import Button
 from user_repo import *

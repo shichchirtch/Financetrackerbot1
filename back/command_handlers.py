@@ -35,12 +35,14 @@ async def command_help(message: Message, dialog_manager: DialogManager):
     user = await get_user(redis_db, message.from_user.id)
     lan =user['lan']
     await message.answer(text=help_msg[lan])
-    await dialog_manager.start(state=ROOT_WIND.root_wind, mode=StartMode.RESET_STACK)
+    await dialog_manager.reset_stack()
+    await dialog_manager.start(state=ROOT_WIND.root_wind)
 
 @ch_router.message(Command('basic_menu'))
 async def basic_menu_start(message: Message, dialog_manager: DialogManager):
     await message.answer('basic menu')
-    await dialog_manager.start(state=ROOT_WIND.root_wind, mode=StartMode.RESET_STACK)
+    await dialog_manager.reset_stack()
+    await dialog_manager.start(state=ROOT_WIND.root_wind)
 
 @ch_router.message(Command('admin'), IS_ADMIN())
 async def admin_enter(message: Message, dialog_manager: DialogManager):

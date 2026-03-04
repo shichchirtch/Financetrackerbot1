@@ -1,4 +1,6 @@
 import translators
+
+from back.bot_instance import ROOT_WIND
 from my_fast_api import redis_db
 from aiogram_dialog.widgets.kbd import Button
 from user_repo import *
@@ -69,7 +71,7 @@ async def tr_stellen(callback: CallbackQuery, widget: Button, dialog_manager: Di
 
 async def do_nothing(callback: CallbackQuery, widget: Button, dialog_manager: DialogManager, *args, **kwargs):
     dialog_manager.show_mode = ShowMode.SEND
-    await dialog_manager.back()
+    await dialog_manager.switch_to(ROOT_WIND.lan_select)
 
 def form_key_note(note):
     if len(note) > 20:

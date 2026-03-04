@@ -36,13 +36,13 @@ async def command_help(message: Message, dialog_manager: DialogManager):
     lan =user['lan']
     await message.answer(text=help_msg[lan])
     await dialog_manager.reset_stack()
-    await dialog_manager.start(state=ROOT_WIND.root_wind)
+    await dialog_manager.start(state=ROOT_WIND.do_nothing)
 
 @ch_router.message(Command('basic_menu'))
 async def basic_menu_start(message: Message, dialog_manager: DialogManager):
     await message.answer('basic menu')
     await dialog_manager.reset_stack()
-    await dialog_manager.start(state=ROOT_WIND.root_wind)
+    await dialog_manager.start(state=ROOT_WIND.do_nothing)
 
 @ch_router.message(Command('admin'), IS_ADMIN())
 async def admin_enter(message: Message, dialog_manager: DialogManager):

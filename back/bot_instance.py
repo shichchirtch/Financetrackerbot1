@@ -32,7 +32,6 @@ dp = Dispatcher(storage=redis_storage)
 
 class ROOT_WIND(StatesGroup):
     lan_select = State()
-    root_wind = State()
     do_nothing = State()
 
 class ADMIN(StatesGroup):

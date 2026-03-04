@@ -209,9 +209,22 @@ async def reset_funk(callback: CallbackQuery, widget: Button,
     dialog_manager.dialog_data.clear()
 
 
+async def crate_dialog_first_window_getter(dialog_manager: DialogManager, event_from_user: User, **kwargs):
+    user_id = event_from_user.id
+    user = await get_user(redis_db, user_id)
+    lan = user['lan']
+    text_foto_dict  = {
+        'ru':'Отправьте мне текст или фотографию',
+        'uk':'Надішліть мені текст або фотографію',
+        'de':'Typen hier oder schick mir eine Foto',
+        'tr':'Bana mesaj veya fotoğraf gönder.'
+    }
+    return { 'TextFoto': text_foto_dict[lan] }
+
+
 create_dialog = Dialog(
     Window(
-        Const('Typen hier oder schick mir eine Foto'),
+        Format('{TextFoto}'),
         MessageInput(
             func=message_text_handler,
             content_types=ContentType.TEXT,
@@ -227,6 +240,7 @@ create_dialog = Dialog(
         Cancel(Const('◀️'),
                id='Cancel_for_uniq_day'),
         state=CREATE.einstellen,
+        getter=crate_dialog_first_window_getter
     ),
     Window(  # Окно предлагающее ввести capture
         Format('{EingebenCaptura}'),  # Хотите сделать подпись по фотографией ?

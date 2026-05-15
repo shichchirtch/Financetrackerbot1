@@ -121,7 +121,7 @@ async def get_expenses(user_id: int, month: str):
     return {
         "status": "ok",
         "expenses": expenses,
-        "total": {round(total, 2)},
+        "total": f"{total:.2f}",
     }
 
 

@@ -121,7 +121,7 @@ async def get_expenses(user_id: int, month: str):
     return {
         "status": "ok",
         "expenses": expenses,
-        "total": f"{total:.2f}",
+        "total":  round(total, 2),
     }
 
 
@@ -331,7 +331,7 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
 
         message += "\n"
 
-    message += f"<b>💰 Общий итог: {round(total, 2)} €</b>"
+    message += f"<b>💰 Общий итог: {round(float(total), 2)} €</b>"
 
     return message
 

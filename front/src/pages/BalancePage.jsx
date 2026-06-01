@@ -79,6 +79,8 @@ export default function BalancePage() {
         [filtered]);
     console.log('total 79 = ', total)
     console.log('grouped = ', grouped)
+    console.log('total =', total)
+    console.log('typeof total =', typeof total)
     const dispatch = useDispatch()
 
     async function handleDeleteExpense() { // изменено: добавлен обработчик удаления дохода

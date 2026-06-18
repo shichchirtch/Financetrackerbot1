@@ -11,9 +11,84 @@ import {getUserExpenses} from "../app/getUserExpenses";
 import {setExpenses, setTotal, removeExpense} from "../features/expenses/expensesSlice";
 import {useTranslation} from "../features/customHoock";
 import {formPost} from "../app/formPost.js";
-import { useMemo } from "react";
+import {useMemo} from "react";
 
+const categories_ru = [
+    'Продукты',
+    'Аренда',
+    'Транспорт',
+    'Связь и Интернет',
+    'Бизнес',
+    'Работа',
+    'Подарки',
+    'Развлечения',
+    'Налоги',
+    'Путешествия',
+    'Лекарства',
+    'Одежда / Косметика',
+    'Для дома',
+    'Благотворительность',
+    'Учёба',
+    'Хобби',
+    'Спорт',
+    'Иное',
+]
+const categories_tr = ['Market',
+    'Kira',
+    'Ulaşım',
+    'İletişim ve İnternet',
+    'Hediyeler',
+    'Eğlence',
+    'Vergiler',
+    'Seyahat',
+    'İlaçlar',
+    'Giyim/Kozmetik',
+    'Ev',
+    'Hayır Kurumu',
+    'Eğitim',
+    'Hobiler',
+    'Spor',
+    'Diğer']
 
+const categories_de = ['Lebensmittel',
+    'Miete',
+    'Transport',
+    'Kommunikation und Internet',
+    'Geschenke',
+    'Unterhaltung',
+    'Steuern',
+    'Reisen',
+    'Medikamente',
+    'Kleidung/Kosmetik',
+    'Wohnen',
+    'Wohltätigkeit',
+    'Studium',
+    'Hobbys',
+    'Sport',
+    'Sonstiges']
+const categories_uk = ['Продукти',
+    'Оренда',
+    'Транспорт',
+    'Звязок та Інтернет',
+    'Подарунки',
+    'Розваги',
+    'Податки',
+    'Подорожі',
+    'Ліки',
+    'Одяг / Косметика',
+    'Для дому',
+    'Благодійність',
+    'Навчання',
+    'Хоббі',
+    'Спорт',
+    'Інше',]
+
+const categories_dict = {
+    'ru': categories_ru,
+    'uk': categories_uk,
+    'de': categories_de,
+    'tr': categories_tr
+}
 
 const future_expenses_dict = {
     'ru': 'Трат в будущем ещё нет',
@@ -67,17 +142,26 @@ export default function BalancePage() {
     const [showChart, setShowChart] = useState(false)
     const [loading, setLoading] = useState(true);
     const user_id = useSelector(state => state.user.account?.user_id)
-    const { t } = useTranslation()
+    const {t} = useTranslation()
 
     const [expenseToDelete, setExpenseToDelete] = useState(null)
     const [deleting, setDeleting] = useState(false)
     const [removingId, setRemovingId] = useState(null)
     const total = useSelector(state => state.expensesUser.total)
     const lan = useSelector(state => state.user.lan)
-    const filtered = useSelector( state => state.expensesUser.trataList)
+    const filtered = useSelector(state => state.expensesUser.trataList)
     const grouped = useMemo(() => groupExpensesByCategory(filtered),
         [filtered]);
-    console.log('total 79 = ', total)
+    const orderedGroups = useMemo(() => {
+        const order = categories_dict[lan] ?? categories_ru;
+
+        return Object.entries(grouped).sort(([a], [b]) => {
+            return order.indexOf(a) - order.indexOf(b);
+        });
+    }, [grouped, lan]);
+
+
+    console.log('total 164 = ', total)
     console.log('grouped = ', grouped)
     console.log('total =', total)
     console.log('typeof total =', typeof total)
@@ -155,7 +239,6 @@ export default function BalancePage() {
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-
     // 3️⃣ Пустое состояние
     function getEmptyMessage(monthKey) {
         const now = new Date().toISOString().slice(0, 7)
@@ -229,7 +312,7 @@ export default function BalancePage() {
             <div className="space-y-4">
 
 
-                {Object.entries(grouped).map(([category, data]) => {
+                {orderedGroups.map(([category, data]) => {
 
                     return (
                         <div

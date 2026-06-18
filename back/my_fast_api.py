@@ -109,10 +109,11 @@ async def add_expense(expense: ExpenseIn):
 
 @f_api.get("/api/expenses/{user_id}/{month}")
 async def get_expenses(user_id: int, month: str):
-
+    print('GET EXPENSES WORKS\n\n')
     key = f"user:{user_id}:expenses:{month}"
 
     raw = await redis_db.lrange(key, 0, -1)
+    print('raw = ', raw)
 
     expenses = [json.loads(item) for item in raw]
 

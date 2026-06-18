@@ -15,7 +15,8 @@ async def create_user(redis, user_id: int, name: str, user_lan:str):
     user = {
         "user_tg_id": user_id,
         "name": name,
-        "lan": user_lan
+        "lan": user_lan,
+        # 'cat':{}
     }
 
     await redis.set(

@@ -62,9 +62,11 @@ async def init_user(data: dict):
     if not user:
         user = await create_user(redis_db, user_id, first_name, tg_lan)
 
-    user = await migrate_user(redis_db, user_id, tg_lan)
+    await migrate_user(redis_db, user_id, user["lan"])
 
-    return {"lan": user['lan']}
+    return {
+        "lan": user["lan"]
+    }
 
 
 @f_api.post("/api/receive_telegram_data")

@@ -90,6 +90,8 @@ async def migrate_user(redis, user_id: int, user_lan: str):
         if categories:
             await redis.rpush(categories_key,*categories)
 
+            
+
 def month_key(date_str: str) -> str:
     return date_str[:7]  # YYYY-MM
 

@@ -39,30 +39,6 @@ async def create_user(redis, user_id: int, name: str, user_lan: str):
     return user
 
 
-
-# async def create_user(redis, user_id: int, name: str, user_lan:str):
-#
-#     lan_list = ['ru', 'uk', 'de', 'tr']
-#
-#     if user_lan not in lan_list:
-#         user_lan = 'ru'
-#
-#     user = {
-#         "user_tg_id": user_id,
-#         "name": name,
-#         "lan": user_lan,
-#         # 'cat':{}
-#     }
-#
-#     await redis.set(
-#         f"user:{user_id}",
-#         json.dumps(user, ensure_ascii=False)
-#     )
-#
-#     await redis.sadd("users:all", user_id)
-#     return user
-
-
 async def migrate_user(redis, user_id: int, user_lan: str):
 
     # ---------- settings ----------

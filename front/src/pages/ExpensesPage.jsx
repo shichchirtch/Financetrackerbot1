@@ -1,10 +1,12 @@
 // // pages/ExpensesPage.jsx
 import {Link} from 'react-router-dom'
-import {useState} from "react";
+import {useState, useRef, useEffect} from "react";
 import ExpenseModal from '../components/rashod/ExpenseModal'
 import {useSelector} from "react-redux";
 import {useTranslation} from "../features/customHoock";
 import CategoryModal from "./CategoryModal.jsx";
+import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
+
 
 export default function ExpensesPage() {
 
@@ -12,38 +14,163 @@ export default function ExpensesPage() {
     const [categoryModal, setCategoryModal] = useState(false)
     const categories = useSelector(state => state.category.spisokKategories);
     const {t} = useTranslation()
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
+
+    const [renameCategoryModal, setRenameCategoryModal] = useState(false);
+
+    const [currencyModal, setCurrencyModal] = useState(false);
+    const menuRef = useRef(null);
+
+
+    useEffect(() => {
+
+        function handleClickOutside(event) {
+
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target)
+            ) {
+                setMenuOpen(false);
+            }
+
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener(
+                "mousedown",
+                handleClickOutside
+            );
+        };
+
+    }, []);
 
     return (
         <>
             <div className="w-full p-4
         text-white
         ">
-                <h2 className="text-xl font-semibold mb-6 mt-4 text-center">
-                    {t('ArtOfExpenses')}
+                <h2 className="text-xl font-semibold">
+                    {t("ArtOfExpenses")}
                 </h2>
 
-                <button onClick={() => setCategoryModal(true)}
+
+                <div ref={menuRef}
+                     className="relative">
+
+                    <button
+                        onClick={() => setMenuOpen(prev => !prev)}
                         className="
             w-8
             h-8
-            rounded-full
+            rounded-lg
             bg-slate-700
             hover:bg-slate-600
-            text-xl
+            active:scale-95
+            transition
             flex
+            items-center
             justify-center
-            items-center"
-
-                >
-                    ＋
-                </button>
-
-                <div
-                    className="
-          grid
-          grid-cols-2
-          gap-3
         "
+                    >
+                        ☰
+                    </button>
+
+                    {menuOpen && (
+
+                        <div
+                            className="
+                absolute
+                right-0
+                mt-2
+    w-60
+    rounded-xl
+    bg-slate-800
+    shadow-xl
+    border
+    border-slate-700
+    z-50
+    origin-top-right
+    transition-all
+    duration-200"
+                        >
+
+                            <button
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    setCategoryModal(true);
+                                }}
+                                className="
+                    w-full
+                    text-left
+                    px-4
+                    py-3
+                    hover:bg-slate-700
+                "
+                            >
+                                ➕ {t("AddCategory")}
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    setRenameCategoryModal(true);
+                                }}
+                                className="
+                    w-full
+                    text-left
+                    px-4
+                    py-3
+                    hover:bg-slate-700
+                "
+                            >
+                                ✏️ {t("RenameCategory")}
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    setDeleteCategoryModal(true);
+                                }}
+                                className="
+                    w-full
+                    text-left
+                    px-4
+                    py-3
+                    hover:bg-slate-700
+                "
+                            >
+                                🗑 {t("DeleteCategory")}
+                            </button>
+
+                            <div className="border-t border-slate-600"/>
+
+                            <button
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    setCurrencyModal(true);
+                                }}
+                                className="
+                    w-full
+                    text-left
+                    px-4
+                    py-3
+                    hover:bg-slate-700
+                "
+                            >
+                                💶 {t("Currency")}
+                            </button>
+
+                        </div>
+
+                    )}
+
+                </div>
+
+                <div className="grid grid-cols-2 gap-3"
                 >
                     {categories.map(category => (
                         <button
@@ -102,6 +229,13 @@ export default function ExpensesPage() {
             {categoryModal && (
                 <CategoryModal onClose={() => setCategoryModal(false)}/>
             )}
+
+            {deleteCategoryModal && (
+                <DeleteCategoryModal
+                    onClose={() => setDeleteCategoryModal(false)}
+                />
+            )}
+
         </>
 
     )

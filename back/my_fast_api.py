@@ -205,9 +205,45 @@ async def add_category(data: CategoryModel):
         "status": "ok"
     }
 
+@f_api.post("/api/categories/delete")
+async def delete_category(data: CategoryModel):
 
+    # Проверяем все месяцы пользователя
+    pattern = f"user:{data.user_id}:expenses:*"
 
+    async for key in redis_db.scan_iter(match=pattern):
 
+        raw = await redis_db.lrange(key, 0, -1)
+
+        expenses = [json.loads(item) for item in raw]
+
+        for expense in expenses:
+            if expense["category"] == data.category:
+
+                return {
+                    "status": "error",
+                    "message": "Category is not empty"
+                }
+
+    # Если расходов нет — удаляем категорию
+
+    key = f"user:{data.user_id}:categories"
+
+    deleted = await redis_db.lrem(
+        key,
+        1,
+        data.category
+    )
+
+    if deleted == 0:
+        return {
+            "status": "error",
+            "message": "Category not found"
+        }
+
+    return {
+        "status": "ok"
+    }
 
 
 

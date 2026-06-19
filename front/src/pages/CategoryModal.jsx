@@ -16,6 +16,8 @@ export default function CategoryModal({onClose}) {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch()
 
+
+
     async function handleAdd() {
 
         const name = category.trim();
@@ -111,7 +113,7 @@ export default function CategoryModal({onClose}) {
                             disabled:opacity-40
                         "
                     >
-                        {loading ? "..." : "Add"}
+                        {loading ? "..." : "+"}
                     </button>
 
                 </div>

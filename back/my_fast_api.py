@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
 import os
+
+from back.user_repo import create_user
 from bot_instance import bot
 import logging
 import redis.asyncio as aioredis
@@ -9,7 +11,7 @@ import json
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
-from user_repo import ensure_user
+from user_repo import migrate_user, get_user
 from lexicon import *
 from collections import defaultdict
 
@@ -31,6 +33,9 @@ class IncomeIn(BaseModel):
     title: Optional[str] = None
     amount: float
 
+class CategoryModel(BaseModel):
+    user_id: int
+    category: str
 
 
 f_api = FastAPI(
@@ -54,11 +59,14 @@ async def init_user(data: dict):
     first_name = data["first_name"]
     tg_lan = data.get("language_code", "ru")
 
-    user = await ensure_user(redis_db, user_id, first_name, tg_lan)
+    user = await get_user(redis_db, user_id)
+
+    if not user:
+        user = await create_user(redis_db, user_id, first_name, tg_lan)
+
+    user = await migrate_user(redis_db, user_id, tg_lan)
 
     return {"lan": user['lan']}
-
-
 
 
 @f_api.post("/api/receive_telegram_data")
@@ -171,6 +179,45 @@ async def delete_expense(data: dict):
         "ok": True,
         "total": total
     }
+
+
+@f_api.get("/api/categories/{user_id}")
+async def get_categories(user_id: int):
+
+    categories = await redis_db.lrange(
+        f"user:{user_id}:categories",0,-1)
+
+    return {
+        "status": "ok",
+        "categories": categories
+    }
+
+@f_api.post("/api/category")
+async def add_category(data: CategoryModel):
+
+    key = f"user:{data.user_id}:categories"
+
+    await redis_db.rpush(key, data.category)
+
+    return {
+        "status": "ok"
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ################################INCOMES########################

@@ -6,6 +6,8 @@ import {useEffect} from "react";
 import {setUser, setLanguage} from "../../features/user/userSlice"
 import {useTranslation} from "../../features/customHoock";
 import {formPost} from "../../app/formPost.js";
+import {formGet} from "../../app/formGet.js";
+import {setCategories} from "../../features/category/categorySlice.js";
 
 function Layout() {
     const wa = window.Telegram?.WebApp;
@@ -46,6 +48,8 @@ function Layout() {
             } catch (err) {
                 console.error("Init error:", err)
             }
+            const categories = await formGet(`/api/categories/${tgUser.id}`);
+            dispatch(setCategories(categories.categories));
         }
 
         initUser()

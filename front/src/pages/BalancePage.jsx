@@ -149,19 +149,53 @@ export default function BalancePage() {
     const [removingId, setRemovingId] = useState(null)
     const total = useSelector(state => state.expensesUser.total)
     const lan = useSelector(state => state.user.lan)
+    const categories = useSelector(state => state.category.spisokKategories);
+
     const filtered = useSelector(state => state.expensesUser.trataList)
-    const grouped = useMemo(() => groupExpensesByCategory(filtered),
-        [filtered]);
+
+    const categoryMap = useMemo(() => {
+
+        return new Map(
+            categories.map((cat, index) => [cat, index])
+        );
+
+    }, [categories]);
+    const grouped = useMemo(
+        () => groupExpensesByCategory(filtered),
+        [filtered]
+    );
+
     const orderedGroups = useMemo(() => {
-        const order = categories_dict[lan] ?? categories_ru;
 
         return Object.entries(grouped).sort(([a], [b]) => {
-            return order.indexOf(a) - order.indexOf(b);
+
+            const ia = categoryMap.get(a) ?? 999;
+            const ib = categoryMap.get(b) ?? 999;
+
+            return ia - ib;
+
         });
-    }, [grouped, lan]);
+
+    }, [grouped, categoryMap]);
 
 
-    console.log('total 164 = ', total)
+    //
+    // const orderedGroups = useMemo(() => {
+    //
+    //     return Object.entries(grouped).sort(([a], [b]) => {
+    //
+    //         const ia = categories.indexOf(a);
+    //         const ib = categories.indexOf(b);
+    //
+    //         return (ia === -1 ? 999 : ia)
+    //             - (ib === -1 ? 999 : ib);
+    //
+    //     });
+    //
+    // }, [grouped, categories]);
+
+
+    console.log('total 176 = ', total)
     console.log('grouped = ', grouped)
     console.log('total =', total)
     console.log('typeof total =', typeof total)
@@ -212,7 +246,7 @@ export default function BalancePage() {
                 setLoading(false);
                 return;
             }
-            console.log("Redux total =", total)
+
             try {
 
                 const data = await getUserExpenses(
@@ -235,7 +269,7 @@ export default function BalancePage() {
 
         loadExpenses();
 
-    }, [month, dispatch, user_id, total]);
+    }, [month, dispatch, user_id]);
 ///////////////////////////////////////////////////////////////////////////////////
 
 

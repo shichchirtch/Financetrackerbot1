@@ -4,94 +4,13 @@ import {useState} from "react";
 import ExpenseModal from '../components/rashod/ExpenseModal'
 import {useSelector} from "react-redux";
 import {useTranslation} from "../features/customHoock";
-
-const categories_ru = [
-    'Продукты',
-    'Аренда',
-    'Транспорт',
-    'Связь и Интернет',
-    'Бизнес',
-    'Работа',
-    'Подарки',
-    'Развлечения',
-    'Налоги',
-    'Путешествия',
-    'Лекарства',
-    'Одежда / Косметика',
-    'Для дома',
-    'Благотворительность',
-    'Учёба',
-    'Хобби',
-    'Спорт',
-    'Иное',
-]
-const categories_tr = ['Market',
-    'Kira',
-    'Ulaşım',
-    'İletişim ve İnternet',
-    'Hediyeler',
-    'Eğlence',
-    'Vergiler',
-    'Seyahat',
-    'İlaçlar',
-    'Giyim/Kozmetik',
-    'Ev',
-    'Hayır Kurumu',
-    'Eğitim',
-    'Hobiler',
-    'Spor',
-    'Diğer']
-
-const categories_de = ['Lebensmittel',
-    'Miete',
-    'Transport',
-    'Kommunikation und Internet',
-    'Geschenke',
-    'Unterhaltung',
-    'Steuern',
-    'Reisen',
-    'Medikamente',
-    'Kleidung/Kosmetik',
-    'Wohnen',
-    'Wohltätigkeit',
-    'Studium',
-    'Hobbys',
-    'Sport',
-    'Sonstiges']
-const categories_uk = ['Продукти',
-    'Оренда',
-    'Транспорт',
-    'Звязок та Інтернет',
-    'Подарунки',
-    'Розваги',
-    'Податки',
-    'Подорожі',
-    'Ліки',
-    'Одяг / Косметика',
-    'Для дому',
-    'Благодійність',
-    'Навчання',
-    'Хоббі',
-    'Спорт',
-    'Інше',]
-
-const categories_dict = {
-    'ru': categories_ru,
-    'uk': categories_uk,
-    'de': categories_de,
-    'tr': categories_tr
-}
+import CategoryModal from "./CategoryModal.jsx";
 
 export default function ExpensesPage() {
 
     const [selectedCategory, setSelectedCategory] = useState(null)
-
-    const trataList = useSelector(
-        state => state.expensesUser.trataList
-    )
-    const lan = useSelector(state => state.user.lan)
-
-    console.log('TRATALIST = ', trataList)
+    const [categoryModal, setCategoryModal] = useState(false)
+    const categories = useSelector(state => state.category.spisokKategories);
     const {t} = useTranslation()
 
     return (
@@ -103,6 +22,22 @@ export default function ExpensesPage() {
                     {t('ArtOfExpenses')}
                 </h2>
 
+                <button onClick={() => setCategoryModal(true)}
+                        className="
+            w-8
+            h-8
+            rounded-full
+            bg-slate-700
+            hover:bg-slate-600
+            text-xl
+            flex
+            justify-center
+            items-center"
+
+                >
+                    ＋
+                </button>
+
                 <div
                     className="
           grid
@@ -110,7 +45,7 @@ export default function ExpensesPage() {
           gap-3
         "
                 >
-                    {categories_dict[lan].map((category) => (
+                    {categories.map(category => (
                         <button
                             key={category}
                             className="
@@ -164,7 +99,11 @@ export default function ExpensesPage() {
                     onClose={() => setSelectedCategory(null)}
                 />
             )}
+            {categoryModal && (
+                <CategoryModal onClose={() => setCategoryModal(false)}/>
+            )}
         </>
+
     )
 }
 

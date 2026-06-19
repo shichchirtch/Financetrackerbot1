@@ -28,6 +28,8 @@ const translations = {
         DeleteIncome:'Удалить доход',
         CancelNote:'Отменить',
         DeleteAct:'Удалить',
+        NewCategory: 'Новая категория',
+        CategoryName:''
     },
     de: {
         Hello: "Hallo",
@@ -56,6 +58,8 @@ const translations = {
         DeleteIncome:'Einkommen löschen',
         CancelNote:'Stornieren',
         DeleteAct:'Löschen',
+        NewCategory:'Neue Kategorie',
+        CategoryName:'Kategoriename'
     },
 
     uk: {
@@ -85,6 +89,8 @@ const translations = {
         DeleteIncome:'Видалити дохід',
         CancelNote:'Скасувати',
         DeleteAct:'Видалити',
+        NewCategory:'Нова категорія',
+        CategoryName:'Назва категорії'
     },
 
     tr: {
@@ -114,6 +120,8 @@ const translations = {
         DeleteIncome:'Geliri sil',
         CancelNote:'İptal etmek',
         DeleteAct:'Silmek',
+        NewCategory:'Yeni kategori',
+        CategoryName:'Kategori adı'
     }
 }
 

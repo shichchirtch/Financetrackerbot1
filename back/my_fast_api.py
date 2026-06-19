@@ -187,6 +187,8 @@ async def get_categories(user_id: int):
     categories = await redis_db.lrange(
         f"user:{user_id}:categories",0,-1)
 
+    print("REDIS CATEGORIES =", categories)
+
     return {
         "status": "ok",
         "categories": categories

@@ -13,21 +13,21 @@ const categorySlice = createSlice({
     reducers: {
 
         setCategories(state, action) {
-            state.list = action.payload;
+            state.spisokKategories = action.payload;
         },
 
         addCategory(state, action) {
-            state.list.push(action.payload);
+            state.spisokKategories.push(action.payload);
         },
 
         removeCategory(state, action) {
-            state.list = state.list.filter(
+            state.spisokKategories = state.spisokKategories.filter(
                 category => category !== action.payload
             );
         },
 
         clearCategories(state) {
-            state.list = [];
+            state.spisokKategories = [];
         }
 
     }

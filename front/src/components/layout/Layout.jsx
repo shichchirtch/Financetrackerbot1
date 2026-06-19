@@ -49,6 +49,7 @@ function Layout() {
                 console.error("Init error:", err)
             }
             const categories = await formGet(`/api/categories/${tgUser.id}`);
+            console.log("DATA CATEGORIES =", categories);
             dispatch(setCategories(categories.categories));
         }
 

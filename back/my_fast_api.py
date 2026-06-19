@@ -2,8 +2,6 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
 import os
-
-from back.user_repo import create_user
 from bot_instance import bot
 import logging
 import redis.asyncio as aioredis
@@ -11,7 +9,7 @@ import json
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime, timezone
-from user_repo import migrate_user, get_user
+from user_repo import migrate_user, get_user, create_user
 from lexicon import *
 from collections import defaultdict
 

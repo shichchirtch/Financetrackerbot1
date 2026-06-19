@@ -194,7 +194,7 @@ async def get_categories(user_id: int):
         "categories": categories
     }
 
-@f_api.post("/api/category")
+@f_api.post("/api/categories")
 async def add_category(data: CategoryModel):
 
     key = f"user:{data.user_id}:categories"

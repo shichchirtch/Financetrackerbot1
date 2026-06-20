@@ -53,31 +53,34 @@ export default function ExpensesPage() {
             <div className="w-full p-4
         text-white
         ">
-                <h2 className="text-xl font-semibold">
-                    {t("ArtOfExpenses")}
-                </h2>
+                <div className="flex items-center justify-between mb-6 mt-4">
 
+    <h2 className="text-xl font-semibold">
+        {t("ArtOfExpenses")}
+    </h2>
 
-                <div ref={menuRef}
-                     className="relative">
+    <div
+        ref={menuRef}
+        className="relative"
+    >
 
-                    <button
-                        onClick={() => setMenuOpen(prev => !prev)}
-                        className="
-            w-8
-            h-8
-            rounded-lg
-            bg-slate-700
-            hover:bg-slate-600
-            active:scale-95
-            transition
-            flex
-            items-center
-            justify-center
-        "
-                    >
-                        ☰
-                    </button>
+        <button
+            onClick={() => setMenuOpen(prev => !prev)}
+            className="
+                w-8
+                h-8
+                rounded-lg
+                bg-slate-700
+                hover:bg-slate-600
+                active:scale-95
+                transition
+                flex
+                items-center
+                justify-center
+            "
+        >
+            ☰
+        </button>
 
                     {menuOpen && (
 
@@ -97,6 +100,7 @@ export default function ExpensesPage() {
     transition-all
     duration-200"
                         >
+
 
                             <button
                                 onClick={() => {
@@ -168,6 +172,7 @@ export default function ExpensesPage() {
 
                     )}
 
+                </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3"

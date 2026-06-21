@@ -26,6 +26,20 @@ const categorySlice = createSlice({
             );
         },
 
+        renameCategory(state, action) {
+
+    const {oldName, newName} = action.payload;
+
+    const index = state.spisokKategories.indexOf(oldName);
+
+    if (index !== -1) {
+
+        state.spisokKategories[index] = newName;
+
+    }
+
+},
+
         clearCategories(state) {
             state.spisokKategories = [];
         }
@@ -38,6 +52,7 @@ export const {
     setCategories,
     addCategory,
     removeCategory,
+    renameCategory,
     clearCategories
 } = categorySlice.actions;
 

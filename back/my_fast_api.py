@@ -13,12 +13,12 @@ from user_repo import migrate_user, get_user, create_user
 from lexicon import *
 from collections import defaultdict
 
-
 redis_db = aioredis.Redis(host=os.getenv("REDIS_HOST", "redis0502"),
-                     port=int(os.getenv("REDIS_PORT", 6379)),
-                   decode_responses=True)
+                          port=int(os.getenv("REDIS_PORT", 6379)),
+                          decode_responses=True)
 
 ADMIN_ID = 6685637602
+
 
 class ExpenseIn(BaseModel):
     user_id: int
@@ -26,14 +26,22 @@ class ExpenseIn(BaseModel):
     title: Optional[str] = None
     price: float
 
+
 class IncomeIn(BaseModel):
     user_id: int
     title: Optional[str] = None
     amount: float
 
+
 class CategoryModel(BaseModel):
     user_id: int
     category: str
+
+
+class RenameCategoryModel(BaseModel):
+    user_id: int
+    old_name: str
+    new_name: str
 
 
 f_api = FastAPI(
@@ -73,8 +81,8 @@ async def init_user(data: dict):
 async def receive_telegram_data(data: dict):
     user_id = data["user_id"]
     logger.warning(f"📦 Telegram data: {data}")
-    await bot.send_message(chat_id= ADMIN_ID,
-                           text = f"user_id from webapp: {user_id}")
+    await bot.send_message(chat_id=ADMIN_ID,
+                           text=f"user_id from webapp: {user_id}")
     return {"ok": True}
 
 
@@ -130,7 +138,7 @@ async def get_expenses(user_id: int, month: str):
     return {
         "status": "ok",
         "expenses": expenses,
-        "total":  round(total, 2),
+        "total": round(total, 2),
     }
 
 
@@ -183,9 +191,8 @@ async def delete_expense(data: dict):
 
 @f_api.get("/api/categories/{user_id}")
 async def get_categories(user_id: int):
-
     categories = await redis_db.lrange(
-        f"user:{user_id}:categories",0,-1)
+        f"user:{user_id}:categories", 0, -1)
 
     print("REDIS CATEGORIES =", categories)
 
@@ -194,9 +201,9 @@ async def get_categories(user_id: int):
         "categories": categories
     }
 
+
 @f_api.post("/api/categories")
 async def add_category(data: CategoryModel):
-
     key = f"user:{data.user_id}:categories"
 
     await redis_db.rpush(key, data.category)
@@ -205,9 +212,9 @@ async def add_category(data: CategoryModel):
         "status": "ok"
     }
 
+
 @f_api.post("/api/categories/delete")
 async def delete_category(data: CategoryModel):
-
     # Проверяем все месяцы пользователя
     pattern = f"user:{data.user_id}:expenses:*"
 
@@ -219,7 +226,6 @@ async def delete_category(data: CategoryModel):
 
         for expense in expenses:
             if expense["category"] == data.category:
-
                 return {
                     "status": "error",
                     "message": "Category is not empty"
@@ -246,16 +252,78 @@ async def delete_category(data: CategoryModel):
     }
 
 
+@f_api.post("/api/categories/rename")
+async def rename_category(data: RenameCategoryModel):
+    categories_key = f"user:{data.user_id}:categories"
 
+    # Проверяем, что новое имя ещё не существует
+    categories = await redis_db.lrange(categories_key, 0, -1)
 
+    if not data.new_name.strip():
+        return {
+            "status": "error",
+            "message": "Category name is empty"
+        }
 
+    if data.new_name in categories:
+        return {
+            "status": "error",
+            "message": "Category already exists"
+        }
 
+    if data.old_name not in categories:
+        return {
+            "status": "error",
+            "message": "Category not found"
+        }
+    # ---------- Переименовываем категорию ----------
 
+    index = categories.index(data.old_name)
 
+    await redis_db.lset(
+        categories_key,
+        index,
+        data.new_name
+    )
 
+    # ---------- Обновляем все расходы ----------
 
+    pattern = f"user:{data.user_id}:expenses:*"
 
+    async for key in redis_db.scan_iter(match=pattern):
 
+        raw = await redis_db.lrange(key, 0, -1)
+
+        expenses = [json.loads(item) for item in raw]
+
+        changed = False
+
+        for expense in expenses:
+
+            if expense["category"] == data.old_name:
+                expense["category"] = data.new_name
+
+                changed = True
+
+        if changed:
+
+            await redis_db.delete(key)
+
+            if expenses:
+                await redis_db.rpush(
+                    key,
+                    *[
+                        json.dumps(
+                            expense,
+                            ensure_ascii=False
+                        )
+                        for expense in expenses
+                    ]
+                )
+
+    return {
+        "status": "ok"
+    }
 
 
 ################################INCOMES########################
@@ -297,10 +365,8 @@ async def add_income(income: IncomeIn):
     }
 
 
-
 @f_api.get("/api/incomes/{user_id}/{month}")
 async def get_incomes(user_id: int, month: str):
-
     key = f"user:{user_id}:incomes_inc:{month}"
 
     raw = await redis_db.lrange(key, 0, -1)
@@ -313,6 +379,7 @@ async def get_incomes(user_id: int, month: str):
         "incomes": user_incomes,
         "total": total
     }
+
 
 @f_api.post("/api/incomes/delete")
 async def delete_income(data: dict):
@@ -347,15 +414,16 @@ async def delete_income(data: dict):
     return {"ok": True,
             "total": total}
 
+
 ## ## ## ## ## ## ## ############ Bot Report ###################################
 bez_nazwanija = {
-    'ru':'Без названия',
-    'uk':'Без назви',
-    'de':'Ohne Titel',
-    'tr':'Başlıksız'
+    'ru': 'Без названия',
+    'uk': 'Без назви',
+    'de': 'Ohne Titel',
+    'tr': 'Başlıksız'
 }
 
-monthDict= {
+monthDict = {
     '2026-01': 'January 2026',
     '2026-02': 'February 2026',
     '2026-03': 'March 2026',
@@ -369,8 +437,8 @@ monthDict= {
     '2026-11': 'November 2026',
     '2026-12': 'December 2026'}
 
-async def build_expense_report(redis_db, user_id: int, month: str, lan: str, total:float)->dict:
 
+async def build_expense_report(redis_db, user_id: int, month: str, lan: str, total: float) -> dict:
     key = f"user:{user_id}:expenses:{month}"
     raw = await redis_db.lrange(key, 0, -1)
 
@@ -387,7 +455,6 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
 
     # заголовок
     message = f"<b>📊 {report_for[lan]} {monthDict[month]}</b>\n\n"
-
 
     for category, items in grouped.items():
 
@@ -422,12 +489,8 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
     return message
 
 
-
-
-
 @f_api.post("/api/report")
 async def receive_telegram_data(data: dict):
-
     user_id = data["user_id"]
     month = data["month"]
     lan = data.get("lan", "ru")
@@ -448,7 +511,3 @@ async def receive_telegram_data(data: dict):
     )
 
     return {"ok": True}
-
-
-
-

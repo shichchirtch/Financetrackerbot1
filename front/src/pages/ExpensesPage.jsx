@@ -6,6 +6,7 @@ import {useSelector} from "react-redux";
 import {useTranslation} from "../features/customHoock";
 import CategoryModal from "./CategoryModal.jsx";
 import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
+import RenameCategoryModal from "./RenameCategoryModal.jsx";
 
 
 export default function ExpensesPage() {
@@ -240,6 +241,12 @@ export default function ExpensesPage() {
                     onClose={() => setDeleteCategoryModal(false)}
                 />
             )}
+
+            {renameCategoryModal && (
+    <RenameCategoryModal
+        onClose={() => setRenameCategoryModal(false)}
+    />
+)}
 
         </>
 

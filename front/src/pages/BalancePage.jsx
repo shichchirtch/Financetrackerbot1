@@ -179,22 +179,6 @@ export default function BalancePage() {
     }, [grouped, categoryMap]);
 
 
-    //
-    // const orderedGroups = useMemo(() => {
-    //
-    //     return Object.entries(grouped).sort(([a], [b]) => {
-    //
-    //         const ia = categories.indexOf(a);
-    //         const ib = categories.indexOf(b);
-    //
-    //         return (ia === -1 ? 999 : ia)
-    //             - (ib === -1 ? 999 : ib);
-    //
-    //     });
-    //
-    // }, [grouped, categories]);
-
-
     console.log('total 176 = ', total)
     console.log('grouped = ', grouped)
     console.log('total =', total)

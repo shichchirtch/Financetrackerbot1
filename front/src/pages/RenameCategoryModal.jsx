@@ -177,7 +177,7 @@ export default function RenameCategoryModal({onClose}) {
                             disabled:opacity-40
                         "
                     >
-                        {loading ? "..." : t("Save")}
+                        {loading ? "..." : t("ToSave")}
                     </button>
 
                 </div>

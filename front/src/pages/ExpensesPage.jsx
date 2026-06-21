@@ -9,6 +9,8 @@ import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
 import RenameCategoryModal from "./RenameCategoryModal.jsx";
 import CurrencyModal from "./CurrencyModal.jsx";
 import CategoryButton from "../components/category/CategoryButton";
+import {DndContext, closestCenter} from "@dnd-kit/core";
+import {SortableContext, rectSortingStrategy, arrayMove} from "@dnd-kit/sortable";
 
 
 export default function ExpensesPage() {
@@ -18,6 +20,7 @@ export default function ExpensesPage() {
     const categories = useSelector(state => state.category.spisokKategories);
     const {t} = useTranslation()
     const [menuOpen, setMenuOpen] = useState(false);
+    const [orderedCategories, setOrderedCategories] = useState([]);
 
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
 
@@ -50,6 +53,31 @@ export default function ExpensesPage() {
         };
 
     }, []);
+
+    useEffect(() => {
+
+        setOrderedCategories(categories);
+
+    }, [categories]);
+
+    function handleDragEnd(event) {
+
+        const {active, over} = event;
+
+        if (!over || active.id === over.id) return;
+
+        const oldIndex = orderedCategories.indexOf(active.id);
+        const newIndex = orderedCategories.indexOf(over.id);
+
+        setOrderedCategories(
+            arrayMove(
+                orderedCategories,
+                oldIndex,
+                newIndex
+            )
+        );
+
+    }
 
     return (
         <>
@@ -177,70 +205,80 @@ export default function ExpensesPage() {
 
                     </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-3"
+                <DndContext
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
                 >
-                    {categories.map(category => (
 
-                        <CategoryButton
+                    <SortableContext
+                        items={orderedCategories}
+                        strategy={rectSortingStrategy}
+                    >
 
-                            key={category}
+                        <div className="grid grid-cols-2 gap-3">
+                            {orderedCategories.map(category => (
 
-                            category={category}
+                                <CategoryButton
 
-                            onClick={() => setSelectedCategory(category)}
+                                    key={category}
 
-                        />
+                                    category={category}
 
-                    ))}
+                                    onClick={() => setSelectedCategory(category)}
 
-                    {/*        {categories.map(category => (*/}
-                    {/*            <button*/}
-                    {/*                key={category}*/}
-                    {/*                className="*/}
-                    {/*  h-16*/}
-                    {/*  rounded-xl*/}
-                    {/*  text-sm*/}
-                    {/*  font-medium*/}
-                    {/*  bg-gradient-to-br*/}
-                    {/*  from-[#7489a3]*/}
-                    {/*  to-[#2F3D45]*/}
-                    {/*  hover:bg-[#6f8095]*/}
-                    {/*  active:scale-95*/}
-                    {/*  transition*/}
-                    {/*  shadow-md*/}
-                    {/*"*/}
-                    {/*                onClick={() => setSelectedCategory(category)}*/}
-                    {/*            >*/}
-                    {/*                {category}*/}
-                    {/*            </button>*/}
-                    {/*        ))}*/}
-                </div>
+                                />
 
-                <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
-                    <Link to="/">
-                        <button className="px-12 py-1.5
+                            ))}
+
+                            {/*        {categories.map(category => (*/}
+                            {/*            <button*/}
+                            {/*                key={category}*/}
+                            {/*                className="*/}
+                            {/*  h-16*/}
+                            {/*  rounded-xl*/}
+                            {/*  text-sm*/}
+                            {/*  font-medium*/}
+                            {/*  bg-gradient-to-br*/}
+                            {/*  from-[#7489a3]*/}
+                            {/*  to-[#2F3D45]*/}
+                            {/*  hover:bg-[#6f8095]*/}
+                            {/*  active:scale-95*/}
+                            {/*  transition*/}
+                            {/*  shadow-md*/}
+                            {/*"*/}
+                            {/*                onClick={() => setSelectedCategory(category)}*/}
+                            {/*            >*/}
+                            {/*                {category}*/}
+                            {/*            </button>*/}
+                            {/*        ))}*/}
+                        </div>
+                    </SortableContext>
+                </DndContext>
+
+                        <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
+                            <Link to="/">
+                                <button className="px-12 py-1.5
                          bg-gradient-to-br
                     from-sky-400
                     to-sky-950
                     active:scale-95
                         rounded-lg">
-                            {t('Back')}
-                        </button>
+                                    {t('Back')}
+                                </button>
 
-                    </Link>
+                            </Link>
 
-                    <Link to="/balance">
-                        <button className=" py-1.5 px-12
+                            <Link to="/balance">
+                                <button className=" py-1.5 px-12
                            bg-gradient-to-br
                     from-cyan-400
                     bg-sky-950
                     active:scale-95
                         rounded-lg">
-                            {t('Budget')}
-                        </button>
-                    </Link>
-                </div>
+                                    {t('Budget')}
+                                </button>
+                            </Link>
+                        </div>
             </div>
             {selectedCategory && (
                 <ExpenseModal
@@ -272,6 +310,6 @@ export default function ExpensesPage() {
 
         </>
 
-    )
+)
 }
 

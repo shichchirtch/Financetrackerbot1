@@ -10,6 +10,7 @@ import {formGet} from "../../app/formGet.js";
 import {setCategories} from "../../features/category/categorySlice.js";
 import {setCurrency} from "../../features/currency/currencySlice.js";
 
+
 function Layout() {
     const wa = window.Telegram?.WebApp;
     const tgUser = wa?.initDataUnsafe?.user;

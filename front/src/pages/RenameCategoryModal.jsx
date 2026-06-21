@@ -80,7 +80,7 @@ export default function RenameCategoryModal({onClose}) {
         flex
         justify-center
         items-start
-        pt-[10vh]
+        pt-24
         pb-10
         z-50
     "

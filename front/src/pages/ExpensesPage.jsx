@@ -7,6 +7,7 @@ import {useTranslation} from "../features/customHoock";
 import CategoryModal from "./CategoryModal.jsx";
 import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
 import RenameCategoryModal from "./RenameCategoryModal.jsx";
+import CurrencyModal from "./CurrencyModal.jsx";
 
 
 export default function ExpensesPage() {
@@ -23,7 +24,7 @@ export default function ExpensesPage() {
 
     const [currencyModal, setCurrencyModal] = useState(false);
     const menuRef = useRef(null);
-
+    const currency = useSelector(state => state.currency.currency);
 
     useEffect(() => {
 
@@ -245,6 +246,12 @@ export default function ExpensesPage() {
             {renameCategoryModal && (
     <RenameCategoryModal
         onClose={() => setRenameCategoryModal(false)}
+    />
+)}
+
+            {currencyModal && (
+    <CurrencyModal
+        onClose={() => setCurrencyModal(false)}
     />
 )}
 

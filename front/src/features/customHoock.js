@@ -31,7 +31,8 @@ const translations = {
         NewCategory: 'Новая категория',
         CategoryName:'Имя категории',
         DeleteCategoriy:'Удалить Категорию',
-        RenameCategory:'Переименовать Категорию'
+        RenameCategory:'Переименовать Категорию',
+        Currency: "Валюта"
     },
     de: {
         Hello: "Hallo",
@@ -63,7 +64,8 @@ const translations = {
         NewCategory:'Neue Kategorie',
         CategoryName:'Kategoriename',
         DeleteCategoriy:'Kategorie löschen',
-        RenameCategory:'Kategorie umbenennen'
+        RenameCategory:'Kategorie umbenennen',
+        Currency: "Währung"
     },
 
     uk: {
@@ -96,7 +98,8 @@ const translations = {
         NewCategory:'Нова категорія',
         CategoryName:'Назва категорії',
         DeleteCategoriy:'Видалити категорію',
-        RenameCategory:'Перейменувати категорію'
+        RenameCategory:'Перейменувати категорію',
+        Currency: "Валюта"
     },
 
     tr: {
@@ -129,7 +132,8 @@ const translations = {
         NewCategory:'Yeni kategori',
         CategoryName:'Kategori adı',
         DeleteCategoriy:'Kategoriyi sil',
-        RenameCategory:'Kategoriyi yeniden adlandır'
+        RenameCategory:'Kategoriyi yeniden adlandır',
+        Currency: "para birimi"
     }
 }
 

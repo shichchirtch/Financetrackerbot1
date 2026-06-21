@@ -8,6 +8,7 @@ import {useTranslation} from "../../features/customHoock";
 import {formPost} from "../../app/formPost.js";
 import {formGet} from "../../app/formGet.js";
 import {setCategories} from "../../features/category/categorySlice.js";
+import {setCurrency} from "../../features/currency/currencySlice.js";
 
 function Layout() {
     const wa = window.Telegram?.WebApp;
@@ -51,6 +52,10 @@ function Layout() {
             const categories = await formGet(`/api/categories/${tgUser.id}`);
             console.log("DATA CATEGORIES =", categories);
             dispatch(setCategories(categories.categories));
+
+            const settings = await formGet(`/api/settings/${tgUser.id}`);
+
+            dispatch(setCurrency(settings.currency));
         }
 
         initUser()

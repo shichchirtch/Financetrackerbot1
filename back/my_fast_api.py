@@ -43,6 +43,10 @@ class RenameCategoryModel(BaseModel):
     old_name: str
     new_name: str
 
+class CurrencyModel(BaseModel):
+    user_id: int
+    currency: str
+
 
 f_api = FastAPI(
     middleware=[
@@ -414,6 +418,23 @@ async def delete_income(data: dict):
     return {"ok": True,
             "total": total}
 
+############################# C U R R E N C Y ################################
+
+@f_api.post("/api/settings/currency")
+async def change_currency(data: CurrencyModel):
+
+    settings = json.loads(
+        await redis_db.get(f"user:{data.user_id}:settings")
+    )
+
+    settings["currency"] = data.currency
+
+    await redis_db.set(
+        f"user:{data.user_id}:settings",
+        json.dumps(settings)
+    )
+
+    return {"status": "ok"}
 
 ## ## ## ## ## ## ## ############ Bot Report ###################################
 bez_nazwanija = {
@@ -439,7 +460,14 @@ monthDict = {
 
 
 async def build_expense_report(redis_db, user_id: int, month: str, lan: str, total: float) -> dict:
+    settings = json.loads(
+        await redis_db.get(f"user:{user_id}:settings")
+    )
+
+    currency = settings["currency"]
+
     key = f"user:{user_id}:expenses:{month}"
+
     raw = await redis_db.lrange(key, 0, -1)
 
     expenses = [json.loads(item) for item in raw]
@@ -476,15 +504,15 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
 
             category_total += price
 
-            message += f"{date_str} — {title} — {price} €\n"
+            message += f"{date_str} — {title} — {price} {currency}\n"
 
             # 👇 Показываем "Итого" только если больше одной записи
         if len(items) > 1:
-            message += f"Итого: <b>{round(category_total, 2)} €</b>\n"
+            message += f"Итого: <b>{round(category_total, 2)} {currency}</b>\n"
 
         message += "\n"
 
-    message += f"<b>💰 Общий итог: {round(float(total), 2)} €</b>"
+    message += f"<b>💰 Общий итог: {round(float(total), 2)} {currency}</b>"
 
     return message
 

@@ -79,36 +79,35 @@ export default function RenameCategoryModal({onClose}) {
                     {t("RenameCategory")}
                 </h2>
 
-                <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="
-                        w-full
-                        rounded-lg
-                        p-2
-                        mb-4
-                        bg-slate-700
-                        text-white
-                        border border-slate-600
-                    "
-                >
-
-                    <option value="">
-                        {t("SelectCategory")}
-                    </option>
+                <div className="max-h-72 overflow-y-auto space-y-2 mb-5">
 
                     {categories.map(category => (
 
-                        <option
+                        <button
+
                             key={category}
-                            value={category}
+
+                            onClick={() => setSelectedCategory(category)}
+
+                            className={`
+                w-full
+                rounded-lg
+                p-3
+                text-left
+                transition
+                ${
+                                selectedCategory === category
+                                    ? "bg-sky-700 text-white"
+                                    : "bg-slate-700 hover:bg-slate-600 text-white"
+                            }
+            `}
                         >
                             {category}
-                        </option>
+                        </button>
 
                     ))}
 
-                </select>
+                </div>
 
                 <input
 

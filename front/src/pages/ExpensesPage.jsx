@@ -8,6 +8,7 @@ import CategoryModal from "./CategoryModal.jsx";
 import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
 import RenameCategoryModal from "./RenameCategoryModal.jsx";
 import CurrencyModal from "./CurrencyModal.jsx";
+import CategoryButton from "../components/category/CategoryButton";
 
 
 export default function ExpensesPage() {
@@ -57,18 +58,18 @@ export default function ExpensesPage() {
         ">
                 <div className="flex items-center justify-between mb-6 mt-4">
 
-    <h2 className="text-xl font-semibold">
-        {t("ArtOfExpenses")}
-    </h2>
+                    <h2 className="text-xl font-semibold">
+                        {t("ArtOfExpenses")}
+                    </h2>
 
-    <div
-        ref={menuRef}
-        className="relative"
-    >
+                    <div
+                        ref={menuRef}
+                        className="relative"
+                    >
 
-        <button
-            onClick={() => setMenuOpen(prev => !prev)}
-            className="
+                        <button
+                            onClick={() => setMenuOpen(prev => !prev)}
+                            className="
                 w-8
                 h-8
                 rounded-lg
@@ -80,14 +81,14 @@ export default function ExpensesPage() {
                 items-center
                 justify-center
             "
-        >
-            ☰
-        </button>
+                        >
+                            ☰
+                        </button>
 
-                    {menuOpen && (
+                        {menuOpen && (
 
-                        <div
-                            className="
+                            <div
+                                className="
                 absolute
                 right-0
                 mt-2
@@ -101,105 +102,119 @@ export default function ExpensesPage() {
     origin-top-right
     transition-all
     duration-200"
-                        >
+                            >
 
 
-                            <button
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                    setCategoryModal(true);
-                                }}
-                                className="
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        setCategoryModal(true);
+                                    }}
+                                    className="
                     w-full
                     text-left
                     px-4
                     py-3
                     hover:bg-slate-700
                 "
-                            >
-                                ➕ {t("AddCategory")}
-                            </button>
+                                >
+                                    ➕ {t("AddCategory")}
+                                </button>
 
-                            <button
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                    setRenameCategoryModal(true);
-                                }}
-                                className="
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        setRenameCategoryModal(true);
+                                    }}
+                                    className="
                     w-full
                     text-left
                     px-4
                     py-3
                     hover:bg-slate-700
                 "
-                            >
-                                ✏️ {t("RenameCategory")}
-                            </button>
+                                >
+                                    ✏️ {t("RenameCategory")}
+                                </button>
 
-                            <button
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                    setDeleteCategoryModal(true);
-                                }}
-                                className="
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        setDeleteCategoryModal(true);
+                                    }}
+                                    className="
                     w-full
                     text-left
                     px-4
                     py-3
                     hover:bg-slate-700
                 "
-                            >
-                                🗑 {t("DeleteCategory")}
-                            </button>
+                                >
+                                    🗑 {t("DeleteCategory")}
+                                </button>
 
-                            <div className="border-t border-slate-600"/>
+                                <div className="border-t border-slate-600"/>
 
-                            <button
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                    setCurrencyModal(true);
-                                }}
-                                className="
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        setCurrencyModal(true);
+                                    }}
+                                    className="
                     w-full
                     text-left
                     px-4
                     py-3
                     hover:bg-slate-700
                 "
-                            >
-                                💶 {t("Currency")}
-                            </button>
+                                >
+                                    💶 {t("Currency")}
+                                </button>
 
-                        </div>
+                            </div>
 
-                    )}
+                        )}
 
-                </div>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3"
                 >
                     {categories.map(category => (
-                        <button
+
+                        <CategoryButton
+
                             key={category}
-                            className="
-              h-16
-              rounded-xl
-              text-sm
-              font-medium
-              bg-gradient-to-br
-              from-[#7489a3]
-              to-[#2F3D45]
-              hover:bg-[#6f8095]
-              active:scale-95
-              transition
-              shadow-md
-            "
+
+                            category={category}
+
                             onClick={() => setSelectedCategory(category)}
-                        >
-                            {category}
-                        </button>
+
+                        />
+
                     ))}
+
+                    {/*        {categories.map(category => (*/}
+                    {/*            <button*/}
+                    {/*                key={category}*/}
+                    {/*                className="*/}
+                    {/*  h-16*/}
+                    {/*  rounded-xl*/}
+                    {/*  text-sm*/}
+                    {/*  font-medium*/}
+                    {/*  bg-gradient-to-br*/}
+                    {/*  from-[#7489a3]*/}
+                    {/*  to-[#2F3D45]*/}
+                    {/*  hover:bg-[#6f8095]*/}
+                    {/*  active:scale-95*/}
+                    {/*  transition*/}
+                    {/*  shadow-md*/}
+                    {/*"*/}
+                    {/*                onClick={() => setSelectedCategory(category)}*/}
+                    {/*            >*/}
+                    {/*                {category}*/}
+                    {/*            </button>*/}
+                    {/*        ))}*/}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
@@ -244,16 +259,16 @@ export default function ExpensesPage() {
             )}
 
             {renameCategoryModal && (
-    <RenameCategoryModal
-        onClose={() => setRenameCategoryModal(false)}
-    />
-)}
+                <RenameCategoryModal
+                    onClose={() => setRenameCategoryModal(false)}
+                />
+            )}
 
             {currencyModal && (
-    <CurrencyModal
-        onClose={() => setCurrencyModal(false)}
-    />
-)}
+                <CurrencyModal
+                    onClose={() => setCurrencyModal(false)}
+                />
+            )}
 
         </>
 

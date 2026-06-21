@@ -9,7 +9,7 @@ import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
 import RenameCategoryModal from "./RenameCategoryModal.jsx";
 import CurrencyModal from "./CurrencyModal.jsx";
 import CategoryButton from "../components/category/CategoryButton";
-import {DndContext, closestCenter} from "@dnd-kit/core";
+import {DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, rectSortingStrategy, arrayMove} from "@dnd-kit/sortable";
 
 
@@ -29,6 +29,19 @@ export default function ExpensesPage() {
     const [currencyModal, setCurrencyModal] = useState(false);
     const menuRef = useRef(null);
     const currency = useSelector(state => state.currency.currency);
+
+    const sensors = useSensors(useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 200,
+                tolerance: 8,
+            },
+        })
+    );
 
     useEffect(() => {
 
@@ -206,6 +219,7 @@ export default function ExpensesPage() {
                     </div>
                 </div>
                 <DndContext
+                    sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}
                 >
@@ -255,30 +269,30 @@ export default function ExpensesPage() {
                     </SortableContext>
                 </DndContext>
 
-                        <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
-                            <Link to="/">
-                                <button className="px-12 py-1.5
+                <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
+                    <Link to="/">
+                        <button className="px-12 py-1.5
                          bg-gradient-to-br
                     from-sky-400
                     to-sky-950
                     active:scale-95
                         rounded-lg">
-                                    {t('Back')}
-                                </button>
+                            {t('Back')}
+                        </button>
 
-                            </Link>
+                    </Link>
 
-                            <Link to="/balance">
-                                <button className=" py-1.5 px-12
+                    <Link to="/balance">
+                        <button className=" py-1.5 px-12
                            bg-gradient-to-br
                     from-cyan-400
                     bg-sky-950
                     active:scale-95
                         rounded-lg">
-                                    {t('Budget')}
-                                </button>
-                            </Link>
-                        </div>
+                            {t('Budget')}
+                        </button>
+                    </Link>
+                </div>
             </div>
             {selectedCategory && (
                 <ExpenseModal
@@ -310,6 +324,6 @@ export default function ExpensesPage() {
 
         </>
 
-)
+    )
 }
 

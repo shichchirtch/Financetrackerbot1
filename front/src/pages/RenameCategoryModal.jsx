@@ -71,7 +71,20 @@ export default function RenameCategoryModal({onClose}) {
 
     return (
 
-        <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
+<div
+    className="
+        fixed
+        inset-0
+        bg-black/60
+        overflow-y-auto
+        flex
+        justify-center
+        items-start
+        pt-10
+        pb-10
+        z-50
+    "
+>
 
             <div className="w-80 rounded-xl bg-slate-800 p-5 shadow-xl">
 

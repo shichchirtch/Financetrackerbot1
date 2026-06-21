@@ -30,7 +30,8 @@ const translations = {
         DeleteAct:'Удалить',
         NewCategory: 'Новая категория',
         CategoryName:'Имя категории',
-        DeleteCategoriy:''
+        DeleteCategoriy:'Удалить Категорию',
+        RenameCategory:'Переименовать Категорию'
     },
     de: {
         Hello: "Hallo",
@@ -61,7 +62,8 @@ const translations = {
         DeleteAct:'Löschen',
         NewCategory:'Neue Kategorie',
         CategoryName:'Kategoriename',
-        DeleteCategoriy:'Kategorie löschen'
+        DeleteCategoriy:'Kategorie löschen',
+        RenameCategory:'Kategorie umbenennen'
     },
 
     uk: {
@@ -93,7 +95,8 @@ const translations = {
         DeleteAct:'Видалити',
         NewCategory:'Нова категорія',
         CategoryName:'Назва категорії',
-        DeleteCategoriy:'Видалити категорію'
+        DeleteCategoriy:'Видалити категорію',
+        RenameCategory:'Перейменувати категорію'
     },
 
     tr: {
@@ -125,7 +128,8 @@ const translations = {
         DeleteAct:'Silmek',
         NewCategory:'Yeni kategori',
         CategoryName:'Kategori adı',
-        DeleteCategoriy:'Kategoriyi sil'
+        DeleteCategoriy:'Kategoriyi sil',
+        RenameCategory:'Kategoriyi yeniden adlandır'
     }
 }
 

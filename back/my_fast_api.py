@@ -466,6 +466,19 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
 
     currency = settings["currency"]
 
+    print("\n\nCurrency: ", currency)
+
+    currency_symbols = {
+        "EUR": "€",
+        "USD": "$",
+        "RUB": "₽",
+        "UAH": "₴"
+    }
+
+    currency = settings["currency"]
+
+    currency_symbol = currency_symbols.get(currency, currency)
+
     key = f"user:{user_id}:expenses:{month}"
 
     raw = await redis_db.lrange(key, 0, -1)
@@ -504,15 +517,15 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
 
             category_total += price
 
-            message += f"{date_str} — {title} — {price} {currency}\n"
+            message += f"{date_str} — {title} — {price} {currency_symbol}\n"
 
             # 👇 Показываем "Итого" только если больше одной записи
         if len(items) > 1:
-            message += f"Итого: <b>{round(category_total, 2)} {currency}</b>\n"
+            message += f"Итого: <b>{round(category_total, 2)} {currency_symbol}</b>\n"
 
         message += "\n"
 
-    message += f"<b>💰 Общий итог: {round(float(total), 2)} {currency}</b>"
+    message += f"<b>💰 Общий итог: {round(float(total), 2)} {currency_symbol}</b>"
 
     return message
 

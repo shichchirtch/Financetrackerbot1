@@ -6,7 +6,7 @@ import {setCurrency} from "../features/currency/currencySlice";
 
 const currencies = [
     {
-        code: "EUR",
+        code: "€",
         title: "€ Euro"
     },
     {

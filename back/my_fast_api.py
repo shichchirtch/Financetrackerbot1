@@ -48,6 +48,11 @@ class CurrencyModel(BaseModel):
     currency: str
 
 
+class ReorderCategoriesModel(BaseModel):
+    user_id: int
+    categories: list[str]
+
+
 f_api = FastAPI(
     middleware=[
         Middleware(
@@ -329,6 +334,27 @@ async def rename_category(data: RenameCategoryModel):
         "status": "ok"
     }
 
+
+#############################  Пересоздание списка категория в катомномн порядке #######################
+
+@f_api.post("/api/categories/reorder")
+async def reorder_categories(data: ReorderCategoriesModel):
+
+    key = f"user:{data.user_id}:categories"
+
+    # удаляем старый список
+    await redis_db.delete(key)
+
+    # записываем новый порядок
+    if data.categories:
+        await redis_db.rpush(
+            key,
+            *data.categories
+        )
+
+    return {
+        "status": "ok"
+    }
 
 ################################INCOMES########################
 

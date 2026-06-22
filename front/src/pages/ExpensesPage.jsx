@@ -2,7 +2,7 @@
 import {Link} from 'react-router-dom'
 import {useState, useRef, useEffect} from "react";
 import ExpenseModal from '../components/rashod/ExpenseModal'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useTranslation} from "../features/customHoock";
 import CategoryModal from "./CategoryModal.jsx";
 import DeleteCategoryModal from "./DeleteCategotiesModul.jsx";
@@ -12,7 +12,8 @@ import CategoryButton from "../components/category/CategoryButton";
 import {DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, rectSortingStrategy, arrayMove} from "@dnd-kit/sortable";
 import SortableCategoryButton from "../components/category/SortableCategoryButton.jsx";
-
+import {formPost} from "../app/formPost.js";
+import {setCategories} from "../features/category/categorySlice";
 
 export default function ExpensesPage() {
 
@@ -22,16 +23,16 @@ export default function ExpensesPage() {
     const {t} = useTranslation()
     const [menuOpen, setMenuOpen] = useState(false);
     const [orderedCategories, setOrderedCategories] = useState([]);
-
+    const user_id =  useSelector(state => state.user.account?.user_id)
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
 
     const [renameCategoryModal, setRenameCategoryModal] = useState(false);
 
     const [currencyModal, setCurrencyModal] = useState(false);
     const menuRef = useRef(null);
-    const currency = useSelector(state => state.currency.currency);
 
     const [dragMode, setDragMode] = useState(false);
+    const dispatch = useDispatch()
 
     const sensors = useSensors(useSensor(PointerSensor, {
             activationConstraint: {
@@ -94,6 +95,35 @@ export default function ExpensesPage() {
             )
         );
     }
+
+    async function handleToggleSortMode() {
+
+    setMenuOpen(false);
+
+    if (dragMode) {
+
+        await formPost(
+            "/api/categories/reorder",
+            {
+                user_id,
+                categories: orderedCategories,
+            }
+        );
+
+        dispatch(setCategories(orderedCategories));
+
+        setDragMode(false);
+
+        window.Telegram?.WebApp?.HapticFeedback
+            ?.notificationOccurred("success");
+
+    } else {
+
+        setDragMode(true);
+
+    }
+
+}
 
     return (
         <>
@@ -200,24 +230,7 @@ export default function ExpensesPage() {
                                 <div className="border-t border-slate-600"/>
 
                                 <button
-                                    onClick={() => {
-                                        setMenuOpen(false);
-                                        if (dragMode) {
-
-                                            // ← сюда потом добавим POST
-                                            // await formPost("/api/categories/reorder"...)
-
-                                            setDragMode(false);
-                                            window.Telegram?.WebApp?.HapticFeedback
-                                                ?.notificationOccurred("success");
-
-                                        } else {
-
-                                            setDragMode(true);
-
-
-                                        }
-                                    }}
+                                    onClick={handleToggleSortMode}
                                     className="
                                         w-full
                                         text-left

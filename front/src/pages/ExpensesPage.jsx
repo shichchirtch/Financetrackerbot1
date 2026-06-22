@@ -11,6 +11,7 @@ import CurrencyModal from "./CurrencyModal.jsx";
 import CategoryButton from "../components/category/CategoryButton";
 import {DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, rectSortingStrategy, arrayMove} from "@dnd-kit/sortable";
+import SortableCategoryButton from "../components/category/SortableCategoryBatton.jsx";
 
 
 export default function ExpensesPage() {
@@ -29,6 +30,8 @@ export default function ExpensesPage() {
     const [currencyModal, setCurrencyModal] = useState(false);
     const menuRef = useRef(null);
     const currency = useSelector(state => state.currency.currency);
+
+    const [dragMode, setDragMode] = useState(false);
 
     const sensors = useSensors(useSensor(PointerSensor, {
             activationConstraint: {
@@ -89,7 +92,6 @@ export default function ExpensesPage() {
                 newIndex
             )
         );
-
     }
 
     return (
@@ -199,6 +201,39 @@ export default function ExpensesPage() {
                                 <button
                                     onClick={() => {
                                         setMenuOpen(false);
+                                        if (dragMode) {
+
+                                            // ← сюда потом добавим POST
+                                            // await formPost("/api/categories/reorder"...)
+
+                                            setDragMode(false);
+                                            window.Telegram?.WebApp?.HapticFeedback
+                                                ?.notificationOccurred("success");
+
+                                        } else {
+
+                                            setDragMode(true);
+
+
+                                        }
+                                    }}
+                                    className="
+                                        w-full
+                                        text-left
+                                        px-4
+                                        py-3
+                                        hover:bg-slate-700
+                                        "
+                                >
+                                    {dragMode
+                                        ? `✅ ${t("FinishSorting")}`
+                                        : `↕️ ${t("SortCategories")}`
+                                    }
+                                </button>
+
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
                                         setCurrencyModal(true);
                                     }}
                                     className="
@@ -218,6 +253,25 @@ export default function ExpensesPage() {
 
                     </div>
                 </div>
+
+
+                {dragMode && (
+                    <div
+                        className="
+            mb-3
+            rounded-lg
+            bg-sky-900/40
+            border
+            border-sky-600
+            p-3
+            text-sm
+            text-sky-200
+        "
+                    >
+                        ↕️ {t("DragCategoriesHint")}
+                    </div>
+                )}
+
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -232,39 +286,27 @@ export default function ExpensesPage() {
                         <div className="grid grid-cols-2 gap-3">
                             {orderedCategories.map(category => (
 
-                                <CategoryButton
 
-                                    key={category}
+                                dragMode ? (
 
-                                    category={category}
 
-                                    onClick={() => setSelectedCategory(category)}
+                                    <SortableCategoryButton
+                                        key={category}
+                                        category={category}
+                                    />
 
-                                />
+                                ) : (
+
+                                    <CategoryButton
+                                        key={category}
+                                        category={category}
+                                        onClick={() => setSelectedCategory(category)}
+                                    />
+
+                                )
 
                             ))}
 
-                            {/*        {categories.map(category => (*/}
-                            {/*            <button*/}
-                            {/*                key={category}*/}
-                            {/*                className="*/}
-                            {/*  h-16*/}
-                            {/*  rounded-xl*/}
-                            {/*  text-sm*/}
-                            {/*  font-medium*/}
-                            {/*  bg-gradient-to-br*/}
-                            {/*  from-[#7489a3]*/}
-                            {/*  to-[#2F3D45]*/}
-                            {/*  hover:bg-[#6f8095]*/}
-                            {/*  active:scale-95*/}
-                            {/*  transition*/}
-                            {/*  shadow-md*/}
-                            {/*"*/}
-                            {/*                onClick={() => setSelectedCategory(category)}*/}
-                            {/*            >*/}
-                            {/*                {category}*/}
-                            {/*            </button>*/}
-                            {/*        ))}*/}
                         </div>
                     </SortableContext>
                 </DndContext>

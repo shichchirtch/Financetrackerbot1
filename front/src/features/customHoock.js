@@ -32,7 +32,10 @@ const translations = {
         CategoryName:'Имя категории',
         DeleteCategoriy:'Удалить Категорию',
         RenameCategory:'Переименовать Категорию',
-        Currency: "Валюта"
+        Currency: "Валюта",
+        FinishSorting:'Сортировка закончена',
+        SortCategories:'Сортировать категории',
+        DragCategoriesHint:"Перетащите категории в нужном порядке, затем нажмите «Закончить сортировку»"
     },
     de: {
         Hello: "Hallo",
@@ -65,7 +68,10 @@ const translations = {
         CategoryName:'Kategoriename',
         DeleteCategoriy:'Kategorie löschen',
         RenameCategory:'Kategorie umbenennen',
-        Currency: "Währung"
+        Currency: "Währung",
+        FinishSorting:'Sortierung abgeschlossen',
+        SortCategories:'Kategorien sortieren',
+        DragCategoriesHint:"Ziehen Sie die Kategorien in die gewünschte Reihenfolge und klicken Sie dann auf „Sortierung abschließen“."
     },
 
     uk: {
@@ -99,7 +105,10 @@ const translations = {
         CategoryName:'Назва категорії',
         DeleteCategoriy:'Видалити категорію',
         RenameCategory:'Перейменувати категорію',
-        Currency: "Валюта"
+        Currency: "Валюта",
+        FinishSorting:'Сортування завершено',
+        SortCategories:'сортувати категорії',
+        DragCategoriesHint:"Перетягніть категорії в потрібному порядку, потім натисніть «Закінчити сортування»"
     },
 
     tr: {
@@ -133,7 +142,10 @@ const translations = {
         CategoryName:'Kategori adı',
         DeleteCategoriy:'Kategoriyi sil',
         RenameCategory:'Kategoriyi yeniden adlandır',
-        Currency: "para birimi"
+        Currency: "para birimi",
+        FinishSorting:'Sıralama tamamlandı',
+        SortCategories:'Kategorileri sırala',
+        DragCategoriesHint:"Kategorileri istediğiniz sıraya sürükleyin, ardından Sıralamayı Bitir'e tıklayın."
     }
 }
 

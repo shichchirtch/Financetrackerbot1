@@ -1,36 +1,22 @@
-import {useSortable} from "@dnd-kit/sortable";
-import {CSS} from "@dnd-kit/utilities";
+import {useRef} from "react";
 
 export default function CategoryButton({
-    category,
-    onClick
-}) {
+                                           category,
+                                           onClick,
+                                           setDragMode
+                                       }) {
 
-    const {
-        attributes,
-        listeners,
-        setNodeRef,
-        transform,
-        transition
-    } = useSortable({
-        id: category
-    });
+    function handleClick() {
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition
-    };
+        onClick();
+
+    }
 
     return (
 
         <button
 
-            ref={setNodeRef}
-
-            style={style}
-
-            {...attributes}
-            {...listeners}
+            onClick={handleClick}
 
             className="
                 h-16
@@ -45,12 +31,8 @@ export default function CategoryButton({
                 transition
                 shadow-md
             "
-
-            onClick={onClick}
-
         >
             {category}
-
         </button>
 
     );

@@ -11,7 +11,7 @@ import CurrencyModal from "./CurrencyModal.jsx";
 import CategoryButton from "../components/category/CategoryButton";
 import {DndContext, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core";
 import {SortableContext, rectSortingStrategy, arrayMove} from "@dnd-kit/sortable";
-import SortableCategoryButton from "../components/category/SortableCategoryBatton.jsx";
+import SortableCategoryButton from "../components/category/SortableCategoryButton.jsx";
 
 
 export default function ExpensesPage() {

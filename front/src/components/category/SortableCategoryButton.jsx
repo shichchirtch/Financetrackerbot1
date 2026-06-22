@@ -1,10 +1,7 @@
 import {useSortable} from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 
-export default function SortableCategoryButton({
-                                                   category
-                                               }) {
-
+export default function SortableCategoryButton({category}) {
     const {
         attributes,
         listeners,
@@ -16,9 +13,10 @@ export default function SortableCategoryButton({
     });
 
     const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-    };
+    transform: CSS.Transform.toString(transform),
+    transition,
+    touchAction: "none",
+};
 
     return (
 
@@ -43,7 +41,6 @@ export default function SortableCategoryButton({
                 cursor-grab
                 active:cursor-grabbing
                 active:scale-95
-                touch-action-none
                 select-none
                 transition
             "

@@ -35,7 +35,8 @@ export default function ExpensesPage() {
 
     const sensors = useSensors(useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 8,
+                delay: 250,
+                tolerance: 5,
             },
         }),
         useSensor(TouchSensor, {

@@ -33,7 +33,7 @@ const translations = {
         DeleteCategoriy:'Удалить Категорию',
         RenameCategory:'Переименовать Категорию',
         Currency: "Валюта",
-        FinishSorting:'Сортировка закончена',
+        FinishSorting:'Закончить сортировку',
         SortCategories:'Сортировать категории',
         DragCategoriesHint:"Перетащите категории в нужном порядке, затем нажмите «Закончить сортировку»"
     },

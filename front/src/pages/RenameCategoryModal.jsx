@@ -128,6 +128,8 @@ export default function RenameCategoryModal({onClose}) {
 
                     onChange={(e) => setNewName(e.target.value)}
 
+                    maxLength={15}
+
                     placeholder={t("NewCategoryName")}
 
                     className="

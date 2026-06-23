@@ -66,6 +66,8 @@ export default function CategoryModal({onClose}) {
 
                     onChange={(e) => setCategory(e.target.value)}
 
+                    maxLength={15}
+
                     placeholder={t("CategoryName")}
 
                     className="

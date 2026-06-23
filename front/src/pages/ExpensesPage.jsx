@@ -127,9 +127,7 @@ export default function ExpensesPage() {
 
     return (
         <>
-            <div className="w-full p-4
-        text-white
-        ">
+            <div className="w-full h-screen flex flex-col p-4 text-white">
                 <div className="flex items-center justify-between mb-6 mt-4">
 
                     <h2 className="text-xl font-semibold">
@@ -285,7 +283,7 @@ export default function ExpensesPage() {
                         ↕️ {t("DragCategoriesHint")}
                     </div>
                 )}
-
+            <div className="flex-1 overflow-y-auto">
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -324,6 +322,7 @@ export default function ExpensesPage() {
                         </div>
                     </SortableContext>
                 </DndContext>
+                </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
                     <Link to="/">

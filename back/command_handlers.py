@@ -12,10 +12,6 @@ from user_repo import *
 
 ch_router = Router()
 
-@ch_router.message(F.video)
-async def video_id_geber_messages(message: Message):
-    data = message.video.file_id
-    print('\n\nvidos tocken\n\n',data)
 
 @ch_router.message(CommandStart())
 async def command_start_process(message: Message,dialog_manager: DialogManager, state: FSMContext
@@ -50,9 +46,9 @@ async def basic_menu_start(message: Message, dialog_manager: DialogManager):
 
 @ch_router.message(Command('presentation'))
 async def provide_presentation(message: Message,  dialog_manager: DialogManager):
-    video_presentation = 'BAACAgIAAxkBAAINBWdv5xZKBAjtV3p-ThlpdMpMxxsIAAJXXQACyNSAS8TQD540NahaNgQ'
+    video_presentation = 'BAACAgIAAxkBAAIHhWo7DpHkybsdSBaSJdPxnTCz7ckgAAJ_qwACceLZSZihAAFy0FVaQzwE'
 
-    await message.answer_video(video=video_presentation, caption="🖥 Video Instruction")
+    await message.answer_video(video=video_presentation, caption="🖥 Video Instruction on YouTube https://youtu.be/Routkv_ZZEM")
     await dialog_manager.reset_stack()
     await dialog_manager.start(state=ROOT_WIND.do_nothing)
 

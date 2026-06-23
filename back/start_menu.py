@@ -10,7 +10,9 @@ async def set_main_menu(bot):
                    description='about bot'),
 
         BotCommand(command='/about_project',
-                   description='what it is')
+                   description='what it is'),
 
+        BotCommand(command='/presentation',
+                   description='instruction')
     ]
     await bot.set_my_commands(main_menu_commands)

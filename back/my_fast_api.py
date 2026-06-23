@@ -491,7 +491,7 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
     )
 
     currency = settings["currency"]
-
+    categories =  await redis_db.lrange(f"user:{user_id}:categories",0,-1)
     print("\n\nCurrency: ", currency)
 
     currency_symbols = {
@@ -500,8 +500,6 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
         "RUB": "₽",
         "UAH": "₴"
     }
-
-    currency = settings["currency"]
 
     currency_symbol = currency_symbols.get(currency, currency)
 
@@ -523,7 +521,12 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
     # заголовок
     message = f"<b>📊 {report_for[lan]} {monthDict[month]}</b>\n\n"
 
-    for category, items in grouped.items():
+    for category in categories:
+
+        if category not in grouped:
+            continue
+
+        items = grouped[category]
 
         # сортировка по дате
         items.sort(key=lambda x: x["createdAt"])
@@ -543,11 +546,17 @@ async def build_expense_report(redis_db, user_id: int, month: str, lan: str, tot
 
             category_total += price
 
-            message += f"{date_str} — {title} — {price} {currency_symbol}\n"
+            message += (
+                f"{date_str} — {title} — "
+                f"{price} {currency_symbol}\n"
+            )
 
-            # 👇 Показываем "Итого" только если больше одной записи
         if len(items) > 1:
-            message += f"Итого: <b>{round(category_total, 2)} {currency_symbol}</b>\n"
+            message += (
+                f"Итого: "
+                f"<b>{round(category_total, 2)} "
+                f"{currency_symbol}</b>\n"
+            )
 
         message += "\n"
 

@@ -23,7 +23,7 @@ export default function ExpensesPage() {
     const {t} = useTranslation()
     const [menuOpen, setMenuOpen] = useState(false);
     const [orderedCategories, setOrderedCategories] = useState([]);
-    const user_id =  useSelector(state => state.user.account?.user_id)
+    const user_id = useSelector(state => state.user.account?.user_id)
     const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
 
     const [renameCategoryModal, setRenameCategoryModal] = useState(false);
@@ -34,16 +34,24 @@ export default function ExpensesPage() {
     const [dragMode, setDragMode] = useState(false);
     const dispatch = useDispatch()
 
-    const sensors = useSensors(useSensor(PointerSensor, {
-            activationConstraint: {
-                delay: 150,
-                tolerance: 5,
-            },
-        }),
+    // const sensors = useSensors(useSensor(PointerSensor, {
+    //         activationConstraint: {
+    //             delay: 150,
+    //             tolerance: 5,
+    //         },
+    //     }),
+    //     useSensor(TouchSensor, {
+    //         activationConstraint: {
+    //             delay: 200,
+    //             tolerance: 5,
+    //         },
+    //     })
+    // );
+    const sensors = useSensors(
         useSensor(TouchSensor, {
             activationConstraint: {
-                delay: 200,
-                tolerance: 5,
+                delay: 250,
+                tolerance: 10,
             },
         })
     );
@@ -98,32 +106,32 @@ export default function ExpensesPage() {
 
     async function handleToggleSortMode() {
 
-    setMenuOpen(false);
+        setMenuOpen(false);
 
-    if (dragMode) {
+        if (dragMode) {
 
-        await formPost(
-            "/api/categories/reorder",
-            {
-                user_id,
-                categories: orderedCategories,
-            }
-        );
+            await formPost(
+                "/api/categories/reorder",
+                {
+                    user_id,
+                    categories: orderedCategories,
+                }
+            );
 
-        dispatch(setCategories(orderedCategories));
+            dispatch(setCategories(orderedCategories));
 
-        setDragMode(false);
+            setDragMode(false);
 
-        window.Telegram?.WebApp?.HapticFeedback
-            ?.notificationOccurred("success");
+            window.Telegram?.WebApp?.HapticFeedback
+                ?.notificationOccurred("success");
 
-    } else {
+        } else {
 
-        setDragMode(true);
+            setDragMode(true);
+
+        }
 
     }
-
-}
 
     return (
         <>
@@ -283,45 +291,45 @@ export default function ExpensesPage() {
                         ↕️ {t("DragCategoriesHint")}
                     </div>
                 )}
-            <div className="flex-1 overflow-y-auto">
-                <DndContext
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleDragEnd}
-                >
-
-                    <SortableContext
-                        items={orderedCategories}
-                        strategy={rectSortingStrategy}
+                <div className="flex-1 overflow-y-auto">
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
                     >
 
-                        <div className="grid grid-cols-2 gap-3">
-                            {orderedCategories.map(category => (
+                        <SortableContext
+                            items={orderedCategories}
+                            strategy={rectSortingStrategy}
+                        >
+
+                            <div className="grid grid-cols-2 gap-3">
+                                {orderedCategories.map(category => (
 
 
-                                dragMode ? (
+                                    dragMode ? (
 
 
-                                    <SortableCategoryButton
-                                        key={category}
-                                        category={category}
-                                    />
+                                        <SortableCategoryButton
+                                            key={category}
+                                            category={category}
+                                        />
 
-                                ) : (
+                                    ) : (
 
-                                    <CategoryButton
-                                        key={category}
-                                        category={category}
-                                        onClick={() => setSelectedCategory(category)}
-                                    />
+                                        <CategoryButton
+                                            key={category}
+                                            category={category}
+                                            onClick={() => setSelectedCategory(category)}
+                                        />
 
-                                )
+                                    )
 
-                            ))}
+                                ))}
 
-                        </div>
-                    </SortableContext>
-                </DndContext>
+                            </div>
+                        </SortableContext>
+                    </DndContext>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-3 justify-items-center">
